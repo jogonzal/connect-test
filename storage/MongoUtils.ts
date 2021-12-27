@@ -14,4 +14,4 @@ const kittenSchema = new mongoose.Schema({
   name: String
 });
 
-export const Kitten = mongoose.model<Kitten>('Kitten', kittenSchema);
+export const Kitten = mongoose.models.Kitten || mongoose.model<Kitten>('Kitten', kittenSchema);
