@@ -7,11 +7,11 @@ async function main() {
 
 main().catch(err => console.log(err));
 
-export interface Kitten {
+interface Kitten {
   name: string
 }
-const kittenSchema = new mongoose.Schema({
+const kittenSchema = new mongoose.Schema<Kitten>({
   name: String
 });
 
-export const Kitten = mongoose.models.Kitten || mongoose.model<Kitten>('Kitten', kittenSchema);
+export const Kitten = mongoose.models.Kitten as mongoose.Model<Kitten> || mongoose.model<Kitten>('Kitten', kittenSchema);

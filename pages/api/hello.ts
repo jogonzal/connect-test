@@ -2,13 +2,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Kitten } from '../../storage/MongoUtils';
 
-type Data = {
-  name: string
-}
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   try {
     const silence = new Kitten({ name: 'Silence' });
