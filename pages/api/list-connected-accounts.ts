@@ -13,6 +13,7 @@ export default async function handler(
   } catch (error) {
     const errorAsAny = error as any
     const errorMessage = (errorAsAny && errorAsAny.message) ? errorAsAny.message : 'unknown'
+    console.error('An error ocurred when fetching accounts', error)
     res.status(500).json({ error: errorMessage })
   }
 }
