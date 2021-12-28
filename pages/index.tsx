@@ -1,3 +1,4 @@
+import { initializeIcons } from '@fluentui/react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react';
@@ -16,5 +17,7 @@ const Home: NextPage = () => {
     </div>
   )
 }
+
+initializeIcons()
 
 export default Home
