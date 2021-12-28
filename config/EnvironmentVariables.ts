@@ -22,4 +22,3 @@ if (!process.env.stripe_private_key) {
     throw new Error('Stripe private key not present')
 }
 export const StripePrivateKey = process.env.stripe_private_key
-

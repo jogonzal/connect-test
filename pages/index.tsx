@@ -18,6 +18,9 @@ const Home: NextPage = () => {
   )
 }
 
-initializeIcons()
+// Only run in client
+if (typeof window === 'undefined') {
+  initializeIcons()
+}
 
 export default Home
