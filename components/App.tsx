@@ -41,10 +41,6 @@ export const App: React.FC = () => {
         setAccountName(val ?? '')
     }
 
-    const setCurrentAccountAndReset = (row: Stripe.Account) => {
-        console.log('Switching to account ', row)
-    }
-
     const onboardAccount = async (row: Stripe.Account) => {
         const accountsResponse = await fetch('/api/create-account-link', {
             method: 'POST',
@@ -118,8 +114,16 @@ export const App: React.FC = () => {
       <Stack horizontalAlign='center'>
         <StackItem tokens={ stackTokens }>
             <Stack>
-                <Text variant='large'>Merchant management test app</Text>
-                <Text>Total Accounts: { accounts && accounts.data.length }</Text>
+                <StackItem>
+                    <Stack>
+                        <StackItem>
+                            <Text variant='large'>Merchant management test app</Text>
+                        </StackItem>
+                        <StackItem>
+                            <Text>Total Accounts: { accounts && accounts.data.length }</Text>
+                        </StackItem>
+                    </Stack>
+                </StackItem>
                 <Separator />
                 <Stack horizontal>
                     <PrimaryButton onClick={ onCreateAccountClicked }>Create account</PrimaryButton>
