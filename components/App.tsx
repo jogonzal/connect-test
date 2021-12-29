@@ -9,8 +9,8 @@ export const App: React.FC = () => {
     const [accounts, setAccounts] = React.useState<Stripe.Response<Stripe.ApiList<Stripe.Account>> | undefined>(undefined)
     const [accountName, setAccountName] = React.useState('')
     const [currentAccountFullDetails, setCurrentAccountFullDetails] = React.useState<Stripe.Account | undefined>(undefined)
-    const [showCheckoutUIDialogForMerchant, setShowCheckoutDialogForMerchant] = React.useState<Stripe.Account | undefined>(undefined)
-    const [showPaymentUIDialogForMerchant, setShowPaymentUIDialogForMerchant] = React.useState<Stripe.Account | undefined>(undefined)
+    const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] = React.useState<Stripe.Account | undefined>(undefined)
+    const [showPaymentDialogForMerchant, setShowPaymentDialogForMerchant] = React.useState<Stripe.Account | undefined>(undefined)
 
     const refreshAccounts = async () => {
         const listAccountsResponse = await fetch("/api/list-connected-accounts")
@@ -68,44 +68,32 @@ export const App: React.FC = () => {
     }
 
     const paymentUIForMerchant = (row: Stripe.Account) => {
-        setShowPaymentUIDialogForMerchant(row)
+        setShowPaymentDialogForMerchant(row)
     }
 
     const getColumns = (): IColumn[] => {
         return [
             {
                 key: 'name',
-                name: 'name',
+                name: 'Account Name',
                 minWidth: 100,
                 onRender: (row: Stripe.Account) => row?.business_profile?.name,
             },
             {
                 key: 'type',
-                name: 'type',
+                name: 'Account Type',
                 minWidth: 100,
                 onRender: (row: Stripe.Account) => row.type,
             },
             {
                 key: 'charges_enabled',
-                name: 'charges_enabled',
+                name: 'Charges enabled',
                 minWidth: 100,
                 onRender: (row: Stripe.Account) => {
                     if (row.charges_enabled) {
                         return <>y <Link onClick={ () => checkoutForMerchant(row) }>Create payment</Link></>
                     } else {
-                        return <Link onClick={ () => onboardAccount(row) }>Onboard link</Link>
-                    }
-                },
-            },
-            {
-                key: 'details_submitted',
-                name: 'details_submitted',
-                minWidth: 100,
-                onRender: (row: Stripe.Account) => {
-                    if (row.details_submitted) {
-                        return 'y'
-                    } else {
-                        return <Link onClick={ () => onboardAccount(row) }>Onboard link</Link>
+                        return <>n <Link onClick={ () => onboardAccount(row) }>Onboard link</Link> </>
                     }
                 },
             },
@@ -130,7 +118,7 @@ export const App: React.FC = () => {
       <Stack horizontalAlign='center'>
         <StackItem tokens={ stackTokens }>
             <Stack>
-                <Text variant='large'>Special app</Text>
+                <Text variant='large'>Merchant management test app</Text>
                 <Text>Total Accounts: { accounts && accounts.data.length }</Text>
                 <Separator />
                 <Stack horizontal>
@@ -147,8 +135,15 @@ export const App: React.FC = () => {
             </Stack>
         </StackItem>
         <AccountDetailsDialog account={ currentAccountFullDetails } onDismiss={ () => setCurrentAccountFullDetails(undefined) } />
-        <CheckoutExperienceDialog account={ showCheckoutUIDialogForMerchant } onDismiss={ () => setCurrentAccountFullDetails(undefined) } />
-        <PaymentUIExperienceDialog account= { showPaymentUIDialogForMerchant } onDismiss={ () => setCurrentAccountFullDetails(undefined) } />
+        <CheckoutExperienceDialog
+            account={ showCheckoutDialogForMerchant }
+            onDismiss={ () => setShowCheckoutDialogForMerchant(undefined) }
+            onSuccessfulPayment={ (account) =>  {
+                setCurrentAccountFullDetails(account)
+                setShowCheckoutDialogForMerchant(undefined)
+            } }
+        />
+        <PaymentUIExperienceDialog account= { showPaymentDialogForMerchant } onDismiss={ () => setShowPaymentDialogForMerchant(undefined) } />
       </Stack>
     )
 }

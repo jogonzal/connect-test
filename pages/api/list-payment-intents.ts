@@ -15,7 +15,9 @@ export default async function handler(
 
     console.log('Redirect url is ', redirectUrl)
 
-    const paymentIntent = await StripeClient.paymentIntents.list({},
+    const paymentIntent = await StripeClient.paymentIntents.list({
+        expand: ['data.payment_method']
+    },
     {
         stripeAccount: connectedAccountId,
     });

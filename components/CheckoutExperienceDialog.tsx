@@ -1,12 +1,12 @@
-import { Dialog, PrimaryButton, Stack, StackItem, Text, TextField } from '@fluentui/react'
+import { Dialog, PrimaryButton, Separator, Stack, StackItem, Text, TextField } from '@fluentui/react'
 import * as React from 'react'
-import { ReactNode } from 'react'
 import { Stripe } from 'stripe'
 import { PaymentsUIClientSecret } from './PaymentsUIClientSecret'
 
 type Props = {
     account: Stripe.Account | undefined
     onDismiss: () => void
+    onSuccessfulPayment: (account: Stripe.Account) => void
 }
 
 export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
@@ -51,14 +51,22 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
         setPaymentsUIClientSecret(clientSecret)
     }
 
-    const renderPaymentsUI = () => {
+    const renderDialogContent = () => {
         if (paymentsUIClientSecret) {
-            return <PaymentsUIClientSecret secret={ paymentsUIClientSecret } account={ currentAccountFullDetails } />
+            return (
+                <Stack>
+                    <StackItem>
+                        <Text variant='large'>Payment elements</Text>
+                    </StackItem>
+                    <Separator />
+                    <StackItem>
+                        <PaymentsUIClientSecret secret={ paymentsUIClientSecret } account={ currentAccountFullDetails } onSuccessfulPayment={ () => props.onSuccessfulPayment(currentAccountFullDetails) } />
+                    </StackItem>
+                </Stack>
+            )
         }
-    }
 
-    return (
-        <Dialog hidden={ false } onDismiss={ props.onDismiss } minWidth={ 800 }>
+        return (
             <Stack>
                 <StackItem>
                     <Text variant='large'>Account {currentAccountFullDetails.id}</Text>
@@ -74,10 +82,13 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
                     <PrimaryButton onClick={ onCheckoutClicked }>Checkout</PrimaryButton>
                     <PrimaryButton onClick={ onPaymentUIClicked }>Payment UI</PrimaryButton>
                 </StackItem>
-                <StackItem>
-                    { renderPaymentsUI() }
-                </StackItem>
             </Stack>
+        )
+    }
+
+    return (
+        <Dialog hidden={ false } onDismiss={ props.onDismiss } minWidth={ 800 }>
+            { renderDialogContent() }
         </Dialog>
     )
 }

@@ -8,6 +8,7 @@ import { CheckoutForm } from './CheckoutForm';
 type Props = {
     account: StripeNamespace.Account
     secret: string
+    onSuccessfulPayment: () => void
 }
 
 export const PaymentsUIClientSecret: React.FC<Props> = (props) => {
@@ -29,7 +30,7 @@ export const PaymentsUIClientSecret: React.FC<Props> = (props) => {
 
     return (
         <Elements stripe={stripePromise}>
-          <CheckoutForm paymentIntentSecret={ props.secret }/>
+            <CheckoutForm paymentIntentSecret={ props.secret } onSuccessfulPayment={ props.onSuccessfulPayment }/>
         </Elements>
-      );
+    );
 }

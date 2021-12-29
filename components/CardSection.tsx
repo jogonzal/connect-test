@@ -20,9 +20,6 @@ const CARD_ELEMENT_OPTIONS = {
 };
 export const CardSection: React.FC = () => {
   return (
-    <label>
-      Card details
-      <CardElement options={CARD_ELEMENT_OPTIONS} />
-    </label>
+    <CardElement options={CARD_ELEMENT_OPTIONS} />
   );
 };

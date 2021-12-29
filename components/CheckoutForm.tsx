@@ -2,10 +2,11 @@ import React, { FormEvent } from 'react';
 import {useStripe, useElements, CardElement} from '@stripe/react-stripe-js';
 
 import { CardSection } from './CardSection';
-import { Spinner } from '@fluentui/react';
+import { PrimaryButton, Separator, Spinner } from '@fluentui/react';
 
 interface Props {
     paymentIntentSecret: string
+    onSuccessfulPayment: () => void
 }
 
 export const CheckoutForm: React.FC<Props> = (props) => {
@@ -13,13 +14,9 @@ export const CheckoutForm: React.FC<Props> = (props) => {
   const elements = useElements();
   const [performingPayment, setPerformingPayment] = React.useState(false)
 
-  const handleSubmit = async (event: FormEvent) => {
+  const onPerformPaymentClicked = async () => {
     setPerformingPayment(true)
     try {
-        // We don't want to let default form submission happen here,
-        // which would refresh the page.
-        event.preventDefault();
-
         if (!stripe || !elements) {
             // Stripe.js has not yet loaded.
             // Make sure to disable form submission until Stripe.js has loaded.
@@ -55,6 +52,7 @@ export const CheckoutForm: React.FC<Props> = (props) => {
                 // payment_intent.succeeded event that handles any business critical
                 // post-payment actions
                 console.log('Successful payment!')
+                props.onSuccessfulPayment()
             }
         }
     } catch (error) {
@@ -65,7 +63,7 @@ export const CheckoutForm: React.FC<Props> = (props) => {
   };
 
   const renderSpinner = () => {
-    if (performingPayment) {
+    if (performingPayment || !stripe) {
         return <Spinner />
     }
   }
@@ -73,10 +71,11 @@ export const CheckoutForm: React.FC<Props> = (props) => {
   return (
     <>
         { renderSpinner() }
-        <form onSubmit={handleSubmit} style={{ display: performingPayment ? 'none' : 'block' }}>
+        <div style={{ display: performingPayment ? 'none' : 'block' }}>
             <CardSection />
-            <button disabled={!stripe}>Confirm order</button>
-        </form>
+            <Separator />
+            <PrimaryButton onClick={ onPerformPaymentClicked }>Pay</PrimaryButton>
+        </div>
     </>
   );
 }
