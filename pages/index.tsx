@@ -19,7 +19,7 @@ const Home: NextPage = () => {
 }
 
 // Only run in client
-if (typeof window === 'undefined') {
+if (typeof window !== 'undefined') {
   initializeIcons()
 }
 
