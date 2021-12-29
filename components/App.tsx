@@ -91,7 +91,7 @@ export const App: React.FC = () => {
                 minWidth: 100,
                 onRender: (row: Stripe.Account) => {
                     if (row.charges_enabled) {
-                        return <Text>y <Link onClick={ () => checkoutForMerchant(row) }>Checkout</Link> <Link onClick={ () => paymentUIForMerchant(row)}>Payment UI</Link></Text>
+                        return <>y <Link onClick={ () => checkoutForMerchant(row) }>Create payment</Link></>
                     } else {
                         return <Link onClick={ () => onboardAccount(row) }>Onboard link</Link>
                     }
@@ -110,20 +110,8 @@ export const App: React.FC = () => {
                 },
             },
             {
-                key: 'loginAs',
-                name: 'loginAs',
-                minWidth: 100,
-                onRender: (row: Stripe.Account) => {
-                    return (
-                        <>
-                            <Link onClick={ () => setCurrentAccountAndReset(row) }>Login as</Link>
-                        </>
-                    )
-                },
-            },
-            {
                 key: 'viewFull',
-                name: 'ViewFullDetails',
+                name: 'View details',
                 minWidth: 100,
                 onRender: (row: Stripe.Account) => {
                     return (
