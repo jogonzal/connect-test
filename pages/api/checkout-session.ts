@@ -37,7 +37,7 @@ export default async function handler(
         mode: 'payment',
         success_url: redirectUrl,
         cancel_url: redirectUrl,
-        }, {
+      }, {
         stripeAccount: connectedAccountId,
     });
  
