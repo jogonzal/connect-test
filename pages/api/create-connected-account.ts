@@ -1,4 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { StripeClient } from '../../config/StripeUtils';
 import { Guid } from '../../utils/Guid';
@@ -10,13 +10,23 @@ export default async function handler(
   try {
     const name: string = req.body.name
     console.log('Name is ', name)
+    const type: string = req.body.type
+    console.log('Type is ', type)
 
     const account = await StripeClient.accounts.create({
-        type: 'standard',
+        type: type === 'standard' ? 'standard' : 'express',
         country: 'US',
         email: `test${Guid.newGuid()}@example.com`,
         business_profile: {
             name: name,
+        },
+        capabilities: {
+          card_payments: {
+            requested: true,
+          },
+          transfers: {
+            requested: true,
+          }
         }
     });
 

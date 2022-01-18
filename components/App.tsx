@@ -1,9 +1,14 @@
-import { PrimaryButton, TextField, Text, Separator, DetailsList, DetailsListLayoutMode, IColumn, Link, Stack, StackItem, IStackTokens, Dialog } from '@fluentui/react'
+import { PrimaryButton, TextField, Text, Separator, DetailsList, DetailsListLayoutMode, IColumn, Link, Stack, StackItem, IStackTokens, Dialog, IDropdownOption, Dropdown } from '@fluentui/react'
 import * as React from 'react'
 import { Stripe } from 'stripe'
 import { AccountDetailsDialog } from './AccountDetailsDialog'
 import { CheckoutExperienceDialog } from './CheckoutExperienceDialog'
 import { PaymentUIExperienceDialog } from './PaymentUIExperienceDialog'
+
+const dropdownOptions: IDropdownOption[] = [
+    { key: 'standard', text: 'standard'},
+    { key: 'express', text: 'express' },
+];
 
 export const App: React.FC = () => {
     const [accounts, setAccounts] = React.useState<Stripe.Response<Stripe.ApiList<Stripe.Account>> | undefined>(undefined)
@@ -11,6 +16,11 @@ export const App: React.FC = () => {
     const [currentAccountFullDetails, setCurrentAccountFullDetails] = React.useState<Stripe.Account | undefined>(undefined)
     const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] = React.useState<Stripe.Account | undefined>(undefined)
     const [showPaymentDialogForMerchant, setShowPaymentDialogForMerchant] = React.useState<Stripe.Account | undefined>(undefined)
+    const [accountType, setAccountType] = React.useState<IDropdownOption>(dropdownOptions[0]);
+
+    const onSelectedAccountTypeChanged = (event: React.FormEvent<HTMLDivElement>, item?: IDropdownOption): void => {
+        setAccountType(item ?? dropdownOptions[0]);
+    };
 
     const refreshAccounts = async () => {
         const listAccountsResponse = await fetch("/api/list-connected-accounts")
@@ -31,6 +41,7 @@ export const App: React.FC = () => {
             },
             body: JSON.stringify({
                 name: accountName,
+                type: accountType.key,
             }),
         })
         await accountsResponse.json()
@@ -99,9 +110,24 @@ export const App: React.FC = () => {
                 minWidth: 100,
                 onRender: (row: Stripe.Account) => {
                     return (
-                        <>
-                            <Link onClick={ () => viewAccountFullDetails(row) }>View</Link>
-                        </>
+                        <Link onClick={ () => viewAccountFullDetails(row) }>View</Link>
+                    )
+                },
+            },
+
+            {
+                key: 'viewDashboard',
+                name: 'Dashboard',
+                minWidth: 100,
+                onRender: (row: Stripe.Account) => {
+                    if (row.type !== 'express') {
+                        return null
+                    }
+
+                    const accountId = row.id
+                    const url = `/api/create-dashboard-login-link?connectedAccountId=${accountId}`
+                    return (
+                        <Link href={ url }>View</Link>
                     )
                 },
             },
@@ -128,7 +154,14 @@ export const App: React.FC = () => {
                 <Stack horizontal>
                     <PrimaryButton onClick={ onCreateAccountClicked }>Create account</PrimaryButton>
                     <TextField onChange={ onAccountNameChanged } value={accountName} placeholder='Account name' />
-                </Stack>
+                    <Dropdown
+                        label="Controlled example"
+                        selectedKey={accountType ? accountType.key : undefined}
+                        onChange={onSelectedAccountTypeChanged}
+                        placeholder="Select an option"
+                        options={dropdownOptions}
+                    />
+                    </Stack>
                 <Separator />
                 {accounts && <DetailsList
                     items={accounts.data}
