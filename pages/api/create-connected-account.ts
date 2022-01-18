@@ -1,4 +1,3 @@
-
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { StripeClient } from '../../config/StripeUtils';
 import { Guid } from '../../utils/Guid';
