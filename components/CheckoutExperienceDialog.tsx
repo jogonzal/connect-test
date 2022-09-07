@@ -1,4 +1,4 @@
-import { Dialog, PrimaryButton, Separator, Stack, StackItem, Text, TextField } from '@fluentui/react'
+import { Checkbox, Dialog, PrimaryButton, Separator, Stack, StackItem, Text, TextField } from '@fluentui/react'
 import * as React from 'react'
 import { Stripe } from 'stripe'
 import { PaymentsUIClientSecret } from './PaymentsUIClientSecret'
@@ -13,6 +13,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
     const [productName, setProductName] = React.useState('Test product')
     const [amount, setAmount] = React.useState(1000)
     const [applicationFee, setApplicationFee] = React.useState(100)
+    const [destinationCharge, setDestinationCharge] = React.useState<boolean>(false)
     const [paymentsUIClientSecret, setPaymentsUIClientSecret] = React.useState<string | undefined>(undefined)
 
     const currentAccountFullDetails = props.account
@@ -25,6 +26,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
             productName,
             amount: amount.toString(),
             applicationFee: applicationFee.toString(),
+            destinationCharge: destinationCharge.toString(),
             connectedAccountId: currentAccountFullDetails.id,
         }
         
@@ -40,6 +42,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
                     productName,
                     applicationFee,
                     connectedAccountId: currentAccountFullDetails.id,
+                    destinationCharge: destinationCharge,
                 }
             ),
             headers: {
@@ -76,6 +79,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
                         <TextField label='Product name' value={ productName } onChange={ (ev, s) => setProductName(s ?? '')} />
                         <TextField label='Amount' value={ amount.toString() } onChange={ (ev, s) => setAmount(parseInt(s ?? '0'))} />
                         <TextField label='App fee' value={ applicationFee.toString() } onChange={ (ev, s) => setApplicationFee(parseInt(s ?? '0'))} />
+                        <Checkbox label='Destination charge' checked={ destinationCharge } onChange={ (ev, s) => setDestinationCharge(!!s)} />
                     </Stack>
                 </StackItem>
                 <StackItem>

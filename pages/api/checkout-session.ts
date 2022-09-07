@@ -12,6 +12,7 @@ export default async function handler(
     const productName: string = searchParams.get("productName")!
     const amount: number = parseInt(searchParams.get("amount")!)
     const applicationFee: number = parseInt(searchParams.get("applicationFee")!)
+    const destinationCharge: string = searchParams.get("destination")!
     const currency = 'usd'
     const quantity = 1
 
@@ -32,13 +33,19 @@ export default async function handler(
         }],
         payment_intent_data: {
             application_fee_amount: applicationFee,
+            ...(destinationCharge !== 'true' ? {} : {
+              transfer_data: {
+                destination: connectedAccountId
+              }
+            }),
         },
         mode: 'payment',
         success_url: redirectUrl,
         cancel_url: redirectUrl,
-      }, {
+      },
+      destinationCharge ? undefined : {
         stripeAccount: connectedAccountId,
-    });
+      });
  
     console.log('Created link!', session)
 

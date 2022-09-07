@@ -11,6 +11,7 @@ export default async function handler(
     const productName: string = req.body.productName
     const amount: number = req.body.amount
     const applicationFee: number = req.body.applicationFee
+    const destinationCharge: boolean = req.body.destinationCharge
 
     console.log('Id is ', connectedAccountId)
     const redirectUrl = `${hostUrl}?accountId=${encodeURIComponent(connectedAccountId)}`
@@ -22,8 +23,13 @@ export default async function handler(
         amount: amount,
         currency: 'usd',
         application_fee_amount: applicationFee,
+        ...(destinationCharge !== true ? {} : {
+          transfer_data: {
+            destination: connectedAccountId
+          }
+        }),
     },
-    {
+    destinationCharge ? undefined : {
         stripeAccount: connectedAccountId,
     });
     

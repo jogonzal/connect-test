@@ -1,1 +1,1 @@
-export const StripePublicKey = 'pk_test_51K4BTVCYDfm5SAr7tp9NA387DsnHE1cavwwdsv881FUrd7OXWyoaUV85C45hVbBuLGh0xFYiLVHYrvIXy9VifUpS008PHqEGlm'
+export const StripePublicKey = process.env.NEXT_PUBLIC_stripe_public_key;
