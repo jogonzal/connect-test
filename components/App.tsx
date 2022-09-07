@@ -135,10 +135,10 @@ export const App: React.FC = () => {
             {
                 key: 'getAccountSession',
                 name: 'AccountSession',
-                minWidth: 100,
+                minWidth: 120,
                 onRender: (row: Stripe.Account) => {
                     return (
-                        <PrimaryButton onClick={async () => {
+                        <PrimaryButton text='Account session' onClick={async () => {
                             const response = await fetch('/api/create-account-session', {
                                 method: 'POST',
                                 headers: {
@@ -150,7 +150,7 @@ export const App: React.FC = () => {
                             })
                             const json = await response.json()
                             console.log(json)
-                        }}>Account session</PrimaryButton>
+                        }} />
                     )
                 },
             },
@@ -178,7 +178,6 @@ export const App: React.FC = () => {
                     <PrimaryButton onClick={ onCreateAccountClicked }>Create account</PrimaryButton>
                     <TextField onChange={ onAccountNameChanged } value={accountName} placeholder='Account name' />
                     <Dropdown
-                        label="Controlled example"
                         selectedKey={accountType ? accountType.key : undefined}
                         onChange={onSelectedAccountTypeChanged}
                         placeholder="Select an option"
