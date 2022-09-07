@@ -13,20 +13,25 @@ export default async function handler(
     console.log('Type is ', type)
 
     const account = await StripeClient.accounts.create({
-        type: type === 'standard' ? 'standard' : 'express',
-        country: 'US',
-        email: `test${Guid.newGuid()}@example.com`,
-        business_profile: {
-            name: name,
-        },
-        capabilities: {
-          card_payments: {
-            requested: true,
-          },
-          transfers: {
-            requested: true,
+      type: type === 'standard' ? 'standard' : 'express',
+      country: 'US',
+      email: `test${Guid.newGuid()}@example.com`,
+      business_profile: {
+          name: name,
+      },
+      ...(type === 'standard' ?
+        {} :
+        {
+          capabilities: {
+            card_payments: {
+              requested: true,
+            },
+            transfers: {
+              requested: true,
+            }
           }
         }
+      )
     });
 
     console.log('Created!', account)

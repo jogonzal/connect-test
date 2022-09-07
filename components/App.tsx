@@ -95,12 +95,12 @@ export const App: React.FC = () => {
             {
                 key: 'charges_enabled',
                 name: 'Charges enabled',
-                minWidth: 100,
+                minWidth: 300,
                 onRender: (row: Stripe.Account) => {
                     if (row.charges_enabled) {
                         return <>y <Link onClick={ () => checkoutForMerchant(row) }>Create payment</Link></>
                     } else {
-                        return <>n <Link onClick={ () => onboardAccount(row) }>Onboard link</Link> </>
+                        return <>reason: {row.requirements?.disabled_reason} <Link onClick={ () => onboardAccount(row) }>Onboard link</Link> </>
                     }
                 },
             },
@@ -128,6 +128,29 @@ export const App: React.FC = () => {
                     const url = `/api/create-dashboard-login-link?connectedAccountId=${accountId}`
                     return (
                         <Link href={ url }>View</Link>
+                    )
+                },
+            },
+
+            {
+                key: 'getAccountSession',
+                name: 'AccountSession',
+                minWidth: 100,
+                onRender: (row: Stripe.Account) => {
+                    return (
+                        <PrimaryButton onClick={async () => {
+                            const response = await fetch('/api/create-account-session', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    accountId: row.id,
+                                }),
+                            })
+                            const json = await response.json()
+                            console.log(json)
+                        }}>Account session</PrimaryButton>
                     )
                 },
             },
