@@ -12,9 +12,12 @@ export default async function handler(
     const productName: string = searchParams.get("productName")!
     const amount: number = parseInt(searchParams.get("amount")!)
     const applicationFee: number = parseInt(searchParams.get("applicationFee")!)
-    const destinationCharge: string = searchParams.get("destination")!
+    const destinationCharge: string = searchParams.get("destinationCharge")!
     const currency = 'usd'
     const quantity = 1
+
+    const isDestinationCharge = destinationCharge === 'true'
+    console.log('Destination charge is...', isDestinationCharge)
 
     console.log('Params are', connectedAccountId, productName, amount, applicationFee)
 
@@ -33,7 +36,8 @@ export default async function handler(
         }],
         payment_intent_data: {
             application_fee_amount: applicationFee,
-            ...(destinationCharge !== 'true' ? {} : {
+            description: productName,
+            ...(!isDestinationCharge ? {} : {
               transfer_data: {
                 destination: connectedAccountId
               }
@@ -43,7 +47,7 @@ export default async function handler(
         success_url: redirectUrl,
         cancel_url: redirectUrl,
       },
-      destinationCharge ? undefined : {
+      isDestinationCharge ? undefined : {
         stripeAccount: connectedAccountId,
       });
  

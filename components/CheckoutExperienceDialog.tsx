@@ -63,7 +63,11 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
                     </StackItem>
                     <Separator />
                     <StackItem>
-                        <PaymentsUIClientSecret secret={ paymentsUIClientSecret } account={ currentAccountFullDetails } onSuccessfulPayment={ () => props.onSuccessfulPayment(currentAccountFullDetails) } />
+                        <PaymentsUIClientSecret
+                            destinationCharge={destinationCharge}
+                            secret={ paymentsUIClientSecret }
+                            account={ currentAccountFullDetails }
+                            onSuccessfulPayment={ () => props.onSuccessfulPayment(currentAccountFullDetails) } />
                     </StackItem>
                 </Stack>
             )
@@ -91,7 +95,10 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
     }
 
     return (
-        <Dialog hidden={ false } onDismiss={ props.onDismiss } minWidth={ 800 }>
+        <Dialog hidden={ false } onDismiss={ () => {
+            setPaymentsUIClientSecret(undefined)
+            props.onDismiss()
+        } } minWidth={ 800 }>
             { renderDialogContent() }
         </Dialog>
     )

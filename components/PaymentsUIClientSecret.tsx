@@ -8,6 +8,7 @@ import { CheckoutForm } from './CheckoutForm';
 type Props = {
     account: StripeNamespace.Account
     secret: string
+    destinationCharge: boolean
     onSuccessfulPayment: () => void
 }
 
@@ -17,12 +18,12 @@ export const PaymentsUIClientSecret: React.FC<Props> = (props) => {
     React.useEffect(() => {
         setStripePromise(undefined)
 
-        const promise = loadStripe(StripePublicKey, {
+        const promise = loadStripe(StripePublicKey, props.destinationCharge ? {} : {
             stripeAccount: props.account.id
         })
 
         setStripePromise(promise)
-    }, [props.account.id])
+    }, [props.account.id, props.destinationCharge])
 
     if (stripePromise === undefined) {
         return null

@@ -21,9 +21,10 @@ export default async function handler(
     const paymentIntent = await StripeClient.paymentIntents.create({
         payment_method_types: ['card'],
         amount: amount,
+        description: productName,
         currency: 'usd',
         application_fee_amount: applicationFee,
-        ...(destinationCharge !== true ? {} : {
+        ...(!destinationCharge ? {} : {
           transfer_data: {
             destination: connectedAccountId
           }
