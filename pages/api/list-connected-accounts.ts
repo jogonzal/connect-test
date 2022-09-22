@@ -6,7 +6,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const accounts = await StripeClient.accounts.list()
+    const accounts = await StripeClient.accounts.list({
+      limit: 100,
+    })
 
     res.status(200).json(accounts)
   } catch (error) {
