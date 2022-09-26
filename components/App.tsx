@@ -131,30 +131,14 @@ export const App: React.FC = () => {
                     )
                 },
             },
-
-            {
-                key: 'getAccountSession',
-                name: 'AccountSession',
-                minWidth: 120,
-                onRender: (row: Stripe.Account) => {
-                    return (
-                        <PrimaryButton text='Account session' onClick={async () => {
-                            const response = await fetch('/api/create-account-session', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    accountId: row.id,
-                                }),
-                            })
-                            const json = await response.json()
-                            console.log(json)
-                        }} />
-                    )
-                },
-            },
         ]
+    }
+
+    const renderAccountDialog = () => {
+        if (!currentAccountFullDetails) return;
+        return (
+            <AccountDetailsDialog account={ currentAccountFullDetails } onDismiss={ () => setCurrentAccountFullDetails(undefined) } />
+        )
     }
     
     const stackTokens: IStackTokens = { maxWidth: 1000 };
@@ -193,7 +177,7 @@ export const App: React.FC = () => {
                 }
             </Stack>
         </StackItem>
-        <AccountDetailsDialog account={ currentAccountFullDetails } onDismiss={ () => setCurrentAccountFullDetails(undefined) } />
+        {renderAccountDialog()}
         <CheckoutExperienceDialog
             account={ showCheckoutDialogForMerchant }
             onDismiss={ () => setShowCheckoutDialogForMerchant(undefined) }
