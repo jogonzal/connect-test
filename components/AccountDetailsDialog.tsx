@@ -87,7 +87,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         console.log('Rendering the charge id!')
         return (
             <>
-                <stripe-payment-details-experience charge-id={chargeId} ></stripe-payment-details-experience>
+                <stripe-payment-details-experience charge-id={chargeId}></stripe-payment-details-experience>
             </>
         )
     }
