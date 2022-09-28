@@ -98,7 +98,7 @@ export const App: React.FC = () => {
                 minWidth: 300,
                 onRender: (row: Stripe.Account) => {
                     if (row.charges_enabled) {
-                        return <>y <Link onClick={ () => checkoutForMerchant(row) }>Create payment</Link></>
+                        return <>y <Link onClick={ () => checkoutForMerchant(row) }>Create payment</Link> <Link onClick={ () => onboardAccount(row) }>Onboard link</Link></>
                     } else {
                         return <>reason: {row.requirements?.disabled_reason} <Link onClick={ () => onboardAccount(row) }>Onboard link</Link> </>
                     }
