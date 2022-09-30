@@ -4,7 +4,7 @@ import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const searchParams = new URLSearchParams(req.url!.split("?")[1]);
@@ -12,7 +12,7 @@ export default async function handler(
     const productName: string = searchParams.get("productName")!;
     const amount: number = parseInt(searchParams.get("amount")!);
     const applicationFee: number = parseInt(
-      searchParams.get("applicationFee")!
+      searchParams.get("applicationFee")!,
     );
     const destinationCharge: string = searchParams.get("destinationCharge")!;
     const currency = "usd";
@@ -26,12 +26,12 @@ export default async function handler(
       connectedAccountId,
       productName,
       amount,
-      applicationFee
+      applicationFee,
     );
 
     console.log("Id is ", connectedAccountId);
     const redirectUrl = `${hostUrl}?accountId=${encodeURIComponent(
-      connectedAccountId
+      connectedAccountId,
     )}`;
 
     console.log("Redirect url is ", redirectUrl);
@@ -66,7 +66,7 @@ export default async function handler(
         ? undefined
         : {
             stripeAccount: connectedAccountId,
-          }
+          },
     );
 
     console.log("Created link!", session);

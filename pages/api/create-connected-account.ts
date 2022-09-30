@@ -4,7 +4,7 @@ import { Guid } from "../../utils/Guid";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const name: string = req.body.name;

@@ -3,7 +3,7 @@ import { Kitten } from "../../storage/MongoUtils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const silence = new Kitten({ name: "Silence" });

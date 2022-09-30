@@ -26,7 +26,7 @@ export const PaymentsUIClientSecret: React.FC<Props> = (props) => {
         ? {}
         : {
             stripeAccount: props.account.id,
-          }
+          },
     );
 
     setStripePromise(promise);

@@ -6,7 +6,7 @@ const STRIPE_API_VERSION = "2020-08-27";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const accountId: string = req.body.accountId;
@@ -24,14 +24,14 @@ export default async function handler(
 
     // Specify the API version to include the beta header
     const accountSessionResponse = await new accountSessionResource(
-      StripeClient
+      StripeClient,
     ).create(
       {
         account: accountId,
       },
       {
         apiVersion: `${STRIPE_API_VERSION}; embedded_connect_beta=v1`,
-      }
+      },
     );
 
     (accountSessionResponse as any).publicKey =

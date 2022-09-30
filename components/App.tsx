@@ -37,12 +37,12 @@ export const App: React.FC = () => {
   const [showPaymentDialogForMerchant, setShowPaymentDialogForMerchant] =
     React.useState<Stripe.Account | undefined>(undefined);
   const [accountType, setAccountType] = React.useState<IDropdownOption>(
-    dropdownOptions[0]
+    dropdownOptions[0],
   );
 
   const onSelectedAccountTypeChanged = (
     event: React.FormEvent<HTMLDivElement>,
-    item?: IDropdownOption
+    item?: IDropdownOption,
   ): void => {
     setAccountType(item ?? dropdownOptions[0]);
   };

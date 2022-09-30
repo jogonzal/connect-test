@@ -3,7 +3,7 @@ import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const searchParams = new URLSearchParams(req.url!.split("?")[1]);
@@ -12,7 +12,7 @@ export default async function handler(
     console.log("Params are", connectedAccountId);
 
     const link = await StripeClient.accounts.createLoginLink(
-      connectedAccountId
+      connectedAccountId,
     );
 
     console.log("Created link!", link);

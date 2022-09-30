@@ -4,7 +4,7 @@ import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const accountId: string = req.body.accountId;

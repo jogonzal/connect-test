@@ -21,7 +21,7 @@ type Props = {
 
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
   const [charges, setPayments] = React.useState<undefined | Stripe.Charge[]>(
-    undefined
+    undefined,
   );
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
   const { isLoading, error } = useConnectJSInit(props.account.id);

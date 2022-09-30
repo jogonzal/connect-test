@@ -40,7 +40,7 @@ export const CheckoutForm: React.FC<Props> = (props) => {
               name: "Jenny Rosen",
             },
           },
-        }
+        },
       );
 
       if (result.error) {

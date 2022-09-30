@@ -4,7 +4,7 @@ import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const connectedAccountId: string = req.body.connectedAccountId;
@@ -15,7 +15,7 @@ export default async function handler(
 
     console.log("Id is ", connectedAccountId);
     const redirectUrl = `${hostUrl}?accountId=${encodeURIComponent(
-      connectedAccountId
+      connectedAccountId,
     )}`;
 
     console.log("Redirect url is ", redirectUrl);
@@ -39,7 +39,7 @@ export default async function handler(
         ? undefined
         : {
             stripeAccount: connectedAccountId,
-          }
+          },
     );
 
     console.log("Created payment intent!", paymentIntent);
