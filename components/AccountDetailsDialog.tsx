@@ -13,6 +13,7 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
+import { useGetCharges } from "../hooks/useGetCharges";
 
 type Props = {
   account: Stripe.Account;
@@ -20,36 +21,19 @@ type Props = {
 };
 
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
-  const [charges, setPayments] = React.useState<undefined | Stripe.Charge[]>(
-    undefined,
-  );
+  const {
+    data: charges,
+    isLoading: chargesIsLoading,
+    error: chargesError,
+  } = useGetCharges(props.account);
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
   const { isLoading, error } = useConnectJSInit(props.account.id);
 
-  React.useEffect(() => {
-    const runAsync = async () => {
-      setPayments(undefined);
-      if (!props.account) {
-        return;
-      }
-      const response = await fetch("/api/list-charges", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          connectedAccountId: props.account.id,
-        }),
-      });
+  if (error || chargesError) {
+    return <Text>An error occurred</Text>;
+  }
 
-      const charges: Stripe.Response<Stripe.ApiList<Stripe.Charge>> =
-        await response.json();
-      setPayments(charges.data);
-    };
-    runAsync();
-  }, [props.account]);
-
-  if (isLoading || error) {
+  if (isLoading || chargesIsLoading) {
     return <Spinner />;
   }
 
@@ -114,6 +98,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
 
   return (
     <>
+      {renderPaymentDetailUI()}
       <Dialog hidden={false} onDismiss={props.onDismiss} minWidth={800}>
         <Stack>
           <StackItem>
@@ -139,7 +124,6 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
           </StackItem>
         </Stack>
       </Dialog>
-      {renderPaymentDetailUI()}
     </>
   );
 };

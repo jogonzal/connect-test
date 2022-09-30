@@ -16,6 +16,7 @@ import {
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
+import { useGetAccounts } from "../hooks/useGetAccounts";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
 import { CheckoutExperienceDialog } from "./CheckoutExperienceDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
@@ -26,9 +27,7 @@ const dropdownOptions: IDropdownOption[] = [
 ];
 
 export const App: React.FC = () => {
-  const [accounts, setAccounts] = React.useState<
-    Stripe.Response<Stripe.ApiList<Stripe.Account>> | undefined
-  >(undefined);
+  const { data: accounts, isLoading, error, refetch } = useGetAccounts();
   const [accountName, setAccountName] = React.useState("");
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
@@ -41,22 +40,11 @@ export const App: React.FC = () => {
   );
 
   const onSelectedAccountTypeChanged = (
-    event: React.FormEvent<HTMLDivElement>,
+    _event: React.FormEvent<HTMLDivElement>,
     item?: IDropdownOption,
   ): void => {
     setAccountType(item ?? dropdownOptions[0]);
   };
-
-  const refreshAccounts = async () => {
-    const listAccountsResponse = await fetch("/api/list-connected-accounts");
-    const accounts = await listAccountsResponse.json();
-
-    setAccounts(accounts);
-  };
-
-  React.useEffect(() => {
-    refreshAccounts();
-  }, []);
 
   const onCreateAccountClicked = async () => {
     const accountsResponse = await fetch("/api/create-connected-account", {
@@ -70,7 +58,7 @@ export const App: React.FC = () => {
       }),
     });
     await accountsResponse.json();
-    await refreshAccounts();
+    refetch();
   };
 
   const onAccountNameChanged = (ev: any, val?: string) => {
@@ -96,12 +84,8 @@ export const App: React.FC = () => {
     setCurrentAccountFullDetails(row);
   };
 
-  const checkoutForMerchant = (row: Stripe.Account) => {
+  const paymentForMerchant = (row: Stripe.Account) => {
     setShowCheckoutDialogForMerchant(row);
-  };
-
-  const paymentUIForMerchant = (row: Stripe.Account) => {
-    setShowPaymentDialogForMerchant(row);
   };
 
   const getColumns = (): IColumn[] => {
@@ -127,7 +111,7 @@ export const App: React.FC = () => {
             return (
               <>
                 y{" "}
-                <Link onClick={() => checkoutForMerchant(row)}>
+                <Link onClick={() => paymentForMerchant(row)}>
                   Create payment
                 </Link>{" "}
                 <Link onClick={() => onboardAccount(row)}>Onboard link</Link>
@@ -169,7 +153,7 @@ export const App: React.FC = () => {
     ];
   };
 
-  const renderAccountDialog = () => {
+  const renderAccountDetailsDialog = () => {
     if (!currentAccountFullDetails) return;
     return (
       <AccountDetailsDialog
@@ -182,47 +166,8 @@ export const App: React.FC = () => {
   const stackTokens: IStackTokens = { maxWidth: 1000 };
 
   return (
-    <Stack horizontalAlign="center">
-      <StackItem tokens={stackTokens}>
-        <Stack>
-          <StackItem>
-            <Stack>
-              <StackItem>
-                <Text variant="large">Merchant management test app</Text>
-              </StackItem>
-              <StackItem>
-                <Text>Total Accounts: {accounts && accounts.data.length}</Text>
-              </StackItem>
-            </Stack>
-          </StackItem>
-          <Separator />
-          <Stack horizontal>
-            <PrimaryButton onClick={onCreateAccountClicked}>
-              Create account
-            </PrimaryButton>
-            <TextField
-              onChange={onAccountNameChanged}
-              value={accountName}
-              placeholder="Account name"
-            />
-            <Dropdown
-              selectedKey={accountType ? accountType.key : undefined}
-              onChange={onSelectedAccountTypeChanged}
-              placeholder="Select an option"
-              options={dropdownOptions}
-            />
-          </Stack>
-          <Separator />
-          {accounts && (
-            <DetailsList
-              items={accounts.data}
-              columns={getColumns()}
-              layoutMode={DetailsListLayoutMode.justified}
-            />
-          )}
-        </Stack>
-      </StackItem>
-      {renderAccountDialog()}
+    <>
+      {renderAccountDetailsDialog()}
       <CheckoutExperienceDialog
         account={showCheckoutDialogForMerchant}
         onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
@@ -235,6 +180,48 @@ export const App: React.FC = () => {
         account={showPaymentDialogForMerchant}
         onDismiss={() => setShowPaymentDialogForMerchant(undefined)}
       />
-    </Stack>
+
+      <Stack horizontalAlign="center">
+        <StackItem tokens={stackTokens}>
+          <Stack>
+            <StackItem>
+              <Stack>
+                <StackItem>
+                  <Text variant="large">Merchant management test app</Text>
+                </StackItem>
+                <StackItem>
+                  <Text>Total Accounts: {accounts && accounts.length}</Text>
+                </StackItem>
+              </Stack>
+            </StackItem>
+            <Separator />
+            <Stack horizontal>
+              <PrimaryButton onClick={onCreateAccountClicked}>
+                Create account
+              </PrimaryButton>
+              <TextField
+                onChange={onAccountNameChanged}
+                value={accountName}
+                placeholder="Account name"
+              />
+              <Dropdown
+                selectedKey={accountType ? accountType.key : undefined}
+                onChange={onSelectedAccountTypeChanged}
+                placeholder="Select an option"
+                options={dropdownOptions}
+              />
+            </Stack>
+            <Separator />
+            {accounts && (
+              <DetailsList
+                items={accounts}
+                columns={getColumns()}
+                layoutMode={DetailsListLayoutMode.justified}
+              />
+            )}
+          </Stack>
+        </StackItem>
+      </Stack>
+    </>
   );
 };

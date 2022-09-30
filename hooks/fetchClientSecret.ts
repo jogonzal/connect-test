@@ -14,7 +14,7 @@ export const fetchClientSecret = async (accountId: string): Promise<string> => {
 
     if (!response.ok) {
       console.error(
-        json.error || "There was an error getting the client secret."
+        json.error || "There was an error getting the client secret.",
       );
       throw new Error("Failed to fetch");
     }
