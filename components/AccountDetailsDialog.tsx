@@ -34,7 +34,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
   }
 
   if (isLoading || chargesIsLoading) {
-    return <Spinner />;
+    return <Spinner label="Loading charges..." />;
   }
 
   const getColumns = (): IColumn[] => {

@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import Stripe from "stripe";
-import { StripePublicKey } from "../config/ClientConfig";
 
 const getCharges = async (
   account: Stripe.Account,
@@ -24,7 +23,6 @@ export const useGetCharges = (account: Stripe.Account) => {
   return useQuery<Stripe.Charge[], Error>(
     ["GetCharges", account.id],
     async (): Promise<Stripe.Charge[]> => {
-      const publishableKey = StripePublicKey;
       const accounts = await getCharges(account);
 
       return accounts.data;

@@ -13,9 +13,11 @@ import {
   Dialog,
   IDropdownOption,
   Dropdown,
+  Spinner,
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
+import { useCreateAccount } from "../hooks/useCreateAccount";
 import { useGetAccounts } from "../hooks/useGetAccounts";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
 import { CheckoutExperienceDialog } from "./CheckoutExperienceDialog";
@@ -28,6 +30,13 @@ const dropdownOptions: IDropdownOption[] = [
 
 export const App: React.FC = () => {
   const { data: accounts, isLoading, error, refetch } = useGetAccounts();
+  const {
+    error: createError,
+    isLoading: createLoading,
+    data: createData,
+    reset: resetCreate,
+    mutateAsync: createAccountAsync,
+  } = useCreateAccount();
   const [accountName, setAccountName] = React.useState("");
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
@@ -47,18 +56,11 @@ export const App: React.FC = () => {
   };
 
   const onCreateAccountClicked = async () => {
-    const accountsResponse = await fetch("/api/create-connected-account", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: accountName,
-        type: accountType.key,
-      }),
+    await createAccountAsync({
+      accountName,
+      accountType: accountType.key.toString(),
     });
-    await accountsResponse.json();
-    refetch();
+    await refetch();
   };
 
   const onAccountNameChanged = (ev: any, val?: string) => {
@@ -165,6 +167,31 @@ export const App: React.FC = () => {
 
   const stackTokens: IStackTokens = { maxWidth: 1000 };
 
+  if (error) {
+    return <Text>Failed to load accounts!</Text>;
+  }
+
+  if (!accounts) {
+    return <Spinner label="Loading accounts..." />;
+  }
+
+  if (createError) {
+    return <Text>An error ocurred when creating the account.</Text>;
+  }
+
+  if (createLoading) {
+    return <Spinner label="Creating an account..." />;
+  }
+
+  if (createData) {
+    return (
+      <>
+        <pre>{JSON.stringify(createData, null, "\t")}</pre>
+        <PrimaryButton onClick={resetCreate}>Ok</PrimaryButton>
+      </>
+    );
+  }
+
   return (
     <>
       {renderAccountDetailsDialog()}
@@ -190,7 +217,7 @@ export const App: React.FC = () => {
                   <Text variant="large">Merchant management test app</Text>
                 </StackItem>
                 <StackItem>
-                  <Text>Total Accounts: {accounts && accounts.length}</Text>
+                  <Text>Total Accounts: {accounts.length}</Text>
                 </StackItem>
               </Stack>
             </StackItem>
