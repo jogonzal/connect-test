@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import * as React from 'react';
 import type { AppProps } from 'next/app'
 
 const SafeHydrate: React.FC = ({ children }) => {
