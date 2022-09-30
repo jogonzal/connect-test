@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { NextApiRequest, NextApiResponse } from "next";
 import { hostUrl } from "../../config/EnvironmentVariables";
 import { StripeClient } from "../../config/StripeUtils";
