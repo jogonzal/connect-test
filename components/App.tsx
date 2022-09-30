@@ -82,14 +82,6 @@ export const App: React.FC = () => {
     window.location.href = accountLink.url;
   };
 
-  const viewAccountFullDetails = (row: Stripe.Account) => {
-    setCurrentAccountFullDetails(row);
-  };
-
-  const paymentForMerchant = (row: Stripe.Account) => {
-    setShowCheckoutDialogForMerchant(row);
-  };
-
   const getColumns = (): IColumn[] => {
     return [
       {
@@ -113,43 +105,60 @@ export const App: React.FC = () => {
             return (
               <>
                 y{" "}
-                <Link onClick={() => paymentForMerchant(row)}>
+                <Link onClick={() => setShowCheckoutDialogForMerchant(row)}>
                   Create payment
-                </Link>{" "}
+                </Link>
+                {" | "}
                 <Link onClick={() => onboardAccount(row)}>Onboard link</Link>
               </>
             );
           } else {
             return (
               <>
-                reason: {row.requirements?.disabled_reason}{" "}
-                <Link onClick={() => onboardAccount(row)}>Onboard link</Link>{" "}
+                reason: {row.requirements?.disabled_reason}
+                {" | "}
+                <Link onClick={() => onboardAccount(row)}>
+                  Onboard link
+                </Link>{" "}
               </>
             );
           }
         },
       },
       {
-        key: "viewFull",
-        name: "View details",
-        minWidth: 100,
+        key: "viewAccount",
+        name: "View account",
+        minWidth: 80,
         onRender: (row: Stripe.Account) => {
-          return <Link onClick={() => viewAccountFullDetails(row)}>View</Link>;
+          return (
+            <Link onClick={() => setCurrentAccountFullDetails(row)}>
+              View account
+            </Link>
+          );
         },
       },
 
       {
         key: "viewDashboard",
         name: "Dashboard",
-        minWidth: 100,
+        minWidth: 120,
         onRender: (row: Stripe.Account) => {
-          if (row.type !== "express") {
-            return null;
+          const toRender = [];
+          const accountId = row.id;
+          const url = `/embeddedDashboard?account=${accountId}`;
+          toRender.push(<Link href={url}>Embedded</Link>);
+
+          if (row.type === "express") {
+            const url = `/api/create-dashboard-login-link?connectedAccountId=${accountId}`;
+            toRender.push(
+              <>
+                {" | "}
+                <Link href={url}>Express</Link>
+              </>,
+            );
           }
 
-          const accountId = row.id;
-          const url = `/api/create-dashboard-login-link?connectedAccountId=${accountId}`;
-          return <Link href={url}>View</Link>;
+          return toRender;
         },
       },
     ];

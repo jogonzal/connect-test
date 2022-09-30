@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { hostUrl } from "../../config/EnvironmentVariables";
 import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
@@ -11,16 +10,11 @@ export default async function handler(
 
     console.log("Id is ", connectedAccountId);
 
-    const charge = await StripeClient.charges.list(
-      {},
-      {
-        stripeAccount: connectedAccountId,
-      },
-    );
+    const account = await StripeClient.accounts.retrieve(connectedAccountId);
 
-    console.log("Obtained charges!", charge);
+    console.log("Obtained account!", account);
 
-    res.status(200).send(charge);
+    res.status(200).send(account);
   } catch (error) {
     const errorAsAny = error as any;
     const errorMessage =

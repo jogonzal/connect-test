@@ -10,7 +10,6 @@ export const fetchClientSecret = async (accountId: string): Promise<string> => {
       }),
     });
     const json = await response.json();
-    console.log(json);
 
     if (!response.ok) {
       console.error(

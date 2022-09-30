@@ -23,6 +23,7 @@ export const useGetCharges = (account: Stripe.Account) => {
   return useQuery<Stripe.Charge[], Error>(
     ["GetCharges", account.id],
     async (): Promise<Stripe.Charge[]> => {
+      console.log("Getting charges for ", account.id);
       const accounts = await getCharges(account);
 
       return accounts.data;
