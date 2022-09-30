@@ -3,6 +3,7 @@ import {
   DetailsListLayoutMode,
   Dialog,
   IColumn,
+  Link,
   PrimaryButton,
   Spinner,
   Stack,
@@ -121,6 +122,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
           </Text>
         </StackItem>
         <StackItem>
+          <Link href="/">Back to home - </Link>
           <Text>Payments</Text>
           {charges && (
             <DetailsList
