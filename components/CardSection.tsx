@@ -1,5 +1,5 @@
-import React from 'react';
-import {CardElement} from '@stripe/react-stripe-js';
+import React from "react";
+import { CardElement } from "@stripe/react-stripe-js";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -19,7 +19,5 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 export const CardSection: React.FC = () => {
-  return (
-    <CardElement options={CARD_ELEMENT_OPTIONS} />
-  );
+  return <CardElement options={CARD_ELEMENT_OPTIONS} />;
 };

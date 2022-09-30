@@ -1,105 +1,139 @@
-import { Checkbox, Dialog, PrimaryButton, Separator, Stack, StackItem, Text, TextField } from '@fluentui/react'
-import * as React from 'react'
-import { Stripe } from 'stripe'
-import { PaymentsUIClientSecret } from './PaymentsUIClientSecret'
+import {
+  Checkbox,
+  Dialog,
+  PrimaryButton,
+  Separator,
+  Stack,
+  StackItem,
+  Text,
+  TextField,
+} from "@fluentui/react";
+import * as React from "react";
+import { Stripe } from "stripe";
+import { PaymentsUIClientSecret } from "./PaymentsUIClientSecret";
 
 type Props = {
-    account: Stripe.Account | undefined
-    onDismiss: () => void
-    onSuccessfulPayment: (account: Stripe.Account) => void
-}
+  account: Stripe.Account | undefined;
+  onDismiss: () => void;
+  onSuccessfulPayment: (account: Stripe.Account) => void;
+};
 
 export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
-    const [productName, setProductName] = React.useState('Test product')
-    const [amount, setAmount] = React.useState(1000)
-    const [applicationFee, setApplicationFee] = React.useState(100)
-    const [destinationCharge, setDestinationCharge] = React.useState<boolean>(false)
-    const [paymentsUIClientSecret, setPaymentsUIClientSecret] = React.useState<string | undefined>(undefined)
+  const [productName, setProductName] = React.useState("Test product");
+  const [amount, setAmount] = React.useState(1000);
+  const [applicationFee, setApplicationFee] = React.useState(100);
+  const [destinationCharge, setDestinationCharge] =
+    React.useState<boolean>(false);
+  const [paymentsUIClientSecret, setPaymentsUIClientSecret] = React.useState<
+    string | undefined
+  >(undefined);
 
-    const currentAccountFullDetails = props.account
-    if (!currentAccountFullDetails) {
-        return null
-    }
+  const currentAccountFullDetails = props.account;
+  if (!currentAccountFullDetails) {
+    return null;
+  }
 
-    const onCheckoutClicked = () => {
-        const params: Record<string, string> = {
-            productName,
-            amount: amount.toString(),
-            applicationFee: applicationFee.toString(),
-            destinationCharge: destinationCharge.toString(),
-            connectedAccountId: currentAccountFullDetails.id,
-        }
-        
-        window.location.href = '/api/checkout-session?' + new URLSearchParams(params).toString()
-    }
+  const onCheckoutClicked = () => {
+    const params: Record<string, string> = {
+      productName,
+      amount: amount.toString(),
+      applicationFee: applicationFee.toString(),
+      destinationCharge: destinationCharge.toString(),
+      connectedAccountId: currentAccountFullDetails.id,
+    };
 
-    const onPaymentUIClicked = async () => {
-        const paymentIntentResponse = await fetch('/api/create-payment-intent', {
-            method: 'post',
-            body: JSON.stringify(
-                {
-                    amount,
-                    productName,
-                    applicationFee,
-                    connectedAccountId: currentAccountFullDetails.id,
-                    destinationCharge: destinationCharge,
-                }
-            ),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+    window.location.href =
+      "/api/checkout-session?" + new URLSearchParams(params).toString();
+  };
 
-        const clientSecret: string = await paymentIntentResponse.text()
-        setPaymentsUIClientSecret(clientSecret)
-    }
+  const onPaymentUIClicked = async () => {
+    const paymentIntentResponse = await fetch("/api/create-payment-intent", {
+      method: "post",
+      body: JSON.stringify({
+        amount,
+        productName,
+        applicationFee,
+        connectedAccountId: currentAccountFullDetails.id,
+        destinationCharge: destinationCharge,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    const renderDialogContent = () => {
-        if (paymentsUIClientSecret) {
-            return (
-                <Stack>
-                    <StackItem>
-                        <Text variant='large'>Payment elements</Text>
-                    </StackItem>
-                    <Separator />
-                    <StackItem>
-                        <PaymentsUIClientSecret
-                            destinationCharge={destinationCharge}
-                            secret={ paymentsUIClientSecret }
-                            account={ currentAccountFullDetails }
-                            onSuccessfulPayment={ () => props.onSuccessfulPayment(currentAccountFullDetails) } />
-                    </StackItem>
-                </Stack>
-            )
-        }
+    const clientSecret: string = await paymentIntentResponse.text();
+    setPaymentsUIClientSecret(clientSecret);
+  };
 
-        return (
-            <Stack>
-                <StackItem>
-                    <Text variant='large'>Account {currentAccountFullDetails.id}</Text>
-                </StackItem>
-                <StackItem>
-                    <Stack>
-                        <TextField label='Product name' value={ productName } onChange={ (ev, s) => setProductName(s ?? '')} />
-                        <TextField label='Amount' value={ amount.toString() } onChange={ (ev, s) => setAmount(parseInt(s ?? '0'))} />
-                        <TextField label='App fee' value={ applicationFee.toString() } onChange={ (ev, s) => setApplicationFee(parseInt(s ?? '0'))} />
-                        <Checkbox label='Destination charge' checked={ destinationCharge } onChange={ (ev, s) => setDestinationCharge(!!s)} />
-                    </Stack>
-                </StackItem>
-                <StackItem>
-                    <PrimaryButton onClick={ onCheckoutClicked }>Checkout</PrimaryButton>
-                    <PrimaryButton onClick={ onPaymentUIClicked }>Payment UI</PrimaryButton>
-                </StackItem>
-            </Stack>
-        )
+  const renderDialogContent = () => {
+    if (paymentsUIClientSecret) {
+      return (
+        <Stack>
+          <StackItem>
+            <Text variant="large">Payment elements</Text>
+          </StackItem>
+          <Separator />
+          <StackItem>
+            <PaymentsUIClientSecret
+              destinationCharge={destinationCharge}
+              secret={paymentsUIClientSecret}
+              account={currentAccountFullDetails}
+              onSuccessfulPayment={() =>
+                props.onSuccessfulPayment(currentAccountFullDetails)
+              }
+            />
+          </StackItem>
+        </Stack>
+      );
     }
 
     return (
-        <Dialog hidden={ false } onDismiss={ () => {
-            setPaymentsUIClientSecret(undefined)
-            props.onDismiss()
-        } } minWidth={ 800 }>
-            { renderDialogContent() }
-        </Dialog>
-    )
-}
+      <Stack>
+        <StackItem>
+          <Text variant="large">Account {currentAccountFullDetails.id}</Text>
+        </StackItem>
+        <StackItem>
+          <Stack>
+            <TextField
+              label="Product name"
+              value={productName}
+              onChange={(ev, s) => setProductName(s ?? "")}
+            />
+            <TextField
+              label="Amount"
+              value={amount.toString()}
+              onChange={(ev, s) => setAmount(parseInt(s ?? "0"))}
+            />
+            <TextField
+              label="App fee"
+              value={applicationFee.toString()}
+              onChange={(ev, s) => setApplicationFee(parseInt(s ?? "0"))}
+            />
+            <Checkbox
+              label="Destination charge"
+              checked={destinationCharge}
+              onChange={(ev, s) => setDestinationCharge(!!s)}
+            />
+          </Stack>
+        </StackItem>
+        <StackItem>
+          <PrimaryButton onClick={onCheckoutClicked}>Checkout</PrimaryButton>
+          <PrimaryButton onClick={onPaymentUIClicked}>Payment UI</PrimaryButton>
+        </StackItem>
+      </Stack>
+    );
+  };
+
+  return (
+    <Dialog
+      hidden={false}
+      onDismiss={() => {
+        setPaymentsUIClientSecret(undefined);
+        props.onDismiss();
+      }}
+      minWidth={800}
+    >
+      {renderDialogContent()}
+    </Dialog>
+  );
+};
