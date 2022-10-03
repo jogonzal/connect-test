@@ -21,12 +21,6 @@ type Props = {
 };
 
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
-  const {
-    data: charges,
-    isLoading: chargesIsLoading,
-    error: chargesError,
-  } = useGetCharges(props.account);
-  const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
   const { isLoading, error } = useConnectJSInit(props.account.id);
 
   if (error || chargesError) {
@@ -84,33 +78,10 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
     ];
   };
 
-  const renderPaymentDetailUI = () => {
-    if (!chargeId) return null;
-    console.log("Rendering the charge id!");
-    return (
-      <>
-        <stripe-payment-details-experience
-          charge-id={chargeId}
-        ></stripe-payment-details-experience>
-      </>
-    );
-  };
-
   return (
     <>
-      {renderPaymentDetailUI()}
       <Dialog hidden={false} onDismiss={props.onDismiss} minWidth={800}>
         <Stack>
-          <StackItem>
-            <Text>Payments</Text>
-            {charges && (
-              <DetailsList
-                items={charges}
-                columns={getColumns()}
-                layoutMode={DetailsListLayoutMode.justified}
-              />
-            )}
-          </StackItem>
           <StackItem>
             <Text variant="large">Account {props.account.id}</Text>
           </StackItem>

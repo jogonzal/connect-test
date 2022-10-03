@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface IStripeConnectAppearance {
   colors: {
     primary?: string;
@@ -44,6 +46,7 @@ declare global {
       ["stripe-payment-details-experience"]: CustomElement<{
         hidden: string | null;
         "charge-id": string | null;
+        ref: React.RefObject<HTMLElement>;
       }>;
     }
   }

@@ -1,7 +1,6 @@
 import {
   DetailsList,
   DetailsListLayoutMode,
-  Dialog,
   IColumn,
   Link,
   PrimaryButton,
@@ -9,13 +8,13 @@ import {
   Stack,
   StackItem,
   Text,
-  TextField,
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
 import { useGetAccount } from "../hooks/useGetAccount";
 import { useGetCharges } from "../hooks/useGetCharges";
+import { PaymentDetailsUI } from "./PaymentDetailsUI";
 
 export const EmbeddedDashboard = () => {
   const accountId = new URL(window.location.href).searchParams.get("account");
@@ -102,13 +101,12 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
 
   const renderPaymentDetailUI = () => {
     if (!chargeId) return null;
-    console.log("Rendering the charge id!");
+
     return (
-      <>
-        <stripe-payment-details-experience
-          charge-id={chargeId}
-        ></stripe-payment-details-experience>
-      </>
+      <PaymentDetailsUI
+        chargeId={chargeId}
+        onPaymentDetailsHide={() => setChargeId(undefined)}
+      ></PaymentDetailsUI>
     );
   };
 

@@ -17,7 +17,12 @@ const queryClient = new QueryClient({
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div
+      style={{
+        fontFamily:
+          '"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif',
+      }}
+    >
       <Head>
         <title>Jorge test platform - account</title>
         <link rel="icon" href="/favicon.ico" />
