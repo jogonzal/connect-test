@@ -23,11 +23,11 @@ type Props = {
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
   const { isLoading, error } = useConnectJSInit(props.account.id);
 
-  if (error || chargesError) {
+  if (error) {
     return <Text>An error occurred</Text>;
   }
 
-  if (isLoading || chargesIsLoading) {
+  if (isLoading) {
     return <Spinner label="Loading charges..." />;
   }
 
@@ -62,18 +62,6 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         name: "app_fees",
         minWidth: 100,
         onRender: (row: Stripe.PaymentIntent) => row.application_fee_amount,
-      },
-      {
-        key: "view_details",
-        name: "details",
-        minWidth: 100,
-        onRender: (row: Stripe.PaymentIntent) => (
-          <>
-            <PrimaryButton onClick={() => setChargeId(row.id)}>
-              Detail
-            </PrimaryButton>
-          </>
-        ),
       },
     ];
   };
