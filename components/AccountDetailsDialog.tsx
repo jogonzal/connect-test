@@ -13,7 +13,6 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
-import { useGetCharges } from "../hooks/useGetCharges";
 
 type Props = {
   account: Stripe.Account;
