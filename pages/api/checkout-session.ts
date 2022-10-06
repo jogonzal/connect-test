@@ -16,10 +16,12 @@ export default async function handler(
       searchParams.get("applicationFee")!,
     );
     const destinationCharge: string = searchParams.get("destinationCharge")!;
+    const useTransferAmount: string = searchParams.get("useTransferAmount")!;
     const currency = "usd";
     const quantity = 1;
 
     const isDestinationCharge = destinationCharge === "true";
+    const isUseTransferAmount = useTransferAmount === "true";
     console.log("Destination charge is...", isDestinationCharge);
 
     console.log(
@@ -49,13 +51,20 @@ export default async function handler(
           },
         ],
         payment_intent_data: {
-          application_fee_amount: applicationFee,
+          application_fee_amount: useTransferAmount
+            ? undefined
+            : applicationFee,
           description: productName,
           ...(!isDestinationCharge
             ? {}
             : {
                 transfer_data: {
                   destination: connectedAccountId,
+                  ...(useTransferAmount
+                    ? {
+                        amount: amount - applicationFee,
+                      }
+                    : {}),
                 },
               }),
         },

@@ -3,6 +3,8 @@ import {
   DetailsListLayoutMode,
   IColumn,
   Link,
+  Pivot,
+  PivotItem,
   PrimaryButton,
   Spinner,
   Stack,
@@ -111,26 +113,31 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   };
 
   return (
-    <>
-      {renderPaymentDetailUI()}
-      <Stack>
-        <StackItem>
-          <Text variant="large">
-            Viewing embedded dashboard for account {props.account.id}
-          </Text>
-        </StackItem>
-        <StackItem>
-          <Link href="/">Back to home - </Link>
-          <Text>Payments</Text>
-          {charges && (
-            <DetailsList
-              items={charges}
-              columns={getColumns()}
-              layoutMode={DetailsListLayoutMode.justified}
-            />
-          )}
-        </StackItem>
-      </Stack>
-    </>
+    <Pivot>
+      <PivotItem headerText="Payments">
+        <stripe-payments-experience />
+      </PivotItem>
+      <PivotItem headerText="Payment details">
+        {renderPaymentDetailUI()}
+        <Stack>
+          <StackItem>
+            <Text variant="large">
+              Viewing embedded dashboard for account {props.account.id}
+            </Text>
+          </StackItem>
+          <StackItem>
+            <Link href="/">Back to home - </Link>
+            <Text>Payments</Text>
+            {charges && (
+              <DetailsList
+                items={charges}
+                columns={getColumns()}
+                layoutMode={DetailsListLayoutMode.justified}
+              />
+            )}
+          </StackItem>
+        </Stack>
+      </PivotItem>
+    </Pivot>
   );
 };

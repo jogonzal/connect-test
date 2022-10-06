@@ -24,6 +24,8 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
   const [applicationFee, setApplicationFee] = React.useState(100);
   const [destinationCharge, setDestinationCharge] =
     React.useState<boolean>(false);
+  const [useTransferAmount, setUseTransferAmount] =
+    React.useState<boolean>(false);
   const [paymentsUIClientSecret, setPaymentsUIClientSecret] = React.useState<
     string | undefined
   >(undefined);
@@ -40,6 +42,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
       applicationFee: applicationFee.toString(),
       destinationCharge: destinationCharge.toString(),
       connectedAccountId: currentAccountFullDetails.id,
+      useTransferAmount: (destinationCharge && useTransferAmount).toString(),
     };
 
     window.location.href =
@@ -55,6 +58,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
         applicationFee,
         connectedAccountId: currentAccountFullDetails.id,
         destinationCharge: destinationCharge,
+        useTransferAmount: destinationCharge && useTransferAmount,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -114,6 +118,13 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
               checked={destinationCharge}
               onChange={(ev, s) => setDestinationCharge(!!s)}
             />
+            {destinationCharge && (
+              <Checkbox
+                label="Use transfer amount"
+                checked={useTransferAmount}
+                onChange={(ev, s) => setUseTransferAmount(!!s)}
+              />
+            )}
           </Stack>
         </StackItem>
         <StackItem>

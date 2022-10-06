@@ -12,6 +12,7 @@ export default async function handler(
     const amount: number = req.body.amount;
     const applicationFee: number = req.body.applicationFee;
     const destinationCharge: boolean = req.body.destinationCharge;
+    const useTransferAmount: boolean = req.body.useTransferAmount;
 
     console.log("Id is ", connectedAccountId);
     const redirectUrl = `${hostUrl}?accountId=${encodeURIComponent(
@@ -26,12 +27,17 @@ export default async function handler(
         amount: amount,
         description: productName,
         currency: "usd",
-        application_fee_amount: applicationFee,
+        application_fee_amount: useTransferAmount ? undefined : applicationFee,
         ...(!destinationCharge
           ? {}
           : {
               transfer_data: {
                 destination: connectedAccountId,
+                ...(useTransferAmount
+                  ? {
+                      amount: amount - applicationFee,
+                    }
+                  : {}),
               },
             }),
       },
