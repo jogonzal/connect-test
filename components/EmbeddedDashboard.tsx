@@ -16,6 +16,7 @@ import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
 import { useGetAccount } from "../hooks/useGetAccount";
 import { useGetCharges } from "../hooks/useGetCharges";
+import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { PaymentDetailsUI } from "./PaymentDetailsUI";
 
 export const EmbeddedDashboard = () => {
@@ -137,6 +138,10 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
             )}
           </StackItem>
         </Stack>
+      </PivotItem>
+      <PivotItem headerText="Isolation test">
+        <ExtractChargeFromStripeElements />
+        <stripe-payments-experience />
       </PivotItem>
     </Pivot>
   );
