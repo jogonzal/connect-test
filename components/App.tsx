@@ -14,6 +14,7 @@ import {
   IDropdownOption,
   Dropdown,
   Spinner,
+  SelectionMode,
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
@@ -89,6 +90,12 @@ export const App: React.FC = () => {
         name: "Account Name",
         minWidth: 100,
         onRender: (row: Stripe.Account) => row?.business_profile?.name,
+      },
+      {
+        key: "id",
+        name: "ID",
+        minWidth: 140,
+        onRender: (row: Stripe.Account) => row?.id,
       },
       {
         key: "type",
@@ -253,6 +260,7 @@ export const App: React.FC = () => {
                 items={accounts}
                 columns={getColumns()}
                 layoutMode={DetailsListLayoutMode.justified}
+                selectionMode={SelectionMode.none}
               />
             )}
           </Stack>
