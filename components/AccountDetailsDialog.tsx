@@ -12,7 +12,6 @@ import {
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
-import { useConnectJSInit } from "../hooks/useConnectJsInit";
 
 type Props = {
   account: Stripe.Account;
@@ -20,16 +19,6 @@ type Props = {
 };
 
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
-  const { isLoading, error } = useConnectJSInit(props.account.id);
-
-  if (error) {
-    return <Text>An error occurred</Text>;
-  }
-
-  if (isLoading) {
-    return <Spinner label="Loading charges..." />;
-  }
-
   const getColumns = (): IColumn[] => {
     return [
       {
