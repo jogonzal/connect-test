@@ -68,7 +68,10 @@ export const App: React.FC = () => {
     setAccountName(val ?? "");
   };
 
-  const onboardAccount = async (row: Stripe.Account) => {
+  const onboardAccount = async (
+    row: Stripe.Account,
+    type: Stripe.AccountLinkCreateParams.Type,
+  ) => {
     const accountsResponse = await fetch("/api/create-account-link", {
       method: "POST",
       headers: {
@@ -76,11 +79,12 @@ export const App: React.FC = () => {
       },
       body: JSON.stringify({
         accountId: row.id,
+        type: type,
       }),
     });
     const accountLink: Stripe.Response<Stripe.AccountLink> =
       await accountsResponse.json();
-    window.location.href = accountLink.url;
+    window.open(accountLink.url);
   };
 
   const getColumns = (): IColumn[] => {
@@ -105,27 +109,32 @@ export const App: React.FC = () => {
       },
       {
         key: "charges_enabled",
-        name: "Charges enabled",
+        name: "Action",
         minWidth: 300,
         onRender: (row: Stripe.Account) => {
           if (row.charges_enabled) {
             return (
               <>
-                y{" "}
                 <Link onClick={() => setShowCheckoutDialogForMerchant(row)}>
                   Create payment
                 </Link>
                 {" | "}
-                <Link onClick={() => onboardAccount(row)}>Onboard link</Link>
+                <Link onClick={() => onboardAccount(row, "account_onboarding")}>
+                  Onboard
+                </Link>
+                {" | "}
+                <Link onClick={() => onboardAccount(row, "account_update")}>
+                  Update
+                </Link>
               </>
             );
           } else {
             return (
               <>
-                reason: {row.requirements?.disabled_reason}
+                DisabledReason: {row.requirements?.disabled_reason}
                 {" | "}
-                <Link onClick={() => onboardAccount(row)}>
-                  Onboard link
+                <Link onClick={() => onboardAccount(row, "account_onboarding")}>
+                  Onboard
                 </Link>{" "}
               </>
             );
