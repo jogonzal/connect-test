@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== "production") {
   host = "http://localhost:3000";
 } else {
   console.log("Not loading environment variables from env");
-  host = "https://nodemongonextsample.herokuapp.com";
+  host = "https://jorgeconnectplatform.herokuapp.com";
 }
 
 export const hostUrl = host;
