@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import Stripe from "stripe";
 import { StripeClient } from "../../config/StripeUtils";
-import { Guid } from "../../utils/Guid";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,7 +13,7 @@ export default async function handler(
     console.log("Type is ", type);
 
     const account = await StripeClient.accounts.create({
-      type: type === "standard" ? "standard" : "express",
+      type: type as Stripe.Account.Type,
       country: "US",
       email: `jorgea@stripe.com`,
       business_profile: {

@@ -27,6 +27,7 @@ import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 const dropdownOptions: IDropdownOption[] = [
   { key: "standard", text: "standard" },
   { key: "express", text: "express" },
+  { key: "custom", text: "custom" },
 ];
 
 export const App: React.FC = () => {
