@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface IStripeConnectAppearance {
-  colors: {
+  colors?: {
     primary?: string;
     textLink?: string;
   };
@@ -14,8 +14,8 @@ export interface IStripeConnectUIConfig {
 export interface IStripeConnectInit {
   publishableKey: string;
   clientSecret: string;
-  // appearance: IStripeConnectAppearance;
-  // uiConfig?: IStripeConnectUIConfig;
+  appearance?: IStripeConnectAppearance;
+  uiConfig?: IStripeConnectUIConfig;
 }
 
 interface IStripeConnect {
