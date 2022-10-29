@@ -40,7 +40,9 @@ declare global {
     interface IntrinsicElements {
       ["stripe-payments-experience"]: CustomElement<{}>;
       ["stripe-payouts-experience"]: CustomElement<{}>;
-      ["stripe-account-onboarding-experience"]: CustomElement<{}>;
+      ["stripe-account-onboarding-experience"]: CustomElement<{
+        ref: React.RefObject<HTMLElement>;
+      }>;
       ["stripe-account-management-experience"]: CustomElement<{}>;
       ["stripe-instant-payouts-experience"]: CustomElement<{}>;
       ["stripe-payment-details-experience"]: CustomElement<{
