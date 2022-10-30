@@ -1,6 +1,5 @@
 import {
   PrimaryButton,
-  TextField,
   Text,
   Separator,
   DetailsList,
@@ -10,64 +9,33 @@ import {
   Stack,
   StackItem,
   IStackTokens,
-  Dialog,
-  IDropdownOption,
-  Dropdown,
   Spinner,
   SelectionMode,
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
-import { useCreateAccount } from "../hooks/useCreateAccount";
 import { useGetAccounts } from "../hooks/useGetAccounts";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
 import { CheckoutExperienceDialog } from "./CheckoutExperienceDialog";
+import { CreateAccountDialog } from "./CreateAccountDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 
-const dropdownOptions: IDropdownOption[] = [
-  { key: "standard", text: "standard" },
-  { key: "express", text: "express" },
-  { key: "custom", text: "custom" },
-];
-
 export const App: React.FC = () => {
-  const { data: accounts, isLoading, error, refetch } = useGetAccounts();
   const {
-    error: createError,
-    isLoading: createLoading,
-    data: createData,
-    reset: resetCreate,
-    mutateAsync: createAccountAsync,
-  } = useCreateAccount();
-  const [accountName, setAccountName] = React.useState("");
+    data: accounts,
+    isLoading: isGetAccountsLoading,
+    isFetching: isGetAccountsFetching,
+    error: isGetAccountsError,
+    refetch: refetchGetAccounts,
+  } = useGetAccounts();
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
   const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] =
     React.useState<Stripe.Account | undefined>(undefined);
   const [showPaymentDialogForMerchant, setShowPaymentDialogForMerchant] =
     React.useState<Stripe.Account | undefined>(undefined);
-  const [accountType, setAccountType] = React.useState<IDropdownOption>(
-    dropdownOptions[0],
-  );
-
-  const onSelectedAccountTypeChanged = (
-    _event: React.FormEvent<HTMLDivElement>,
-    item?: IDropdownOption,
-  ): void => {
-    setAccountType(item ?? dropdownOptions[0]);
-  };
-
-  const onCreateAccountClicked = async () => {
-    await createAccountAsync({
-      accountName,
-      accountType: accountType.key.toString(),
-    });
-    await refetch();
-  };
-
-  const onAccountNameChanged = (ev: any, val?: string) => {
-    setAccountName(val ?? "");
-  };
+  const [showCreateAccountDialog, setShowCreateAccountDialog] =
+    React.useState<boolean>(false);
 
   const onboardAccount = async (
     row: Stripe.Account,
@@ -181,46 +149,23 @@ export const App: React.FC = () => {
     ];
   };
 
-  const renderAccountDetailsDialog = () => {
-    if (!currentAccountFullDetails) return;
-    return (
-      <AccountDetailsDialog
-        account={currentAccountFullDetails}
-        onDismiss={() => setCurrentAccountFullDetails(undefined)}
-      />
-    );
-  };
-
   const stackTokens: IStackTokens = { maxWidth: 1000 };
 
-  if (error) {
+  if (isGetAccountsError) {
     return <Text>Failed to load accounts!</Text>;
   }
 
-  if (!accounts) {
+  if (isGetAccountsLoading || isGetAccountsFetching || accounts === undefined) {
     return <Spinner label="Loading accounts..." />;
-  }
-
-  if (createError) {
-    return <Text>An error ocurred when creating the account.</Text>;
-  }
-
-  if (createLoading) {
-    return <Spinner label="Creating an account..." />;
-  }
-
-  if (createData) {
-    return (
-      <>
-        <pre>{JSON.stringify(createData, null, "\t")}</pre>
-        <PrimaryButton onClick={resetCreate}>Ok</PrimaryButton>
-      </>
-    );
   }
 
   return (
     <>
-      {renderAccountDetailsDialog()}
+      {/* Render dialogs */}
+      <AccountDetailsDialog
+        account={currentAccountFullDetails}
+        onDismiss={() => setCurrentAccountFullDetails(undefined)}
+      />
       <CheckoutExperienceDialog
         account={showCheckoutDialogForMerchant}
         onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
@@ -233,6 +178,17 @@ export const App: React.FC = () => {
         account={showPaymentDialogForMerchant}
         onDismiss={() => setShowPaymentDialogForMerchant(undefined)}
       />
+      {showCreateAccountDialog && (
+        <CreateAccountDialog
+          onAccountCreated={(_account: Stripe.Account) => {
+            setShowCreateAccountDialog(false);
+            refetchGetAccounts({});
+          }}
+          onDismiss={() => {
+            setShowCreateAccountDialog(false);
+          }}
+        />
+      )}
 
       <Stack horizontalAlign="center">
         <StackItem tokens={stackTokens}>
@@ -245,25 +201,16 @@ export const App: React.FC = () => {
                 <StackItem>
                   <Text>Total Accounts: {accounts.length}</Text>
                 </StackItem>
+                <StackItem>
+                  <PrimaryButton
+                    onClick={() => setShowCreateAccountDialog(true)}
+                  >
+                    Create account
+                  </PrimaryButton>
+                </StackItem>
               </Stack>
             </StackItem>
             <Separator />
-            <Stack horizontal>
-              <PrimaryButton onClick={onCreateAccountClicked}>
-                Create account
-              </PrimaryButton>
-              <TextField
-                onChange={onAccountNameChanged}
-                value={accountName}
-                placeholder="Account name"
-              />
-              <Dropdown
-                selectedKey={accountType ? accountType.key : undefined}
-                onChange={onSelectedAccountTypeChanged}
-                placeholder="Select an option"
-                options={dropdownOptions}
-              />
-            </Stack>
             <Separator />
             {accounts && (
               <DetailsList

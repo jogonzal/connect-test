@@ -14,52 +14,22 @@ import * as React from "react";
 import { Stripe } from "stripe";
 
 type Props = {
-  account: Stripe.Account;
+  account?: Stripe.Account;
   onDismiss: () => void;
 };
 
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
-  const getColumns = (): IColumn[] => {
-    return [
-      {
-        key: "id",
-        name: "id",
-        minWidth: 100,
-        onRender: (row: Stripe.PaymentIntent) => row.id,
-      },
-      {
-        key: "status",
-        name: "status",
-        minWidth: 100,
-        onRender: (row: Stripe.PaymentIntent) => row.status,
-      },
-      {
-        key: "amount",
-        name: "amount",
-        minWidth: 100,
-        onRender: (row: Stripe.PaymentIntent) => row.amount,
-      },
-      {
-        key: "currency",
-        name: "currency",
-        minWidth: 100,
-        onRender: (row: Stripe.PaymentIntent) => row.currency,
-      },
-      {
-        key: "app_fees",
-        name: "app_fees",
-        minWidth: 100,
-        onRender: (row: Stripe.PaymentIntent) => row.application_fee_amount,
-      },
-    ];
-  };
+  const account = props.account;
+  if (!account) {
+    return null;
+  }
 
   return (
     <>
       <Dialog hidden={false} onDismiss={props.onDismiss} minWidth={800}>
         <Stack>
           <StackItem>
-            <Text variant="large">Account {props.account.id}</Text>
+            <Text variant="large">Account {account.id}</Text>
           </StackItem>
           <PrimaryButton
             onClick={async () => {
@@ -69,7 +39,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  accountId: props.account.id,
+                  accountId: account.id,
                 }),
               });
             }}
@@ -80,7 +50,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
             <TextField
               multiline
               rows={20}
-              value={JSON.stringify(props.account, null, 2)}
+              value={JSON.stringify(account, null, 2)}
               width={800}
             />
           </StackItem>
