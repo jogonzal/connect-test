@@ -16,7 +16,7 @@ export const PaymentDetailsUI: React.FC<Props> = ({
       return;
     }
     const currentElement = elementRef.current;
-    const eventListener = (_event: Event) => {
+    const handleHiddenEvent = (_event: Event) => {
       // eslint-disable-next-line no-console
       console.log("Element has been hidden");
       onPaymentDetailsHide();
@@ -24,9 +24,9 @@ export const PaymentDetailsUI: React.FC<Props> = ({
 
     console.log("Added event listener");
 
-    currentElement.addEventListener("close", eventListener);
+    currentElement.addEventListener("close", handleHiddenEvent);
     return () => {
-      currentElement.removeEventListener("close", eventListener);
+      currentElement.removeEventListener("close", handleHiddenEvent);
     };
   }, [elementRef, onPaymentDetailsHide]);
 

@@ -14,11 +14,12 @@ export const OnboardingExperienceExample: React.FC = () => {
     );
   }
 
-  return (
-    <OnboardingExperience
-      onOnboardingComplete={() => setAccountOnboarded(true)}
-    />
-  );
+  const onOnboardingComplete = (chargesEnabled: boolean) => {
+    setAccountOnboarded(true);
+    setChargesEnabled(chargesEnabled);
+  };
+
+  return <OnboardingExperience onOnboardingComplete={onOnboardingComplete} />;
 };
 
 type Props = {
