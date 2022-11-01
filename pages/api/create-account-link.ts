@@ -17,7 +17,7 @@ export default async function handler(
       account: accountId,
       refresh_url: redirectUrl,
       return_url: redirectUrl,
-      type: "account_onboarding",
+      type: req.body.type,
     });
 
     console.log("Created link!", accountLink);
