@@ -17,7 +17,7 @@ export default async function handler(
     const account = await StripeClient.accounts.create({
       type: type as Stripe.Account.Type,
       country: "US",
-      email: email ? email : undefined,
+      ...(email ? { email } : {}),
       business_profile: {
         name: name,
       },
