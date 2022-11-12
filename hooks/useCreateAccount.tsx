@@ -4,6 +4,7 @@ import Stripe from "stripe";
 export type Params = {
   accountName: string;
   accountType: string;
+  email: string;
 };
 
 export const useCreateAccount = () => {
@@ -18,6 +19,7 @@ export const useCreateAccount = () => {
         body: JSON.stringify({
           name: params.accountName,
           type: params.accountType,
+          email: params.email,
         }),
       });
       const account = await accountsResponse.json();

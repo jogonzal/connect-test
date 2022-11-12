@@ -36,6 +36,7 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
   const [accountType, setAccountType] = React.useState<IDropdownOption>(
     dropdownOptions[0],
   );
+  const [email, setEmail] = React.useState("");
 
   const onSelectedAccountTypeChanged = (
     _event: React.FormEvent<HTMLDivElement>,
@@ -48,10 +49,15 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
     setAccountName(val ?? "");
   };
 
+  const onEmailChanged = (ev: any, val?: string) => {
+    setEmail(val ?? "");
+  };
+
   const onCreateAccountClicked = async () => {
     const account = await createAccountAsync({
       accountName,
       accountType: accountType.key.toString(),
+      email: email,
     });
     props.onAccountCreated(account);
   };
@@ -84,6 +90,12 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
           onChange={onAccountNameChanged}
           value={accountName}
           placeholder="Account name"
+        />
+        <TextField
+          label="Email"
+          onChange={onEmailChanged}
+          value={email}
+          placeholder="Email"
         />
         <Dropdown
           selectedKey={accountType ? accountType.key : undefined}

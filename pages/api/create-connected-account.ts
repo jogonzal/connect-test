@@ -11,11 +11,13 @@ export default async function handler(
     console.log("Name is ", name);
     const type: string = req.body.type;
     console.log("Type is ", type);
+    const email: string = req.body.type;
+    console.log("Email is ", email);
 
     const account = await StripeClient.accounts.create({
       type: type as Stripe.Account.Type,
       country: "US",
-      email: `jorgea@stripe.com`,
+      email: email || `jorgea@stripe.com`,
       business_profile: {
         name: name,
       },
