@@ -11,7 +11,7 @@ export default async function handler(
     console.log("Name is ", name);
     const type: string = req.body.type;
     console.log("Type is ", type);
-    const email: string = req.body.type;
+    const email: string = req.body.email;
     console.log("Email is ", email);
 
     const account = await StripeClient.accounts.create({
