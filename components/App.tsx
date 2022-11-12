@@ -67,7 +67,7 @@ export const App: React.FC = () => {
       {
         key: "id",
         name: "ID",
-        minWidth: 140,
+        minWidth: 160,
         onRender: (row: Stripe.Account) => row?.id,
       },
       {
