@@ -79,7 +79,7 @@ export const App: React.FC = () => {
       {
         key: "charges_enabled",
         name: "Action",
-        minWidth: 300,
+        minWidth: 320,
         onRender: (row: Stripe.Account) => {
           if (row.charges_enabled) {
             return (
