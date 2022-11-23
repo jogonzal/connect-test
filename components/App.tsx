@@ -217,9 +217,6 @@ export const App: React.FC = () => {
                   <Text variant="large">Merchant management test app</Text>
                 </StackItem>
                 <StackItem>
-                  <Text>Total Accounts: {accounts.data.length}</Text>
-                </StackItem>
-                <StackItem>
                   <PrimaryButton
                     onClick={() => setShowCreateAccountDialog(true)}
                   >
