@@ -229,7 +229,6 @@ export const App: React.FC = () => {
               </Stack>
             </StackItem>
             <Separator />
-            <Separator />
             {accounts && (
               <DetailsList
                 items={accounts.data}
