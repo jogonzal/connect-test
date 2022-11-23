@@ -21,13 +21,16 @@ import { CreateAccountDialog } from "./CreateAccountDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 
 export const App: React.FC = () => {
+  const [startingAfterStack, setStartingAfterStack] = React.useState<string[]>(
+    [],
+  );
   const {
     data: accounts,
     isLoading: isGetAccountsLoading,
     isFetching: isGetAccountsFetching,
     error: isGetAccountsError,
     refetch: refetchGetAccounts,
-  } = useGetAccounts();
+  } = useGetAccounts(startingAfterStack[startingAfterStack.length - 1]);
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
   const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] =
@@ -159,6 +162,21 @@ export const App: React.FC = () => {
     return <Spinner label="Loading accounts..." />;
   }
 
+  const onPreviousClicked = () => {
+    const newList = [...startingAfterStack];
+    newList.pop();
+    setStartingAfterStack(newList);
+  };
+
+  const onNextClicked = () => {
+    if (!accounts || !accounts.data) {
+      return;
+    }
+    const newList = [...startingAfterStack];
+    newList.push(accounts.data[accounts.data.length - 1].id);
+    setStartingAfterStack(newList);
+  };
+
   return (
     <>
       {/* Render dialogs */}
@@ -199,7 +217,7 @@ export const App: React.FC = () => {
                   <Text variant="large">Merchant management test app</Text>
                 </StackItem>
                 <StackItem>
-                  <Text>Total Accounts: {accounts.length}</Text>
+                  <Text>Total Accounts: {accounts.data.length}</Text>
                 </StackItem>
                 <StackItem>
                   <PrimaryButton
@@ -214,12 +232,28 @@ export const App: React.FC = () => {
             <Separator />
             {accounts && (
               <DetailsList
-                items={accounts}
+                items={accounts.data}
                 columns={getColumns()}
                 layoutMode={DetailsListLayoutMode.justified}
                 selectionMode={SelectionMode.none}
               />
             )}
+            <StackItem>
+              <Stack horizontal>
+                <PrimaryButton
+                  disabled={startingAfterStack.length == 0}
+                  onClick={onPreviousClicked}
+                >
+                  Previous
+                </PrimaryButton>
+                <PrimaryButton
+                  disabled={!accounts.has_more}
+                  onClick={onNextClicked}
+                >
+                  Next
+                </PrimaryButton>
+              </Stack>
+            </StackItem>
           </Stack>
         </StackItem>
       </Stack>
