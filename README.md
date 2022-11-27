@@ -12,6 +12,4 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 # Wishlist
 
-1. Query params for "current account" that refresh the page
-2. Ability to test all connect elements
-3. Move off of nextjs and into a simple parcel/nodejs setup
+1. Ability to test all connect elements
