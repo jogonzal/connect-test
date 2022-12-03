@@ -7,6 +7,7 @@
     "start": "next start -p $PORT",
     "lint": "next lint",
     "types": "tsc --noemit",
+    "typescript-check": "npm run types",
     "validate-change": "npm run types && npm run lint",
     "validate-changes": "npm run validate-change"
   },
