@@ -1,5 +1,10 @@
 import React, { FormEvent } from "react";
-import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import {
+  useStripe,
+  useElements,
+  CardElement,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
 
 import { CardSection } from "./CardSection";
 import { PrimaryButton, Separator, Spinner } from "@fluentui/react";
@@ -7,6 +12,7 @@ import { PrimaryButton, Separator, Spinner } from "@fluentui/react";
 interface Props {
   paymentIntentSecret: string;
   onSuccessfulPayment: () => void;
+  usePaymentUI: boolean;
 }
 
 export const CheckoutForm: React.FC<Props> = (props) => {
@@ -74,11 +80,18 @@ export const CheckoutForm: React.FC<Props> = (props) => {
   return (
     <>
       {renderSpinner()}
-      <div style={{ display: performingPayment ? "none" : "block" }}>
-        <CardSection />
-        <Separator />
-        <PrimaryButton onClick={onPerformPaymentClicked}>Pay</PrimaryButton>
-      </div>
+      {props.usePaymentUI ? (
+        <form>
+          <PaymentElement />
+          <button>Submit</button>
+        </form>
+      ) : (
+        <div style={{ display: performingPayment ? "none" : "block" }}>
+          <CardElement />
+          <Separator />
+          <PrimaryButton onClick={onPerformPaymentClicked}>Pay</PrimaryButton>
+        </div>
+      )}
     </>
   );
 };

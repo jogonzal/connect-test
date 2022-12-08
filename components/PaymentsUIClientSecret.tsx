@@ -10,6 +10,7 @@ type Props = {
   secret: string;
   destinationCharge: boolean;
   onSuccessfulPayment: () => void;
+  usePaymentUI: boolean;
 };
 
 export const PaymentsUIClientSecret: React.FC<Props> = (props) => {
@@ -37,10 +38,23 @@ export const PaymentsUIClientSecret: React.FC<Props> = (props) => {
   }
 
   return (
-    <Elements stripe={stripePromise}>
+    <Elements
+      stripe={stripePromise}
+      options={{
+        appearance: {
+          // theme: "night",
+          variables: {
+            colorText: "yellow",
+            // colorBackground: "yellow",
+          },
+        },
+        clientSecret: props.secret,
+      }}
+    >
       <CheckoutForm
         paymentIntentSecret={props.secret}
         onSuccessfulPayment={props.onSuccessfulPayment}
+        usePaymentUI={props.usePaymentUI}
       />
     </Elements>
   );

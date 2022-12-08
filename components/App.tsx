@@ -184,14 +184,16 @@ export const App: React.FC = () => {
         account={currentAccountFullDetails}
         onDismiss={() => setCurrentAccountFullDetails(undefined)}
       />
-      <CheckoutExperienceDialog
-        account={showCheckoutDialogForMerchant}
-        onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
-        onSuccessfulPayment={(account) => {
-          setCurrentAccountFullDetails(account);
-          setShowCheckoutDialogForMerchant(undefined);
-        }}
-      />
+      {showCheckoutDialogForMerchant && (
+        <CheckoutExperienceDialog
+          account={showCheckoutDialogForMerchant}
+          onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
+          onSuccessfulPayment={(account) => {
+            setCurrentAccountFullDetails(account);
+            setShowCheckoutDialogForMerchant(undefined);
+          }}
+        />
+      )}
       <PaymentUIExperienceDialog
         account={showPaymentDialogForMerchant}
         onDismiss={() => setShowPaymentDialogForMerchant(undefined)}

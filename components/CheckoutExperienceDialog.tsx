@@ -13,7 +13,7 @@ import { Stripe } from "stripe";
 import { PaymentsUIClientSecret } from "./PaymentsUIClientSecret";
 
 type Props = {
-  account: Stripe.Account | undefined;
+  account: Stripe.Account;
   onDismiss: () => void;
   onSuccessfulPayment: (account: Stripe.Account) => void;
 };
@@ -22,6 +22,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
   const [productName, setProductName] = React.useState("Test product");
   const [amount, setAmount] = React.useState(1000);
   const [applicationFee, setApplicationFee] = React.useState(100);
+  const [paymentUI, setPaymentUI] = React.useState<boolean>(false);
   const [destinationCharge, setDestinationCharge] =
     React.useState<boolean>(false);
   const [useTransferAmount, setUseTransferAmount] =
@@ -31,9 +32,6 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
   >(undefined);
 
   const currentAccountFullDetails = props.account;
-  if (!currentAccountFullDetails) {
-    return null;
-  }
 
   const onCheckoutClicked = () => {
     const params: Record<string, string> = {
@@ -50,6 +48,27 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
   };
 
   const onPaymentUIClicked = async () => {
+    setPaymentUI(true);
+    const paymentIntentResponse = await fetch("/api/create-payment-intent", {
+      method: "post",
+      body: JSON.stringify({
+        amount,
+        productName,
+        applicationFee,
+        connectedAccountId: currentAccountFullDetails.id,
+        destinationCharge: destinationCharge,
+        useTransferAmount: destinationCharge && useTransferAmount,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const clientSecret: string = await paymentIntentResponse.text();
+    setPaymentsUIClientSecret(clientSecret);
+  };
+
+  const onCardUIClicked = async () => {
     const paymentIntentResponse = await fetch("/api/create-payment-intent", {
       method: "post",
       body: JSON.stringify({
@@ -85,6 +104,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
               onSuccessfulPayment={() =>
                 props.onSuccessfulPayment(currentAccountFullDetails)
               }
+              usePaymentUI={paymentUI}
             />
           </StackItem>
         </Stack>
@@ -130,6 +150,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
         <StackItem>
           <PrimaryButton onClick={onCheckoutClicked}>Checkout</PrimaryButton>
           <PrimaryButton onClick={onPaymentUIClicked}>Payment UI</PrimaryButton>
+          <PrimaryButton onClick={onCardUIClicked}>Card UI</PrimaryButton>
         </StackItem>
       </Stack>
     );
