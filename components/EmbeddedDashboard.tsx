@@ -119,6 +119,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
       <PivotItem headerText="Payments">
         <stripe-payments-experience />
       </PivotItem>
+      <PivotItem headerText="Payouts">
+        <stripe-payouts-experience />
+      </PivotItem>
       <PivotItem headerText="Payment details">
         {renderPaymentDetailUI()}
         <Stack>
@@ -142,6 +145,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
       </PivotItem>
       <PivotItem headerText="Embedded onboarding">
         <OnboardingExperienceExample />
+      </PivotItem>
+      <PivotItem headerText="Account management">
+        <stripe-account-management-experience />
       </PivotItem>
       <PivotItem headerText="Isolation test">
         <ExtractChargeFromStripeElements />
