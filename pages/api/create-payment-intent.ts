@@ -21,6 +21,18 @@ export default async function handler(
 
     console.log("Redirect url is ", redirectUrl);
 
+    const customer = await StripeClient.customers.create(
+      {
+        name: "jorge",
+        email: "jorgea@stripe.com",
+      },
+      destinationCharge
+        ? undefined
+        : {
+            stripeAccount: connectedAccountId,
+          },
+    );
+
     const paymentIntent = await StripeClient.paymentIntents.create(
       {
         payment_method_types: ["card"],
@@ -40,6 +52,7 @@ export default async function handler(
                   : {}),
               },
             }),
+        customer: customer.id,
       },
       destinationCharge
         ? undefined
