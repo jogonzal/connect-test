@@ -71,6 +71,23 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         >
           Prefill account
         </PrimaryButton>
+        <PrimaryButton
+          onClick={async () => {
+            const response = await fetch("/api/express-login-link", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                accountId: account.id,
+              }),
+            });
+            const json = await response.json();
+            console.log(json);
+          }}
+        >
+          Express login link
+        </PrimaryButton>
         <StackItem>
           <TextField
             multiline

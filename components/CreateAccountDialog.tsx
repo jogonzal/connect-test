@@ -22,6 +22,7 @@ const dropdownOptions: IDropdownOption[] = [
   { key: "standard", text: "standard" },
   { key: "express", text: "express" },
   { key: "custom", text: "custom" },
+  { key: "UA7", text: "UA7" },
 ];
 
 export const CreateAccountDialog: React.FC<Props> = (props) => {

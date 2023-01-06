@@ -1922,10 +1922,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-qs@^6.6.0:
-  version "6.10.2"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.2.tgz#c1431bea37fc5b24c5bdbafa20f16bdf2a4b9ffe"
-  integrity sha512-mSIdjzqznWgfd4pMii7sHtaYF8rx8861hBO80SraY5GT0XQibWZWJSid0avzHGkDIZLImux2S5mXO0Hfct2QCw==
+qs@^6.11.0:
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.0.tgz#fd0d963446f7a65e1367e01abd85429453f0c37a"
+  integrity sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==
   dependencies:
     side-channel "^1.0.4"
 
@@ -2162,13 +2162,13 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-stripe@^8.195.0:
-  version "8.195.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-8.195.0.tgz#4d253e247aadb64d972488da9481fff743b58a11"
-  integrity sha512-pXEZFNJb4p9uZ69+B4A+zJEmBiFw3BzNG51ctPxUZij7ghFTnk2/RuUHmSGto2XVCcC46uG75czXVAvCUkOGtQ==
+stripe@^11.7.0-beta.1:
+  version "11.7.0-beta.1"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-11.7.0-beta.1.tgz#ef14666897b87cb6c30e966635d677b12ce662ac"
+  integrity sha512-o/cphhGI1KhMBKrVxQefuvOcQ9F6kL8nJjCmd7YFyoON9ugp1Lvo/JRW948VBeNJ4jjN/zjEV9MwaeV4njA1nw==
   dependencies:
     "@types/node" ">=8.1.0"
-    qs "^6.6.0"
+    qs "^6.11.0"
 
 styled-jsx@5.0.7:
   version "5.0.7"
