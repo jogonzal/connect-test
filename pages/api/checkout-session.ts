@@ -44,10 +44,15 @@ export default async function handler(
         payment_method_types: ["card"],
         line_items: [
           {
-            name: productName,
-            amount: amount,
-            currency: currency,
             quantity: quantity,
+            price_data: {
+              currency: currency,
+              unit_amount: amount,
+              product_data: {
+                name: productName,
+                description: productName,
+              },
+            },
           },
         ],
         payment_intent_data: {
