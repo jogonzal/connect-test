@@ -23,6 +23,24 @@ export default async function handler(
       { requested: true },
     );
 
+    const capability3 = await StripeClient.accounts.updateCapability(
+      connectedAccountId,
+      "eps_payments",
+      { requested: true },
+    );
+
+    const capability4 = await StripeClient.accounts.updateCapability(
+      connectedAccountId,
+      "giropay_payments",
+      { requested: true },
+    );
+
+    const capability5 = await StripeClient.accounts.updateCapability(
+      connectedAccountId,
+      "bancontact_payments",
+      { requested: true },
+    );
+
     console.log("Obtained account!", connectedAccountId);
 
     res.status(200).send({});

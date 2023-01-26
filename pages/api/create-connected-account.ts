@@ -13,63 +13,99 @@ export default async function handler(
     console.log("Type is ", type);
     const email: string = req.body.email;
     console.log("Email is ", email);
+    const prefill: string = req.body.prefill;
+    console.log("prefill is ", prefill);
 
-    let account;
-    if (type === "UA7") {
-      account = await StripeClient.accounts.create(
-        {
-          country: "US",
-          ...(email ? { email } : {}),
-          business_profile: {
-            name: name,
-          },
-          capabilities: {
-            card_payments: {
-              requested: true,
-            },
-            transfers: {
-              requested: true,
-            },
-          },
-          // Specify parameters to indicate an account with no dashboard, where Stripe owns loss liability and onboarding and the platform owns pricing
-          controller: {
-            application: {
-              loss_liable: false, // Stripe owns loss liability
-              onboarding_owner: false, // Stripe is the onboarding owner
-              pricing_controls: true, // The platform is the pricing owner
-            },
-            dashboard: {
-              type: "none", // The connected account will not have access to dashboard
-            },
-          },
-        } as any,
-        {
-          apiVersion:
-            "2022-08-01; embedded_connect_beta=v1;unified_accounts_beta=v1",
-        },
-      );
+    let accountParams: Stripe.AccountCreateParams = {
+      country: "US",
+      ...(email ? { email } : {}),
+      business_profile: {
+        name: name,
+      },
+    };
+    if (type === "standard" || type === "express" || type === "custom") {
+      accountParams.type = type;
     } else {
-      account = await StripeClient.accounts.create({
-        type: type as Stripe.Account.Type,
-        country: "US",
-        ...(email ? { email } : {}),
-        business_profile: {
-          name: name,
+      accountParams.controller = {
+        application: {
+          loss_liable: false, // Stripe owns loss liability
+          onboarding_owner: false, // Stripe is the onboarding owner
+          pricing_controls: true, // The platform is the pricing owner
         },
-        ...(type === "standard"
-          ? {}
-          : {
-              capabilities: {
-                card_payments: {
-                  requested: true,
-                },
-                transfers: {
-                  requested: true,
-                },
-              },
-            }),
-      });
+        dashboard: {
+          type: "none", // The connected account will not have access to dashboard
+        },
+      };
     }
+
+    if (type === "custom" || type === "express" || type === "UA7") {
+      accountParams.capabilities = {
+        card_payments: {
+          requested: true,
+        },
+        transfers: {
+          requested: true,
+        },
+      };
+    }
+
+    if (prefill) {
+      const bankAccountToken = (
+        await StripeClient.tokens.create({
+          bank_account: {
+            country: "US",
+            currency: "usd",
+            account_holder_name: "Jenny Rosen",
+            account_holder_type: "individual",
+            routing_number: "110000000",
+            account_number: "000123456789",
+          },
+        })
+      ).id;
+
+      accountParams.external_account = bankAccountToken;
+      accountParams = {
+        ...accountParams,
+        country: "US",
+        email: email ?? "jorgea@stripe.com",
+        business_type: "individual",
+        business_profile: {
+          mcc: "7299",
+          name: "Some name",
+          product_description: "Description",
+          support_address: {
+            line1: "354 Oyster Point Blvd",
+            city: "South San Francisco",
+            state: "CA",
+            postal_code: "94080",
+          },
+          support_email: "jorgea@stripe.com",
+          support_phone: "4257537116",
+          support_url: "https://furever.dev",
+          url: "https://furever.dev",
+        },
+        individual: {
+          first_name: "Jenny",
+          last_name: "Rosen",
+          email: "jenny.rosen@example.com",
+          address: {
+            line1: "354 Oyster Point Blvd",
+            city: "South San Francisco",
+            state: "CA",
+            postal_code: "94080",
+          },
+          dob: {
+            day: 1,
+            month: 1,
+            year: 1990,
+          },
+          phone: "4257537115",
+          ssn_last_4: "1234",
+        },
+      };
+    }
+
+    const account = await StripeClient.accounts.create(accountParams);
 
     console.log("Created!", account);
 

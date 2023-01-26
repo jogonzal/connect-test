@@ -5,6 +5,7 @@ export type Params = {
   accountName: string;
   accountType: string;
   email: string;
+  prefill: boolean;
 };
 
 export const useCreateAccount = () => {
@@ -20,6 +21,7 @@ export const useCreateAccount = () => {
           name: params.accountName,
           type: params.accountType,
           email: params.email,
+          prefill: params.prefill,
         }),
       });
       const account = await accountsResponse.json();

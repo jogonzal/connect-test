@@ -9,7 +9,7 @@ export default async function handler(
   console.log("Starting after", starting_after);
   try {
     const accounts = await StripeClient.accounts.list({
-      limit: 100,
+      limit: 20,
       ...(starting_after ? { starting_after } : {}),
     });
 

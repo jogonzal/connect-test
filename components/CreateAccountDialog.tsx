@@ -8,6 +8,7 @@ import {
   Spinner,
   Dialog,
   IStackTokens,
+  Checkbox,
 } from "@fluentui/react";
 import * as React from "react";
 import Stripe from "stripe";
@@ -37,6 +38,7 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
   const [accountType, setAccountType] = React.useState<IDropdownOption>(
     dropdownOptions[0],
   );
+  const [prefill, setPrefill] = React.useState(false);
   const [email, setEmail] = React.useState("");
 
   const onSelectedAccountTypeChanged = (
@@ -59,6 +61,7 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
       accountName,
       accountType: accountType.key.toString(),
       email: email,
+      prefill,
     });
     props.onAccountCreated(account);
   };
@@ -104,6 +107,11 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
           placeholder="Select an option"
           options={dropdownOptions}
           label="Account type"
+        />
+        <Checkbox
+          checked={prefill}
+          onChange={(_ev, val) => setPrefill(val ?? false)}
+          label="Prefill account"
         />
         <PrimaryButton onClick={onCreateAccountClicked}>
           Create account
