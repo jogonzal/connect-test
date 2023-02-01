@@ -38,14 +38,15 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
-      ["stripe-payments-experience"]: CustomElement<{}>;
-      ["stripe-payouts-experience"]: CustomElement<{}>;
-      ["stripe-account-onboarding-experience"]: CustomElement<{
+      ["stripe-connect-payments"]: CustomElement<{}>;
+      ["stripe-connect-payouts"]: CustomElement<{}>;
+      ["stripe-connect-account-onboarding"]: CustomElement<{
         ref: React.RefObject<HTMLElement>;
       }>;
-      ["stripe-account-management-experience"]: CustomElement<{}>;
-      ["stripe-instant-payouts-experience"]: CustomElement<{}>;
-      ["stripe-payment-details-experience"]: CustomElement<{
+      ["stripe-connect-account-management"]: CustomElement<{}>;
+      ["stripe-connect-instant-payouts"]: CustomElement<{}>;
+      ["stripe-connect-debug-utils"]: CustomElement<{}>;
+      ["stripe-connect-payment-details"]: CustomElement<{
         hidden: string | null;
         "charge-id": string | null;
         ref: React.RefObject<HTMLElement>;

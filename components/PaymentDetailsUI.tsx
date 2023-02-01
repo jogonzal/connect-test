@@ -31,6 +31,6 @@ export const PaymentDetailsUI: React.FC<Props> = ({
   }, [elementRef, onPaymentDetailsHide]);
 
   return (
-    <stripe-payment-details-experience charge-id={chargeId} ref={elementRef} />
+    <stripe-connect-payment-details charge-id={chargeId} ref={elementRef} />
   );
 };

@@ -52,5 +52,5 @@ const OnboardingExperience: React.FC<Props> = ({ onOnboardingComplete }) => {
     };
   }, [ref, onOnboardingComplete]);
 
-  return <stripe-account-onboarding-experience ref={ref} />;
+  return <stripe-connect-account-onboarding ref={ref} />;
 };

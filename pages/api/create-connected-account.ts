@@ -102,10 +102,25 @@ export default async function handler(
           phone: "4257537115",
           ssn_last_4: "1234",
         },
+        settings: {
+          card_payments: {
+            statement_descriptor_prefix: "FurEver",
+            statement_descriptor_prefix_kana: null,
+            statement_descriptor_prefix_kanji: null,
+          },
+          payments: {
+            statement_descriptor: "FurEver",
+            statement_descriptor_kana: undefined,
+            statement_descriptor_kanji: undefined,
+          },
+        },
       };
     }
 
-    const account = await StripeClient.accounts.create(accountParams);
+    const account = await StripeClient.accounts.create(accountParams, {
+      apiVersion:
+        "2022-11-15; embedded_connect_beta=v1;unified_accounts_beta=v1",
+    });
 
     console.log("Created!", account);
 

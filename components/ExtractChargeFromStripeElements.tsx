@@ -9,7 +9,7 @@ export const ExtractChargeFromStripeElements: React.FC = () => {
   const extractFirstChargeInfo = () => {
     const rows = [
       ...(document
-        .getElementsByTagName("stripe-payments-experience")[0]
+        .getElementsByTagName("stripe-connect-payments")[0]
         ?.shadowRoot?.querySelectorAll(
           '[data-testid="Payments-table-first-row"]',
         ) || []),

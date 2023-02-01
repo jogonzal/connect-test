@@ -56,6 +56,20 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     return <Spinner label="Loading charges..." />;
   }
 
+  const loginAsExpress = async () => {
+    const response = await fetch("/api/express-login-link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accountId: props.account.id,
+      }),
+    });
+    const json = await response.json();
+    window.open(json.url);
+  };
+
   const getColumns = (): IColumn[] => {
     return [
       {
@@ -117,10 +131,10 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   return (
     <Pivot>
       <PivotItem headerText="Payments">
-        <stripe-payments-experience />
+        <stripe-connect-payments />
       </PivotItem>
       <PivotItem headerText="Payouts">
-        <stripe-payouts-experience />
+        <stripe-connect-payouts />
       </PivotItem>
       <PivotItem headerText="Payment details">
         {renderPaymentDetailUI()}
@@ -147,11 +161,17 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         <OnboardingExperienceExample />
       </PivotItem>
       <PivotItem headerText="Account management">
-        <stripe-account-management-experience />
+        <stripe-connect-account-management />
       </PivotItem>
       <PivotItem headerText="Isolation test">
         <ExtractChargeFromStripeElements />
-        <stripe-payments-experience />
+        <stripe-connect-payments />
+      </PivotItem>
+      <PivotItem headerText="Debug">
+        <stripe-connect-debug-utils />
+      </PivotItem>
+      <PivotItem headerText="Express">
+        <PrimaryButton onClick={loginAsExpress}>Login as express</PrimaryButton>
       </PivotItem>
     </Pivot>
   );

@@ -83,7 +83,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
               }),
             });
             const json = await response.json();
-            console.log(json);
+            console.log(json.url);
           }}
         >
           Express login link
