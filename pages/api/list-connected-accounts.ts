@@ -6,7 +6,6 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const starting_after = req.body.starting_after ?? undefined;
-  console.log("Starting after", starting_after);
   try {
     const accounts = await StripeClient.accounts.list({
       limit: 20,
