@@ -249,7 +249,7 @@ export const App: React.FC = () => {
             <StackItem>
               <Stack>
                 <StackItem>
-                  <Text variant="large">Jorgea's connect test app</Text>
+                  <Text variant="large">Jorgea&apos;s connect test app</Text>
                 </StackItem>
                 <StackItem>
                   <PrimaryButton
