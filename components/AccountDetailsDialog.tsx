@@ -13,6 +13,7 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useGetAccount } from "../hooks/useGetAccount";
+import { embeddedDashboardUrl } from "../utils/urls";
 
 type Props = {
   account?: Stripe.Account;
@@ -40,6 +41,9 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         <StackItem>
           <Text variant="large">Account {account.id}</Text>
         </StackItem>
+        <PrimaryButton href={embeddedDashboardUrl(account.id)}>
+          Embedded dashboard
+        </PrimaryButton>
         <PrimaryButton
           onClick={async () => {
             const response = await fetch("/api/add-capabilities", {
@@ -71,23 +75,25 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         >
           Prefill account
         </PrimaryButton>
-        <PrimaryButton
-          onClick={async () => {
-            const response = await fetch("/api/express-login-link", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                accountId: account.id,
-              }),
-            });
-            const json = await response.json();
-            console.log(json.url);
-          }}
-        >
-          Express login link
-        </PrimaryButton>
+        {account.type === "express" && (
+          <PrimaryButton
+            onClick={async () => {
+              const response = await fetch("/api/express-login-link", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  accountId: account.id,
+                }),
+              });
+              const json = await response.json();
+              console.log(json.url);
+            }}
+          >
+            Express login link
+          </PrimaryButton>
+        )}
         <StackItem>
           <TextField
             multiline

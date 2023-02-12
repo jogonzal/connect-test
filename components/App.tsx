@@ -15,6 +15,8 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useGetAccounts } from "../hooks/useGetAccounts";
+import { getReadableAccountType } from "../utils/getReadableAccountType";
+import { embeddedDashboardUrl } from "../utils/urls";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
 import { CheckoutExperienceDialog } from "./CheckoutExperienceDialog";
 import { CreateAccountDialog } from "./CreateAccountDialog";
@@ -27,7 +29,6 @@ export const App: React.FC = () => {
   const {
     data: accounts,
     isLoading: isGetAccountsLoading,
-    isFetching: isGetAccountsFetching,
     error: isGetAccountsError,
     refetch: refetchGetAccounts,
   } = useGetAccounts(startingAfterStack[startingAfterStack.length - 1]);
@@ -77,7 +78,7 @@ export const App: React.FC = () => {
         key: "type",
         name: "Account Type",
         minWidth: 100,
-        onRender: (row: Stripe.Account) => row.type,
+        onRender: (row: Stripe.Account) => getReadableAccountType(row),
       },
       {
         key: "charges_enabled",
@@ -133,7 +134,7 @@ export const App: React.FC = () => {
         onRender: (row: Stripe.Account) => {
           const toRender = [];
           const accountId = row.id;
-          const url = `/embeddedDashboard?account=${accountId}`;
+          const url = embeddedDashboardUrl(accountId);
           toRender.push(<Link href={url}>Embedded</Link>);
 
           if (row.type === "express") {
@@ -154,14 +155,6 @@ export const App: React.FC = () => {
 
   const stackTokens: IStackTokens = { maxWidth: 1000 };
 
-  if (isGetAccountsError) {
-    return <Text>Failed to load accounts!</Text>;
-  }
-
-  if (isGetAccountsLoading || isGetAccountsFetching || accounts === undefined) {
-    return <Spinner label="Loading accounts..." />;
-  }
-
   const onPreviousClicked = () => {
     const newList = [...startingAfterStack];
     newList.pop();
@@ -175,6 +168,45 @@ export const App: React.FC = () => {
     const newList = [...startingAfterStack];
     newList.push(accounts.data[accounts.data.length - 1].id);
     setStartingAfterStack(newList);
+  };
+
+  if (isGetAccountsError) {
+    return <Text>Failed to load accounts!</Text>;
+  }
+
+  if (isGetAccountsLoading || accounts === undefined) {
+    return <Spinner label="Loading accounts..." />;
+  }
+
+  const renderAccountList = () => {
+    return (
+      <>
+        {accounts && (
+          <DetailsList
+            items={accounts.data}
+            columns={getColumns()}
+            layoutMode={DetailsListLayoutMode.justified}
+            selectionMode={SelectionMode.none}
+          />
+        )}
+        <StackItem>
+          <Stack horizontal>
+            <PrimaryButton
+              disabled={startingAfterStack.length == 0}
+              onClick={onPreviousClicked}
+            >
+              Previous
+            </PrimaryButton>
+            <PrimaryButton
+              disabled={!accounts.has_more}
+              onClick={onNextClicked}
+            >
+              Next
+            </PrimaryButton>
+          </Stack>
+        </StackItem>
+      </>
+    );
   };
 
   return (
@@ -200,9 +232,10 @@ export const App: React.FC = () => {
       />
       {showCreateAccountDialog && (
         <CreateAccountDialog
-          onAccountCreated={(_account: Stripe.Account) => {
+          onAccountCreated={(account: Stripe.Account) => {
             setShowCreateAccountDialog(false);
-            refetchGetAccounts({});
+            setCurrentAccountFullDetails(account);
+            refetchGetAccounts();
           }}
           onDismiss={() => {
             setShowCreateAccountDialog(false);
@@ -216,7 +249,7 @@ export const App: React.FC = () => {
             <StackItem>
               <Stack>
                 <StackItem>
-                  <Text variant="large">Merchant management test app</Text>
+                  <Text variant="large">Jorgea's connect test app</Text>
                 </StackItem>
                 <StackItem>
                   <PrimaryButton
@@ -228,30 +261,7 @@ export const App: React.FC = () => {
               </Stack>
             </StackItem>
             <Separator />
-            {accounts && (
-              <DetailsList
-                items={accounts.data}
-                columns={getColumns()}
-                layoutMode={DetailsListLayoutMode.justified}
-                selectionMode={SelectionMode.none}
-              />
-            )}
-            <StackItem>
-              <Stack horizontal>
-                <PrimaryButton
-                  disabled={startingAfterStack.length == 0}
-                  onClick={onPreviousClicked}
-                >
-                  Previous
-                </PrimaryButton>
-                <PrimaryButton
-                  disabled={!accounts.has_more}
-                  onClick={onNextClicked}
-                >
-                  Next
-                </PrimaryButton>
-              </Stack>
-            </StackItem>
+            {renderAccountList()}
           </Stack>
         </StackItem>
       </Stack>

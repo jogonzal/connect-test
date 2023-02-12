@@ -129,50 +129,55 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   };
 
   return (
-    <Pivot>
-      <PivotItem headerText="Payments">
-        <stripe-connect-payments />
-      </PivotItem>
-      <PivotItem headerText="Payouts">
-        <stripe-connect-payouts />
-      </PivotItem>
-      <PivotItem headerText="Payment details">
-        {renderPaymentDetailUI()}
-        <Stack>
-          <StackItem>
-            <Text variant="large">
-              Viewing embedded dashboard for account {props.account.id}
-            </Text>
-          </StackItem>
-          <StackItem>
-            <Link href="/">Back to home - </Link>
-            <Text>Payments</Text>
-            {charges && (
-              <DetailsList
-                items={charges}
-                columns={getColumns()}
-                layoutMode={DetailsListLayoutMode.justified}
-              />
-            )}
-          </StackItem>
-        </Stack>
-      </PivotItem>
-      <PivotItem headerText="Embedded onboarding">
-        <OnboardingExperienceExample />
-      </PivotItem>
-      <PivotItem headerText="Account management">
-        <stripe-connect-account-management />
-      </PivotItem>
-      <PivotItem headerText="Isolation test">
-        <ExtractChargeFromStripeElements />
-        <stripe-connect-payments />
-      </PivotItem>
-      <PivotItem headerText="Debug">
-        <stripe-connect-debug-utils />
-      </PivotItem>
-      <PivotItem headerText="Express">
-        <PrimaryButton onClick={loginAsExpress}>Login as express</PrimaryButton>
-      </PivotItem>
-    </Pivot>
+    <Stack>
+      <PrimaryButton href="/">Back to main app</PrimaryButton>
+      <Pivot>
+        <PivotItem headerText="Payments">
+          <stripe-connect-payments />
+        </PivotItem>
+        <PivotItem headerText="Payouts">
+          <stripe-connect-payouts />
+        </PivotItem>
+        <PivotItem headerText="Payment details">
+          {renderPaymentDetailUI()}
+          <Stack>
+            <StackItem>
+              <Text variant="large">
+                Viewing embedded dashboard for account {props.account.id}
+              </Text>
+            </StackItem>
+            <StackItem>
+              <Link href="/">Back to home - </Link>
+              <Text>Payments</Text>
+              {charges && (
+                <DetailsList
+                  items={charges}
+                  columns={getColumns()}
+                  layoutMode={DetailsListLayoutMode.justified}
+                />
+              )}
+            </StackItem>
+          </Stack>
+        </PivotItem>
+        <PivotItem headerText="Embedded onboarding">
+          <OnboardingExperienceExample />
+        </PivotItem>
+        <PivotItem headerText="Account management">
+          <stripe-connect-account-management />
+        </PivotItem>
+        <PivotItem headerText="Isolation test">
+          <ExtractChargeFromStripeElements />
+          <stripe-connect-payments />
+        </PivotItem>
+        <PivotItem headerText="Debug">
+          <stripe-connect-debug-utils />
+        </PivotItem>
+        <PivotItem headerText="Express">
+          <PrimaryButton onClick={loginAsExpress}>
+            Login as express
+          </PrimaryButton>
+        </PivotItem>
+      </Pivot>
+    </Stack>
   );
 };
