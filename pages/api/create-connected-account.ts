@@ -117,10 +117,7 @@ export default async function handler(
       };
     }
 
-    const account = await StripeClient.accounts.create(accountParams, {
-      apiVersion:
-        "2022-11-15; embedded_connect_beta=v1;unified_accounts_beta=v1",
-    });
+    const account = await StripeClient.accounts.create(accountParams);
 
     console.log("Created!", account);
 

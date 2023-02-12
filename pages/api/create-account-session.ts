@@ -14,14 +14,9 @@ export default async function handler(
     console.log("Redirect url is ", redirectUrl);
 
     // Specify the API version to include the beta header
-    const accountSessionResponse = await StripeClient.accountSessions.create(
-      {
-        account: accountId,
-      },
-      {
-        apiVersion: "2022-11-15;embedded_connect_beta=v1",
-      },
-    );
+    const accountSessionResponse = await StripeClient.accountSessions.create({
+      account: accountId,
+    });
 
     (accountSessionResponse as any).publicKey =
       process.env.NEXT_PUBLIC_stripe_public_key;
