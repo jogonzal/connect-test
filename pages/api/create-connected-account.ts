@@ -71,7 +71,7 @@ export default async function handler(
         business_type: "individual",
         business_profile: {
           mcc: "7299",
-          name: "Some name",
+          name: name,
           product_description: "Description",
           support_address: {
             line1: "354 Oyster Point Blvd",
