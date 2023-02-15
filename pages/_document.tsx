@@ -8,6 +8,10 @@ import { Stylesheet, resetIds } from "@fluentui/react";
 
 const stylesheet = Stylesheet.getInstance();
 
+import ReactGA from "react-ga";
+const TRACKING_ID = "G-3VRXDQ7XJQ"; // OUR_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
+
 type Props = {
   styleTags: any;
   serializedStylesheet: any;
