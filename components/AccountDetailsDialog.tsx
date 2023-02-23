@@ -12,6 +12,8 @@ import {
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
+import { StripePublicKey } from "../config/ClientConfig";
+import { fetchClientSecret } from "../hooks/fetchClientSecret";
 import { useGetAccount } from "../hooks/useGetAccount";
 import { embeddedDashboardUrl } from "../utils/urls";
 
@@ -36,6 +38,42 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
       return <Spinner />;
     }
 
+    const copyEmbeddableScript = async () => {
+      const newSecret = await fetchClientSecret(account.id);
+      const injectableScript = `
+document.body.appendChild(document.createElement('stripe-connect-payments'));
+const script = document.createElement('script')
+script.src = 'https://b.stripecdn.com/connect-js/v0.1/connect.js';
+document.head.appendChild(script)
+window.StripeConnect = window.StripeConnect || {};
+StripeConnect.onLoad = () => {
+  StripeConnect.init({
+      clientSecret:'${newSecret}',
+      publishableKey: '${StripePublicKey}',
+  });
+};`;
+      // Copy into clipboard
+      navigator.clipboard.writeText(injectableScript);
+    };
+
+    const copyEmbeddableScriptNew = async () => {
+      const newSecret = await fetchClientSecret(account.id);
+      const injectableScript = `
+document.body.appendChild(document.createElement('stripe-connect-payments'));
+const script = document.createElement('script')
+script.src = 'https://connect-js.stripe.com/v0.1/connect.js';
+document.head.appendChild(script)
+window.StripeConnect = window.StripeConnect || {};
+StripeConnect.onLoad = () => {
+  StripeConnect.init({
+      clientSecret:'${newSecret}',
+      publishableKey: '${StripePublicKey}',
+  });
+};`;
+      // Copy into clipboard
+      navigator.clipboard.writeText(injectableScript);
+    };
+
     return (
       <Stack>
         <StackItem>
@@ -43,6 +81,12 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         </StackItem>
         <PrimaryButton href={embeddedDashboardUrl(account.id)}>
           Embedded dashboard
+        </PrimaryButton>
+        <PrimaryButton onClick={copyEmbeddableScript}>
+          Copy embeddable script
+        </PrimaryButton>
+        <PrimaryButton onClick={copyEmbeddableScriptNew}>
+          Copy embeddable script (new)
         </PrimaryButton>
         <PrimaryButton
           onClick={async () => {
