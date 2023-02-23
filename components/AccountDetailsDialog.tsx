@@ -2,6 +2,7 @@ import {
   DetailsList,
   DetailsListLayoutMode,
   Dialog,
+  Dropdown,
   IColumn,
   PrimaryButton,
   Spinner,
@@ -25,6 +26,10 @@ type Props = {
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
   const account = props.account;
   const obtainedAccount = useGetAccount(props.account?.id ?? "");
+  const [connectElementOption, setConnectElementOption] = React.useState(
+    "stripe-connect-payments",
+  );
+
   if (!account) {
     return null;
   }
@@ -41,7 +46,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
     const copyEmbeddableScript = async () => {
       const newSecret = await fetchClientSecret(account.id);
       const injectableScript = `
-document.body.appendChild(document.createElement('stripe-connect-payments'));
+document.body.appendChild(document.createElement('${connectElementOption}'));
 const script = document.createElement('script')
 script.src = 'https://b.stripecdn.com/connect-js/v0.1/connect.js';
 document.head.appendChild(script)
@@ -59,7 +64,7 @@ StripeConnect.onLoad = () => {
     const copyEmbeddableScriptNew = async () => {
       const newSecret = await fetchClientSecret(account.id);
       const injectableScript = `
-document.body.appendChild(document.createElement('stripe-connect-payments'));
+document.body.appendChild(document.createElement('${connectElementOption}'));
 const script = document.createElement('script')
 script.src = 'https://connect-js.stripe.com/v0.1/connect.js';
 document.head.appendChild(script)
@@ -81,12 +86,6 @@ StripeConnect.onLoad = () => {
         </StackItem>
         <PrimaryButton href={embeddedDashboardUrl(account.id)}>
           Embedded dashboard
-        </PrimaryButton>
-        <PrimaryButton onClick={copyEmbeddableScript}>
-          Copy embeddable script
-        </PrimaryButton>
-        <PrimaryButton onClick={copyEmbeddableScriptNew}>
-          Copy embeddable script (new)
         </PrimaryButton>
         <PrimaryButton
           onClick={async () => {
@@ -138,6 +137,48 @@ StripeConnect.onLoad = () => {
             Express login link
           </PrimaryButton>
         )}
+        <StackItem>
+          <Stack horizontal>
+            <StackItem>
+              <PrimaryButton onClick={copyEmbeddableScript}>
+                Copy embeddable script
+              </PrimaryButton>
+              <PrimaryButton onClick={copyEmbeddableScriptNew}>
+                Copy embeddable script (new)
+              </PrimaryButton>
+              <Dropdown
+                selectedKey={connectElementOption}
+                onChange={(_ev, opt) =>
+                  setConnectElementOption(
+                    opt?.key?.toString() ?? "stripe-connect-payments",
+                  )
+                }
+                options={[
+                  {
+                    key: "stripe-connect-payments",
+                    text: "stripe-connect-payments",
+                  },
+                  {
+                    key: "stripe-connect-payouts",
+                    text: "stripe-connect-payouts",
+                  },
+                  {
+                    key: "stripe-connect-account-management",
+                    text: "stripe-connect-account-management",
+                  },
+                  {
+                    key: "stripe-connect-account-onboarding",
+                    text: "stripe-connect-account-onboarding",
+                  },
+                  {
+                    key: "stripe-connect-debug-utils",
+                    text: "stripe-connect-debug-utils",
+                  },
+                ]}
+              />
+            </StackItem>
+          </Stack>
+        </StackItem>
         <StackItem>
           <TextField
             multiline
