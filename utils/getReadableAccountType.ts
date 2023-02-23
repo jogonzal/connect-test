@@ -2,7 +2,7 @@ import Stripe from "stripe";
 
 export const getReadableAccountType = (account: Stripe.Account) => {
   if (account.type === "custom" || account.type === "express") {
-    return "express";
+    return account.type;
   }
 
   if (account.type === "standard") {
@@ -82,6 +82,15 @@ export const getReadableAccountType = (account: Stripe.Account) => {
       !platform_owns_loss_liability
     ) {
       return "UA7";
+    }
+
+    if (
+      dashboard === undefined &&
+      platform_owns_loss_liability === undefined &&
+      platform_owns_pricing === undefined &&
+      account.controller.is_controller
+    ) {
+      return "standard CBSP";
     }
   }
 
