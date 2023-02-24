@@ -12,4 +12,4 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 # Wishlist
 
-1. Ability to test all connect elements
+1. Ability to create a test payout
