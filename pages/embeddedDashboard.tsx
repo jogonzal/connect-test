@@ -28,7 +28,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
         <script
           async
-          src="https://b.stripecdn.com/connect-js/v0.1/connect.js"
+          src="https://connect-js.stripe.com/v0.1/connect.js"
         ></script>
       </Head>
 
