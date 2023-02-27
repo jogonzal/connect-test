@@ -16,6 +16,11 @@ export default async function handler(
     const useTransferAmount: boolean = req.body.useTransferAmount;
     const useCustomer = true;
 
+    console.log("Destination charge is...", destinationCharge);
+    console.log("Using transfer amount...", useTransferAmount);
+    console.log("Using customer...", useCustomer);
+    console.log("Using description...", productName);
+
     console.log("Id is ", connectedAccountId);
     const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
       connectedAccountId,

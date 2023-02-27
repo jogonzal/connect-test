@@ -15,6 +15,7 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useGetAccounts } from "../hooks/useGetAccounts";
+import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { getReadableAccountType } from "../utils/getReadableAccountType";
 import { embeddedDashboardUrl } from "../utils/urls";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
@@ -33,6 +34,14 @@ export const App: React.FC = () => {
     error: isGetAccountsError,
     refetch: refetchGetAccounts,
   } = useGetAccounts(startingAfterStack[startingAfterStack.length - 1]);
+
+  const {
+    data: currentAccount,
+    isLoading: isCurrentAccountLoading,
+    error: isGetCurrentAccountError,
+    refetch: refetchCurrentAccount,
+  } = useGetCurrentAccount();
+
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
   const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] =
@@ -135,12 +144,12 @@ export const App: React.FC = () => {
       {
         key: "viewDashboard",
         name: "Dashboard",
-        minWidth: 120,
+        minWidth: 150,
         onRender: (row: Stripe.Account) => {
           const toRender = [];
           const accountId = row.id;
           const url = embeddedDashboardUrl(accountId);
-          toRender.push(<Link href={url}>Embedded</Link>);
+          toRender.push(<Link href={url}>Embed</Link>);
 
           if (row.type === "express") {
             const url = `/api/create-dashboard-login-link?connectedAccountId=${accountId}`;
@@ -151,6 +160,14 @@ export const App: React.FC = () => {
               </>,
             );
           }
+
+          const loginAsUrl = `https://go/loginas/${accountId}`;
+          toRender.push(
+            <>
+              {" | "}
+              <Link href={loginAsUrl}>LoginAs</Link>
+            </>,
+          );
 
           return toRender;
         },
@@ -175,11 +192,16 @@ export const App: React.FC = () => {
     setStartingAfterStack(newList);
   };
 
-  if (isGetAccountsError) {
+  if (isGetAccountsError || isGetCurrentAccountError) {
     return <Text>Failed to load accounts!</Text>;
   }
 
-  if (isGetAccountsLoading || accounts === undefined) {
+  if (
+    isGetAccountsLoading ||
+    accounts === undefined ||
+    isCurrentAccountLoading ||
+    currentAccount === undefined
+  ) {
     return <Spinner label="Loading accounts..." />;
   }
 
@@ -268,6 +290,14 @@ export const App: React.FC = () => {
                   >
                     Create account
                   </PrimaryButton>
+                </StackItem>
+                <StackItem>
+                  <Text>
+                    Current platform {currentAccount.id}{" "}
+                    <Link href={`https://go/loginas/${currentAccount.id}`}>
+                      Login as
+                    </Link>
+                  </Text>
                 </StackItem>
               </Stack>
             </StackItem>

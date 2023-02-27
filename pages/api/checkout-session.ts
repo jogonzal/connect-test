@@ -27,6 +27,7 @@ export default async function handler(
     console.log("Destination charge is...", isDestinationCharge);
     console.log("Using transfer amount...", isUseTransferAmount);
     console.log("Using customer...", isUseCustomer);
+    console.log("Using description...", productName);
 
     console.log(
       "Params are",
