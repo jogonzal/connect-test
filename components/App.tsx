@@ -295,7 +295,7 @@ export const App: React.FC = () => {
                   <Text>
                     Current platform {currentAccount.id}{" "}
                     <Link href={`https://go/loginas/${currentAccount.id}`}>
-                      Login as
+                      LoginAs
                     </Link>
                   </Text>
                 </StackItem>
