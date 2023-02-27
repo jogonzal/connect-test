@@ -9,20 +9,21 @@ export default async function handler(
   try {
     const accountId: string = req.body.accountId;
     console.log("Id is ", accountId);
-    const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
-      accountId,
-    )}`;
 
-    console.log("Redirect url is ", redirectUrl);
+    const payout = await StripeClient.payouts.create(
+      {
+        amount: 1000,
+        currency: "USD",
+        description: "TEST PAYOUT",
+      },
+      {
+        stripeAccount: accountId,
+      },
+    );
 
-    // Specify the API version to include the beta header
-    const accountSessionResponse = await StripeClient.accountSessions.create({
-      account: accountId,
-    });
+    console.log("Created payout!", payout);
 
-    (accountSessionResponse as any).publicKey =
-      process.env.NEXT_PUBLIC_stripe_public_key;
-    res.status(200).json(accountSessionResponse);
+    res.status(200).json(payout);
   } catch (error) {
     const errorAsAny = error as any;
     const errorMessage =

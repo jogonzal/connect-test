@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { hostUrl } from "../../config/EnvironmentVariables";
+import { getHostUrl } from "../../config/EnvironmentVariables";
 import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
@@ -10,7 +10,7 @@ export default async function handler(
     const connectedAccountId: string = req.body.connectedAccountId;
 
     console.log("Id is ", connectedAccountId);
-    const redirectUrl = `${hostUrl}?accountId=${encodeURIComponent(
+    const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
       connectedAccountId,
     )}`;
 

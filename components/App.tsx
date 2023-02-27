@@ -20,6 +20,7 @@ import { embeddedDashboardUrl } from "../utils/urls";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
 import { CheckoutExperienceDialog } from "./CheckoutExperienceDialog";
 import { CreateAccountDialog } from "./CreateAccountDialog";
+import { CreateTestDataDialog } from "./CreateTestDataDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 
 export const App: React.FC = () => {
@@ -40,6 +41,9 @@ export const App: React.FC = () => {
     React.useState<Stripe.Account | undefined>(undefined);
   const [showCreateAccountDialog, setShowCreateAccountDialog] =
     React.useState<boolean>(false);
+  const [showTestDataDialog, setShowTestDataDialog] = React.useState<
+    Stripe.Account | undefined
+  >(undefined);
 
   const onboardAccount = async (
     row: Stripe.Account,
@@ -89,8 +93,10 @@ export const App: React.FC = () => {
             return (
               <>
                 <Link onClick={() => setShowCheckoutDialogForMerchant(row)}>
-                  Create payment
+                  Payment
                 </Link>
+                {" | "}
+                <Link onClick={() => setShowTestDataDialog(row)}>Test</Link>
                 {" | "}
                 <Link onClick={() => onboardAccount(row, "account_onboarding")}>
                   Onboard
@@ -126,7 +132,6 @@ export const App: React.FC = () => {
           );
         },
       },
-
       {
         key: "viewDashboard",
         name: "Dashboard",
@@ -240,6 +245,12 @@ export const App: React.FC = () => {
           onDismiss={() => {
             setShowCreateAccountDialog(false);
           }}
+        />
+      )}
+      {showTestDataDialog && (
+        <CreateTestDataDialog
+          account={showTestDataDialog}
+          onDismiss={() => setShowTestDataDialog(undefined)}
         />
       )}
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { NextApiRequest, NextApiResponse } from "next";
-import { hostUrl } from "../../config/EnvironmentVariables";
+import { Stripe } from "stripe";
+import { getHostUrl } from "../../config/EnvironmentVariables";
 import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
@@ -22,7 +23,10 @@ export default async function handler(
 
     const isDestinationCharge = destinationCharge === "true";
     const isUseTransferAmount = useTransferAmount === "true";
+    const isUseCustomer = true;
     console.log("Destination charge is...", isDestinationCharge);
+    console.log("Using transfer amount...", isUseTransferAmount);
+    console.log("Using customer...", isUseCustomer);
 
     console.log(
       "Params are",
@@ -33,11 +37,26 @@ export default async function handler(
     );
 
     console.log("Id is ", connectedAccountId);
-    const redirectUrl = `${hostUrl}?accountId=${encodeURIComponent(
+    const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
       connectedAccountId,
     )}`;
 
     console.log("Redirect url is ", redirectUrl);
+
+    let customer: Stripe.Customer | undefined = undefined;
+    if (isUseCustomer) {
+      customer = await StripeClient.customers.create(
+        {
+          name: "jorge",
+          email: "jorgea@stripe.com",
+        },
+        destinationCharge
+          ? undefined
+          : {
+              stripeAccount: connectedAccountId,
+            },
+      );
+    }
 
     const session = await StripeClient.checkout.sessions.create(
       {
@@ -65,7 +84,7 @@ export default async function handler(
             : {
                 transfer_data: {
                   destination: connectedAccountId,
-                  ...(useTransferAmount
+                  ...(isUseTransferAmount
                     ? {
                         amount: amount - applicationFee,
                       }
@@ -76,6 +95,7 @@ export default async function handler(
         mode: "payment",
         success_url: redirectUrl,
         cancel_url: redirectUrl,
+        customer: customer?.id,
       },
       isDestinationCharge
         ? undefined
