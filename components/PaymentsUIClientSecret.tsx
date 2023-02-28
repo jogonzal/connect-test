@@ -44,7 +44,7 @@ export const PaymentsUIClientSecret: React.FC<Props> = (props) => {
         appearance: {
           // theme: "night",
           variables: {
-            colorText: "yellow",
+            // colorText: "yellow",
             // colorBackground: "yellow",
           },
         },

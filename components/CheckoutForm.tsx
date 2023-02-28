@@ -4,6 +4,7 @@ import {
   useElements,
   CardElement,
   PaymentElement,
+  AddressElement,
 } from "@stripe/react-stripe-js";
 
 import { CardSection } from "./CardSection";
@@ -83,6 +84,8 @@ export const CheckoutForm: React.FC<Props> = (props) => {
       {props.usePaymentUI ? (
         <form>
           <PaymentElement />
+          <AddressElement options={{ mode: "shipping" }} />
+          <div style={{ height: "200px" }} />
           <button>Submit</button>
         </form>
       ) : (
