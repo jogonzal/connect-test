@@ -165,7 +165,9 @@ export const App: React.FC = () => {
           toRender.push(
             <>
               {" | "}
-              <Link href={loginAsUrl}>LoginAs</Link>
+              <Link href={loginAsUrl} target="_blank">
+                LoginAs
+              </Link>
             </>,
           );
 
@@ -295,7 +297,10 @@ export const App: React.FC = () => {
                 <StackItem>
                   <Text>
                     Current platform {currentAccount.id}{" "}
-                    <Link href={`https://go/loginas/${currentAccount.id}`}>
+                    <Link
+                      href={`https://go/loginas/${currentAccount.id}`}
+                      target="_blank"
+                    >
                       LoginAs
                     </Link>
                   </Text>

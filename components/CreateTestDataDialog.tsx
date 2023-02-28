@@ -10,6 +10,7 @@ import {
 import Stripe from "stripe";
 import { useCreatePayout } from "../hooks/useCreatePayout";
 import { useCreateTestCharge } from "../hooks/useCreateTestCharge";
+import { useCreateAccountDebit } from "../hooks/useCreateAccountDebit";
 
 type Props = {
   account: Stripe.Account;
@@ -36,12 +37,24 @@ export const CreateTestDataDialog: React.FC<Props> = ({
     mutateAsync: createTestChargeAsync,
   } = useCreateTestCharge(account.id);
 
+  const {
+    error: createDebitError,
+    isLoading: createDebitLoading,
+    data: createDebitData,
+    reset: createDebitReset,
+    mutateAsync: createDebitAsync,
+  } = useCreateAccountDebit(account.id);
+
   const onCreateTestPayout = async () => {
     createPayoutAsync();
   };
 
   const onCreateTestCharge = async () => {
     createTestChargeAsync();
+  };
+
+  const onCreateAccountDebit = async () => {
+    createDebitAsync();
   };
 
   return (
@@ -62,7 +75,15 @@ export const CreateTestDataDialog: React.FC<Props> = ({
           {createChargeLoading ?? <Spinner />}
           {createChargeData && <Text>Created!</Text>}
           {createChargeError && (
-            <Text>Error! {JSON.stringify(createPayoutError)}</Text>
+            <Text>Error! {JSON.stringify(createChargeError)}</Text>
+          )}
+          <PrimaryButton onClick={onCreateAccountDebit}>
+            Create account debit
+          </PrimaryButton>
+          {createDebitLoading ?? <Spinner />}
+          {createDebitData && <Text>Created!</Text>}
+          {createDebitError && (
+            <Text>Error! {JSON.stringify(createDebitError)}</Text>
           )}
         </StackItem>
       </Stack>

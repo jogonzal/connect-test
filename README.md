@@ -12,4 +12,4 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 # Wishlist
 
-1. Ability to create a test payout
+1. Better errors when APIs fail (i.e. no available balance when creating payout)

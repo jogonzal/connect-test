@@ -9,20 +9,16 @@ export default async function handler(
     const accountId: string = req.body.accountId;
     console.log("Id is ", accountId);
 
-    const payout = await StripeClient.payouts.create(
-      {
-        amount: 1000,
-        currency: "USD",
-        description: "TEST PAYOUT",
-      },
-      {
-        stripeAccount: accountId,
-      },
-    );
+    const accountDebit = await StripeClient.charges.create({
+      amount: 888,
+      currency: "USD",
+      description: "TEST ACCOUNT DEBIT",
+      source: accountId,
+    });
 
-    console.log("Created payout!", payout);
+    console.log("Created account debit!", accountDebit);
 
-    res.status(200).json(payout);
+    res.status(200).json(accountDebit);
   } catch (error) {
     const errorAsAny = error as any;
     const errorMessage =
