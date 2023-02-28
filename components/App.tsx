@@ -248,6 +248,7 @@ export const App: React.FC = () => {
           account={showCheckoutDialogForMerchant}
           onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
           onSuccessfulPayment={(account) => {
+            console.log("Successful payment", account);
             setCurrentAccountFullDetails(account);
             setShowCheckoutDialogForMerchant(undefined);
           }}

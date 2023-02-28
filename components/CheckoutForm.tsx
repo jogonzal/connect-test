@@ -7,8 +7,7 @@ import {
   AddressElement,
 } from "@stripe/react-stripe-js";
 
-import { CardSection } from "./CardSection";
-import { PrimaryButton, Separator, Spinner } from "@fluentui/react";
+import { PrimaryButton, Separator, Spinner, Text } from "@fluentui/react";
 
 interface Props {
   paymentIntentSecret: string;
@@ -20,6 +19,42 @@ export const CheckoutForm: React.FC<Props> = (props) => {
   const stripe = useStripe();
   const elements = useElements();
   const [performingPayment, setPerformingPayment] = React.useState(false);
+  const [error, setError] = React.useState<string | undefined>(undefined);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    setPerformingPayment(true);
+
+    const url = new URL(window.location.href);
+    const returnUrl = `${url.protocol}//${url.host}/`;
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        // Make sure to change this to your payment completion page
+        return_url: returnUrl,
+      },
+    });
+
+    // This point will only be reached if there is an immediate error when
+    // confirming the payment. Otherwise, your customer will be redirected to
+    // your `return_url`. For some payment methods like iDEAL, your customer will
+    // be redirected to an intermediate site first to authorize the payment, then
+    // redirected to the `return_url`.
+    if (error.type === "card_error" || error.type === "validation_error") {
+      setError(error.message);
+    } else {
+      setError("An unexpected error occurred.");
+    }
+
+    setPerformingPayment(false);
+  };
 
   const onPerformPaymentClicked = async () => {
     setPerformingPayment(true);
@@ -78,15 +113,24 @@ export const CheckoutForm: React.FC<Props> = (props) => {
     }
   };
 
+  const renderError = () => {
+    if (error) {
+      return <Text>An error ocurred! {JSON.stringify(error)}</Text>;
+    }
+  };
+
   return (
     <>
       {renderSpinner()}
+      {renderError()}
       {props.usePaymentUI ? (
-        <form>
+        <form id="payment-form" onSubmit={handleSubmit}>
           <PaymentElement />
           <AddressElement options={{ mode: "shipping" }} />
           <div style={{ height: "200px" }} />
-          <button>Submit</button>
+          <PrimaryButton id="submit" onClick={handleSubmit}>
+            Submit
+          </PrimaryButton>
         </form>
       ) : (
         <div style={{ display: performingPayment ? "none" : "block" }}>

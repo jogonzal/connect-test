@@ -149,10 +149,10 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
         </StackItem>
         <StackItem>
           <PrimaryButton onClick={onCheckoutClicked}>Checkout</PrimaryButton>
-          <PrimaryButton onClick={onPaymentUIClicked}>Payment UI</PrimaryButton>
-          <PrimaryButton onClick={onCardUIClicked}>
-            Card Element UI
+          <PrimaryButton onClick={onPaymentUIClicked}>
+            Payment Element
           </PrimaryButton>
+          <PrimaryButton onClick={onCardUIClicked}>Card Element</PrimaryButton>
         </StackItem>
       </Stack>
     );
