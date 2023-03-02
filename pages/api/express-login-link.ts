@@ -14,8 +14,6 @@ export default async function handler(
       connectedAccountId,
     );
 
-    console.log("Obtained account!", link);
-
     res.status(200).send(link);
   } catch (error) {
     const errorAsAny = error as any;

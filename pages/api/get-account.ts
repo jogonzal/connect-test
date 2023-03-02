@@ -12,8 +12,6 @@ export default async function handler(
 
     const account = await StripeClient.accounts.retrieve(connectedAccountId);
 
-    console.log("Obtained account!", account);
-
     res.status(200).send(account);
   } catch (error) {
     const errorAsAny = error as any;

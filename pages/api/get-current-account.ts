@@ -8,8 +8,6 @@ export default async function handler(
   try {
     const account = await StripeClient.accounts.retrieve();
 
-    console.log("Obtained account!", account);
-
     res.status(200).send(account);
   } catch (error) {
     const errorAsAny = error as any;
