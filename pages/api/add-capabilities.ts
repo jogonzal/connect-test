@@ -41,8 +41,6 @@ export default async function handler(
       { requested: true },
     );
 
-    console.log("Obtained account!", connectedAccountId);
-
     res.status(200).send({});
   } catch (error) {
     const errorAsAny = error as any;

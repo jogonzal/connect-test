@@ -19,7 +19,7 @@ import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { getReadableAccountType } from "../utils/getReadableAccountType";
 import { embeddedDashboardUrl } from "../utils/urls";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
-import { CheckoutExperienceDialog } from "./CheckoutExperienceDialog";
+import { CreatePaymentDialog } from "./CreatePaymentDialog";
 import { CreateAccountDialog } from "./CreateAccountDialog";
 import { CreateTestDataDialog } from "./CreateTestDataDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
@@ -246,7 +246,7 @@ export const App: React.FC = () => {
         onDismiss={() => setCurrentAccountFullDetails(undefined)}
       />
       {showCheckoutDialogForMerchant && (
-        <CheckoutExperienceDialog
+        <CreatePaymentDialog
           account={showCheckoutDialogForMerchant}
           onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
           onSuccessfulPayment={(account) => {

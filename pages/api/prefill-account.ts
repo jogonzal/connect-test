@@ -24,8 +24,6 @@ export default async function handler(
       business_type: "individual",
     });
 
-    console.log("Obtained account!", connectedAccountId);
-
     res.status(200).send({});
   } catch (error) {
     const errorAsAny = error as any;

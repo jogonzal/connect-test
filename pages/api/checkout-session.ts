@@ -18,11 +18,13 @@ export default async function handler(
     );
     const destinationCharge: string = searchParams.get("destinationCharge")!;
     const useTransferAmount: string = searchParams.get("useTransferAmount")!;
+    const useOBO: string = searchParams.get("useOBO")!;
     const currency = "usd";
     const quantity = 1;
 
     const isDestinationCharge = destinationCharge === "true";
     const isUseTransferAmount = useTransferAmount === "true";
+    const isUseOBO = useOBO === "true";
     const isUseCustomer = true;
     console.log("Destination charge is...", isDestinationCharge);
     console.log("Using transfer amount...", isUseTransferAmount);
@@ -92,6 +94,7 @@ export default async function handler(
                     : {}),
                 },
               }),
+          on_behalf_of: useOBO ? connectedAccountId : undefined,
         },
         mode: "payment",
         success_url: redirectUrl,

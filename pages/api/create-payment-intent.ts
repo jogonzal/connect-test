@@ -14,10 +14,12 @@ export default async function handler(
     const applicationFee: number = req.body.applicationFee;
     const destinationCharge: boolean = req.body.destinationCharge;
     const useTransferAmount: boolean = req.body.useTransferAmount;
+    const useOBO: boolean = req.body.useOBO;
     const useCustomer = true;
 
     console.log("Destination charge is...", destinationCharge);
     console.log("Using transfer amount...", useTransferAmount);
+    console.log("Using OBO...", useOBO);
     console.log("Using customer...", useCustomer);
     console.log("Using description...", productName);
 
@@ -63,6 +65,7 @@ export default async function handler(
               },
             }),
         customer: customer?.id,
+        on_behalf_of: useOBO ? connectedAccountId : undefined,
       },
       destinationCharge
         ? undefined

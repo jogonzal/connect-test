@@ -18,7 +18,7 @@ type Props = {
   onSuccessfulPayment: (account: Stripe.Account) => void;
 };
 
-export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
+export const CreatePaymentDialog: React.FC<Props> = (props) => {
   const [productName, setProductName] = React.useState("Test product");
   const [amount, setAmount] = React.useState(1000);
   const [applicationFee, setApplicationFee] = React.useState(100);
@@ -27,6 +27,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
     React.useState<boolean>(false);
   const [useTransferAmount, setUseTransferAmount] =
     React.useState<boolean>(false);
+  const [useOBO, setUseOBO] = React.useState<boolean>(false);
   const [paymentsUIClientSecret, setPaymentsUIClientSecret] = React.useState<
     string | undefined
   >(undefined);
@@ -41,6 +42,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
       destinationCharge: destinationCharge.toString(),
       connectedAccountId: currentAccountFullDetails.id,
       useTransferAmount: (destinationCharge && useTransferAmount).toString(),
+      useOBO: (destinationCharge && useOBO).toString(),
     };
 
     window.location.href =
@@ -58,6 +60,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
         connectedAccountId: currentAccountFullDetails.id,
         destinationCharge: destinationCharge,
         useTransferAmount: destinationCharge && useTransferAmount,
+        useOBO: destinationCharge && useOBO,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -78,6 +81,7 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
         connectedAccountId: currentAccountFullDetails.id,
         destinationCharge: destinationCharge,
         useTransferAmount: destinationCharge && useTransferAmount,
+        useOBO: destinationCharge && useOBO,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -139,11 +143,18 @@ export const CheckoutExperienceDialog: React.FC<Props> = (props) => {
               onChange={(ev, s) => setDestinationCharge(!!s)}
             />
             {destinationCharge && (
-              <Checkbox
-                label="Use transfer amount"
-                checked={useTransferAmount}
-                onChange={(ev, s) => setUseTransferAmount(!!s)}
-              />
+              <>
+                <Checkbox
+                  label="Use transfer amount"
+                  checked={useTransferAmount}
+                  onChange={(ev, s) => setUseTransferAmount(!!s)}
+                />
+                <Checkbox
+                  label="OBO"
+                  checked={useOBO}
+                  onChange={(ev, s) => setUseOBO(!!s)}
+                />
+              </>
             )}
           </Stack>
         </StackItem>
