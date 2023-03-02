@@ -72,23 +72,27 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
   const redirectUrl = `${currentUrl.protocol}//${currentUrl.host}/oauthredirect`;
   const getStandardOAuthUrl = () => {
     if (!clientId) {
-      throw new Error("Client id is not defined");
+      console.log("No client id configured, so OAuth create will be disabled");
+      return null;
     }
 
     return `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${clientId}&scope=read_write&redirect_uri=${encodeURIComponent(
       redirectUrl,
     )}`;
   };
+  const standardOauthUrl = getStandardOAuthUrl();
 
   const getExpressOAuthUrl = () => {
     if (!clientId) {
-      throw new Error("Client id is not defined");
+      console.log("No client id configured, so OAuth create will be disabled");
+      return null;
     }
 
     return `https://connect.stripe.com/express/oauth/authorize?response_type=code&client_id=${clientId}&scope=read_write&redirect_uri=${encodeURIComponent(
       redirectUrl,
     )}`;
   };
+  const expressOAuthUrl = getExpressOAuthUrl();
 
   const renderContent = () => {
     if (createError) {
@@ -143,10 +147,12 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
 
         <Separator />
 
-        <PrimaryButton href={getStandardOAuthUrl()}>
-          Standard OAuth
-        </PrimaryButton>
-        <PrimaryButton href={getExpressOAuthUrl()}>Express OAuth</PrimaryButton>
+        {standardOauthUrl && (
+          <PrimaryButton href={standardOauthUrl}>Standard OAuth</PrimaryButton>
+        )}
+        {expressOAuthUrl && (
+          <PrimaryButton href={expressOAuthUrl}>Express OAuth</PrimaryButton>
+        )}
       </Stack>
     );
   };
