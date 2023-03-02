@@ -9,6 +9,7 @@ import {
   Dialog,
   IStackTokens,
   Checkbox,
+  Separator,
 } from "@fluentui/react";
 import * as React from "react";
 import Stripe from "stripe";
@@ -66,6 +67,29 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
     props.onAccountCreated(account);
   };
 
+  const clientId = process.env.NEXT_PUBLIC_stripe_client_id;
+  const currentUrl = new URL(window.location.href);
+  const redirectUrl = `${currentUrl.protocol}//${currentUrl.host}/oauthredirect`;
+  const getStandardOAuthUrl = () => {
+    if (!clientId) {
+      throw new Error("Client id is not defined");
+    }
+
+    return `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${clientId}&scope=read_write&redirect_uri=${encodeURIComponent(
+      redirectUrl,
+    )}`;
+  };
+
+  const getExpressOAuthUrl = () => {
+    if (!clientId) {
+      throw new Error("Client id is not defined");
+    }
+
+    return `https://connect.stripe.com/express/oauth/authorize?response_type=code&client_id=${clientId}&scope=read_write&redirect_uri=${encodeURIComponent(
+      redirectUrl,
+    )}`;
+  };
+
   const renderContent = () => {
     if (createError) {
       return <Text>An error ocurred when creating the account.</Text>;
@@ -116,6 +140,13 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
         <PrimaryButton onClick={onCreateAccountClicked}>
           Create account
         </PrimaryButton>
+
+        <Separator />
+
+        <PrimaryButton href={getStandardOAuthUrl()}>
+          Standard OAuth
+        </PrimaryButton>
+        <PrimaryButton href={getExpressOAuthUrl()}>Express OAuth</PrimaryButton>
       </Stack>
     );
   };

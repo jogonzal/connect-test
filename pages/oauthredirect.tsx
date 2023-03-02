@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { EmbeddedDashboard } from "../components/EmbeddedDashboard";
+import { OauthRedirectPage } from "../components/OauthRedirectPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,16 +22,11 @@ const Home: NextPage = () => {
       }}
     >
       <Head>
-        <title>Embedded test page</title>
-        <link rel="icon" href="/favicon.ico" />
-        <script
-          async
-          src="https://connect-js.stripe.com/v0.1/connect.js"
-        ></script>
+        <title>Oauth redirect page</title>
       </Head>
 
       <QueryClientProvider client={queryClient}>
-        <EmbeddedDashboard />
+        <OauthRedirectPage />
       </QueryClientProvider>
     </div>
   );

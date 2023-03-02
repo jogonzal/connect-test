@@ -1,4 +1,3 @@
-import { initializeIcons } from "@fluentui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
@@ -18,7 +17,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Jorge test platform</title>
+        <title>Connect test platform</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -28,10 +27,5 @@ const Home: NextPage = () => {
     </div>
   );
 };
-
-// Only run in client
-if (typeof window !== "undefined") {
-  initializeIcons();
-}
 
 export default Home;

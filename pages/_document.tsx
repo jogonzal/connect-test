@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import { Stylesheet, resetIds } from "@fluentui/react";
+import { Stylesheet, resetIds, initializeIcons } from "@fluentui/react";
 // Fluent UI React (Fabric) 7 or earlier
 // import { Stylesheet, resetIds } from 'office-ui-fabric-react';
 
 const stylesheet = Stylesheet.getInstance();
 
 import ReactGA from "react-ga";
+import { QueryClient, QueryClientProvider } from "react-query";
 const TRACKING_ID = "G-3VRXDQ7XJQ"; // OUR_TRACKING_ID
 ReactGA.initialize(TRACKING_ID);
 
@@ -16,6 +17,15 @@ type Props = {
   styleTags: any;
   serializedStylesheet: any;
 };
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 // Now set up the document, and just reset the stylesheet.
 export default class MyDocument extends Document<Props> {
@@ -36,6 +46,11 @@ export default class MyDocument extends Document<Props> {
     return (
       <Html>
         <Head>
+          <link rel="icon" href="/favicon.ico" />
+          <script
+            async
+            src="https://connect-js.stripe.com/v0.1/connect.js"
+          ></script>
           <style
             type="text/css"
             dangerouslySetInnerHTML={{ __html: this.props.styleTags }}
@@ -56,10 +71,17 @@ export default class MyDocument extends Document<Props> {
           />
         </Head>
         <body>
-          <Main />
+          <QueryClientProvider client={queryClient}>
+            <Main />
+          </QueryClientProvider>
           <NextScript />
         </body>
       </Html>
     );
   }
+}
+
+// Only run in client
+if (typeof window !== "undefined") {
+  initializeIcons();
 }
