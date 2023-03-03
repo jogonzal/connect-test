@@ -51,6 +51,8 @@ declare global {
         "charge-id": string | null;
         ref: React.RefObject<HTMLElement>;
       }>;
+      ["stripe-connect-debug-ui-config"]: CustomElement<{}>;
+      ["stripe-connect-debug-ui-preview"]: CustomElement<{}>;
     }
   }
 }

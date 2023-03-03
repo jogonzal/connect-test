@@ -16,6 +16,7 @@ import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
 import { useGetAccount } from "../hooks/useGetAccount";
 import { useGetCharges } from "../hooks/useGetCharges";
+import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PaymentDetailsUI } from "./PaymentDetailsUI";
@@ -23,20 +24,26 @@ import { PaymentDetailsUI } from "./PaymentDetailsUI";
 export const EmbeddedDashboard = () => {
   const accountId = new URL(window.location.href).searchParams.get("account");
   const { data: account, isLoading, error } = useGetAccount(accountId);
+  const {
+    data: platform,
+    isLoading: isPlatformLoading,
+    error: isPlatformError,
+  } = useGetCurrentAccount();
 
-  if (error) {
+  if (error || isPlatformError) {
     return <Text>Failed to get account</Text>;
   }
 
-  if (isLoading || !account) {
+  if (isLoading || !account || isPlatformLoading || !platform) {
     return <Spinner label="Getting account..." />;
   }
 
-  return <EmbeddedDashboardInternal account={account} />;
+  return <EmbeddedDashboardInternal account={account} platform={platform} />;
 };
 
 type Props = {
   account: Stripe.Account;
+  platform: Stripe.Account;
 };
 
 export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
@@ -171,11 +178,19 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         </PivotItem>
         <PivotItem headerText="Debug">
           <stripe-connect-debug-utils />
-        </PivotItem>
-        <PivotItem headerText="Express">
           <PrimaryButton onClick={loginAsExpress}>
-            Login as express
+            Login to express
           </PrimaryButton>
+          <PrimaryButton href={`https://go/o/${props.account.id}`}>
+            Login as CA
+          </PrimaryButton>
+          <PrimaryButton href={`https://go/o/${props.platform.id}`}>
+            Login as CA
+          </PrimaryButton>
+        </PivotItem>
+        <PivotItem headerText="Theming">
+          <stripe-connect-debug-ui-config />
+          <stripe-connect-debug-ui-preview />
         </PivotItem>
       </Pivot>
     </Stack>
