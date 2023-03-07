@@ -123,7 +123,7 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
         <StackItem>
           <Stack>
             <TextField
-              label="Product name"
+              label="Descripcion"
               value={productName}
               onChange={(ev, s) => setProductName(s ?? "")}
             />
