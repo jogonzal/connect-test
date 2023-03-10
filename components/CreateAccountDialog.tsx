@@ -26,7 +26,8 @@ const dropdownOptions: IDropdownOption[] = [
   { key: "custom", text: "custom" },
   { key: "UA1", text: "UA1" },
   { key: "UA2", text: "UA2" },
-  { key: "UA3 or UA6", text: "UA3 or UA6" },
+  { key: "UA3", text: "UA3" },
+  { key: "UA6", text: "UA6" },
   { key: "UA7", text: "UA7" },
 ];
 

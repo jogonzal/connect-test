@@ -47,11 +47,22 @@ export default async function handler(
           type: "full", // Standard dash
         },
       };
-    } else if (type === "UA3 or UA6") {
+    } else if (type === "UA3") {
       accountParams.controller = {
         application: {
           loss_liable: true, // Platform owns loss liability
           onboarding_owner: true, // Platform is the onboarding owner
+          pricing_controls: true, // The platform is the pricing owner
+        },
+        dashboard: {
+          type: "none", // The connected account will not have access to dashboard
+        },
+      };
+    } else if (type === "UA6") {
+      accountParams.controller = {
+        application: {
+          loss_liable: true, // Platform owns loss liability
+          onboarding_owner: false, // Platform is the onboarding owner
           pricing_controls: true, // The platform is the pricing owner
         },
         dashboard: {

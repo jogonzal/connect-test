@@ -27,6 +27,7 @@ export const getReadableAccountType = (account: Stripe.Account) => {
       account.controller.application?.onboarding_owner;
     const platform_owns_pricing =
       account.controller.application?.pricing_controls;
+    const onboarding_owner = account.controller.application?.onboarding_owner;
 
     if (
       dashboard === "full" &&
@@ -57,7 +58,11 @@ export const getReadableAccountType = (account: Stripe.Account) => {
       platform_owns_pricing &&
       platform_owns_loss_liability
     ) {
-      return "UA3 or UA6";
+      if (onboarding_owner) {
+        return "UA3";
+      } else {
+        return "UA6";
+      }
     }
 
     if (
