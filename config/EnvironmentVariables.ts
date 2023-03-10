@@ -28,6 +28,10 @@ export const getHostUrl = (request: NextApiRequest) => {
     return "https://connecttest.onrender.com";
   }
 
+  console.log("Testmode is ", isTestMode);
+
   const url = new URL(request.headers.origin);
-  return `${isTestMode ? url.protocol : "https:"}//${url.host}`;
+  return isTestMode
+    ? `${url.protocol}//${url.host}`
+    : "https://connecttest.onrender.com/";
 };
