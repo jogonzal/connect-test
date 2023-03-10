@@ -25,7 +25,40 @@ export default async function handler(
     };
     if (type === "standard" || type === "express" || type === "custom") {
       accountParams.type = type;
-    } else {
+    } else if (type === "UA1") {
+      accountParams.controller = {
+        application: {
+          loss_liable: true, // Platform owns loss liability
+          onboarding_owner: false, // Stripe is the onboarding owner
+          pricing_controls: true, // The platform is the pricing owner
+        },
+        dashboard: {
+          type: "full", // Standard dash
+        },
+      };
+    } else if (type === "UA2") {
+      accountParams.controller = {
+        application: {
+          loss_liable: false, // Stripe owns loss liability
+          onboarding_owner: false, // Stripe is the onboarding owner
+          pricing_controls: true, // The platform is the pricing owner
+        },
+        dashboard: {
+          type: "full", // Standard dash
+        },
+      };
+    } else if (type === "UA3 or UA6") {
+      accountParams.controller = {
+        application: {
+          loss_liable: true, // Platform owns loss liability
+          onboarding_owner: true, // Platform is the onboarding owner
+          pricing_controls: true, // The platform is the pricing owner
+        },
+        dashboard: {
+          type: "none", // The connected account will not have access to dashboard
+        },
+      };
+    } else if (type === "UA7") {
       accountParams.controller = {
         application: {
           loss_liable: false, // Stripe owns loss liability
@@ -36,9 +69,12 @@ export default async function handler(
           type: "none", // The connected account will not have access to dashboard
         },
       };
+    } else {
+      throw new Error(`Unsupported account type ${type}`);
     }
 
-    if (type === "custom" || type === "express" || type === "UA7") {
+    // "You cannot create standard accounts with capabilities via the API"
+    if (type != "standard" && type !== "UA1" && type !== "UA2") {
       accountParams.capabilities = {
         card_payments: {
           requested: true,
