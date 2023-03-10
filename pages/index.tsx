@@ -1,3 +1,4 @@
+import { initializeIcons } from "@fluentui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
@@ -27,5 +28,10 @@ const Home: NextPage = () => {
     </div>
   );
 };
+
+// Only run in client
+if (typeof window !== "undefined") {
+  initializeIcons();
+}
 
 export default Home;
