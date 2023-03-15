@@ -24,6 +24,7 @@ const Home: NextPage = () => {
     >
       <Head>
         <title>Oauth redirect page</title>
+        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
       </Head>
 
       <QueryClientProvider client={queryClient}>

@@ -20,6 +20,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Connect test platform</title>
         <link rel="icon" href="/favicon.ico" />
+        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
       </Head>
 
       <QueryClientProvider client={queryClient}>

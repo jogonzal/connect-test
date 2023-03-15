@@ -39,6 +39,7 @@ declare global {
   namespace JSX {
     interface IntrinsicElements {
       ["stripe-connect-payments"]: CustomElement<{}>;
+      ["stripe-pricing-table"]: CustomElement<{}>;
       ["stripe-connect-payouts"]: CustomElement<{}>;
       ["stripe-connect-account-onboarding"]: CustomElement<{
         ref: React.RefObject<HTMLElement>;
