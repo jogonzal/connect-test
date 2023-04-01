@@ -176,6 +176,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
           <ExtractChargeFromStripeElements />
           <stripe-connect-payments />
         </PivotItem>
+        <PivotItem headerText="Customers">
+          <CustomersTab />
+        </PivotItem>
         <PivotItem headerText="Debug">
           <stripe-connect-debug-utils />
           <PrimaryButton onClick={loginAsExpress}>
