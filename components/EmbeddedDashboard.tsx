@@ -20,6 +20,7 @@ import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PaymentDetailsUI } from "./PaymentDetailsUI";
+import { PricingTable } from "./PricingTable";
 
 export const EmbeddedDashboard = () => {
   const accountId = new URL(window.location.href).searchParams.get("account");
@@ -194,6 +195,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         <PivotItem headerText="Theming">
           <stripe-connect-debug-ui-config />
           <stripe-connect-debug-ui-preview />
+        </PivotItem>
+        <PivotItem headerText="Pricing table">
+          <PricingTable />
         </PivotItem>
       </Pivot>
     </Stack>

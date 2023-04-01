@@ -51,6 +51,11 @@ export default class MyDocument extends Document<Props> {
             async
             src="https://connect-js.stripe.com/v0.1/connect.js"
           ></script>
+          <script
+            async
+            src="https://js.stripe.com/v3/pricing-table.js"
+          ></script>
+
           <style
             type="text/css"
             dangerouslySetInnerHTML={{ __html: this.props.styleTags }}
