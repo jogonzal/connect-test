@@ -12,6 +12,9 @@ export const useConnectJSInit = (accountId: string) => {
       window.StripeConnect!.init!({
         publishableKey: publishableKey,
         clientSecret: secret,
+        appearance: {
+          colors: { primary: "var(--jorge-color)" },
+        },
       });
     };
   });

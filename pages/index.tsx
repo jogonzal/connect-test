@@ -21,6 +21,12 @@ const Home: NextPage = () => {
         <title>Connect test platform</title>
         <link rel="icon" href="/favicon.ico" />
         <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+        {/* // Color to test */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: ":root {--jorgecolor: #FF00FF;}",
+          }}
+        />
       </Head>
 
       <QueryClientProvider client={queryClient}>

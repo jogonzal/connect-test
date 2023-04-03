@@ -30,6 +30,12 @@ const Home: NextPage = () => {
           async
           src="https://connect-js.stripe.com/v0.1/connect.js"
         ></script>
+        {/* // Color to test */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: ":root {--jorgecolor: #FF00FF;}",
+          }}
+        />
       </Head>
 
       <QueryClientProvider client={queryClient}>

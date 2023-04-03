@@ -194,6 +194,13 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
           </PrimaryButton>
         </PivotItem>
         <PivotItem headerText="Theming">
+          <div
+            style={{
+              backgroundColor: "var(--jorgecolor)",
+            }}
+          >
+            {'This div has background color "var(--jorge-color)"'}
+          </div>
           <stripe-connect-debug-ui-config />
           <stripe-connect-debug-ui-preview />
         </PivotItem>
