@@ -2,11 +2,7 @@ import { Spinner, Text } from "@fluentui/react";
 import * as React from "react";
 import { useGetCustomers } from "../hooks/useGetCustomers";
 
-export const CustomersTab: React.FC = ({
-  accountId,
-}: {
-  accountId: string;
-}) => {
+export const CustomersTab = ({ accountId }: { accountId: string }) => {
   const { isLoading, error, data } = useGetCustomers(accountId);
 
   if (error) {
@@ -16,4 +12,6 @@ export const CustomersTab: React.FC = ({
   if (isLoading) {
     return <Spinner />;
   }
+
+  return <Text>Not implemented!</Text>;
 };

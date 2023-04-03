@@ -179,7 +179,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
           <stripe-connect-payments />
         </PivotItem>
         <PivotItem headerText="Customers">
-          <CustomersTab />
+          <CustomersTab accountId={props.account.id} />
         </PivotItem>
         <PivotItem headerText="Debug">
           <stripe-connect-debug-utils />
