@@ -17,6 +17,7 @@ import { useConnectJSInit } from "../hooks/useConnectJsInit";
 import { useGetAccount } from "../hooks/useGetAccount";
 import { useGetCharges } from "../hooks/useGetCharges";
 import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
+import { CustomersTab } from "./CustomersTab";
 import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PaymentDetailsUI } from "./PaymentDetailsUI";
