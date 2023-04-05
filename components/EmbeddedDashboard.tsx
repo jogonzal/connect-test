@@ -199,7 +199,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
               backgroundColor: "var(--jorgecolor)",
             }}
           >
-            {'This div has background color "var(--jorge-color)"'}
+            {'This div has background color "var(--jorgecolor)"'}
           </div>
           <stripe-connect-debug-ui-config />
           <stripe-connect-debug-ui-preview />
