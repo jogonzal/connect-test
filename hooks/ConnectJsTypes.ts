@@ -5,6 +5,7 @@ export interface IStripeConnectAppearance {
     primary?: string;
     textLink?: string;
   };
+  colorPrimary?: string;
 }
 
 export interface IStripeConnectUIConfig {

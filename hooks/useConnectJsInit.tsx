@@ -13,7 +13,7 @@ export const useConnectJSInit = (accountId: string) => {
         publishableKey: publishableKey,
         clientSecret: secret,
         appearance: {
-          colors: { primary: "var(--jorgecolor)" },
+          colorPrimary: "#00FF00",
         },
       });
     };
