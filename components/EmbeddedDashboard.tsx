@@ -25,6 +25,7 @@ import { PricingTable } from "./PricingTable";
 
 export const EmbeddedDashboard = () => {
   const accountId = new URL(window.location.href).searchParams.get("account");
+
   const { data: account, isLoading, error } = useGetAccount(accountId);
   const {
     data: platform,
@@ -56,6 +57,10 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   } = useGetCharges(props.account);
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
   const { isLoading, error } = useConnectJSInit(props.account.id);
+  const initialTab = new URL(window.location.href).hash;
+  const [currentTab, setCurrentTab] = React.useState<string | undefined>(
+    initialTab,
+  );
 
   if (error || chargesError) {
     return <Text>An error occurred</Text>;
@@ -140,14 +145,21 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   return (
     <Stack>
       <PrimaryButton href="/">Back to main app</PrimaryButton>
-      <Pivot>
-        <PivotItem headerText="Payments">
+      <Pivot
+        onLinkClick={(a, b) => {
+          setCurrentTab(a?.props.itemKey);
+          window.location.hash = a?.props.itemKey ?? "";
+        }}
+        selectedKey={currentTab}
+        defaultSelectedKey="Payments"
+      >
+        <PivotItem headerText="Payments" itemKey="Payments">
           <stripe-connect-payments />
         </PivotItem>
-        <PivotItem headerText="Payouts">
+        <PivotItem headerText="Payouts" itemKey="Payouts">
           <stripe-connect-payouts />
         </PivotItem>
-        <PivotItem headerText="Payment details">
+        <PivotItem headerText="Payment details" itemKey="Payment details">
           {renderPaymentDetailUI()}
           <Stack>
             <StackItem>
@@ -168,20 +180,23 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
             </StackItem>
           </Stack>
         </PivotItem>
-        <PivotItem headerText="Embedded onboarding">
+        <PivotItem
+          headerText="Embedded onboarding"
+          itemKey="Embedded onboarding"
+        >
           <OnboardingExperienceExample />
         </PivotItem>
-        <PivotItem headerText="Account management">
+        <PivotItem headerText="Account management" itemKey="Account management">
           <stripe-connect-account-management />
         </PivotItem>
-        <PivotItem headerText="Isolation test">
+        <PivotItem headerText="Isolation test" itemKey="Isolation test">
           <ExtractChargeFromStripeElements />
           <stripe-connect-payments />
         </PivotItem>
-        <PivotItem headerText="Customers">
+        <PivotItem headerText="Customers" itemKey="Customers">
           <CustomersTab accountId={props.account.id} />
         </PivotItem>
-        <PivotItem headerText="Debug">
+        <PivotItem headerText="Debug" itemKey="Debug">
           <stripe-connect-debug-utils />
           <PrimaryButton onClick={loginAsExpress}>
             Login to express
@@ -193,7 +208,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
             Login as CA
           </PrimaryButton>
         </PivotItem>
-        <PivotItem headerText="Theming">
+        <PivotItem headerText="Theming" itemKey="Theming">
           <div
             style={{
               backgroundColor: "var(--jorgecolor)",
@@ -204,7 +219,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
           <stripe-connect-debug-ui-config />
           <stripe-connect-debug-ui-preview />
         </PivotItem>
-        <PivotItem headerText="Pricing table">
+        <PivotItem headerText="Pricing table" itemKey="Pricing table">
           <PricingTable />
         </PivotItem>
       </Pivot>
