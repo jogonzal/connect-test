@@ -57,7 +57,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   } = useGetCharges(props.account);
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
   const { isLoading, error } = useConnectJSInit(props.account.id);
-  const initialTab = new URL(window.location.href).hash;
+  const initialTab = new URL(window.location.href).hash.replaceAll("#", "");
   const [currentTab, setCurrentTab] = React.useState<string | undefined>(
     initialTab,
   );
