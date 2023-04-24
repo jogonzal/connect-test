@@ -15,6 +15,9 @@ export const useConnectJSInit = (accountId: string) => {
         appearance: {
           colorPrimary: "#00FF00",
         },
+        uiConfig: {
+          overlay: "drawer",
+        },
       });
     };
   });
