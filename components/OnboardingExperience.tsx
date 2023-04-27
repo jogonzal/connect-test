@@ -1,3 +1,4 @@
+import { ConnectAccountOnboarding } from "@stripe/react-connect-js";
 import * as React from "react";
 
 export const OnboardingExperienceExample: React.FC = () => {
@@ -14,43 +15,12 @@ export const OnboardingExperienceExample: React.FC = () => {
     );
   }
 
-  const onOnboardingComplete = (chargesEnabled: boolean) => {
+  const onOnboardingComplete = () => {
     setAccountOnboarded(true);
-    setChargesEnabled(chargesEnabled);
+    setChargesEnabled(true);
   };
 
-  return <OnboardingExperience onOnboardingComplete={onOnboardingComplete} />;
-};
-
-type Props = {
-  onOnboardingComplete: (chargesEnabled: boolean) => void;
-};
-
-const OnboardingExperience: React.FC<Props> = ({ onOnboardingComplete }) => {
-  const ref = React.useRef<HTMLElement>(null);
-
-  React.useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    const current = ref.current;
-    const handleOnboardingCompleteEvent = (ev: Event) => {
-      const customEvent = ev as CustomEvent;
-      onOnboardingComplete(!!customEvent.detail.chargesEnabled);
-    };
-    current.addEventListener(
-      "onboardingcomplete",
-      handleOnboardingCompleteEvent,
-    );
-
-    return () => {
-      current.removeEventListener(
-        "onboardingcomplete",
-        handleOnboardingCompleteEvent,
-      );
-    };
-  }, [ref, onOnboardingComplete]);
-
-  return <stripe-connect-account-onboarding ref={ref} />;
+  return (
+    <ConnectAccountOnboarding onOnboardingComplete={onOnboardingComplete} />
+  );
 };

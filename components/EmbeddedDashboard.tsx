@@ -22,6 +22,13 @@ import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElemen
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PaymentDetailsUI } from "./PaymentDetailsUI";
 import { PricingTable } from "./PricingTable";
+import {
+  ConnectAccountManagement,
+  ConnectComponentsProvider,
+  ConnectPaymentDetails,
+  ConnectPayments,
+  ConnectPayouts,
+} from "@stripe/react-connect-js";
 
 export const EmbeddedDashboard = () => {
   const accountId = new URL(window.location.href).searchParams.get("account");
@@ -56,7 +63,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     error: chargesError,
   } = useGetCharges(props.account);
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
-  const { isLoading, error } = useConnectJSInit(props.account.id);
+  const { isLoading, error, data } = useConnectJSInit(props.account.id);
   const initialTab = new URL(window.location.href).hash.replaceAll("#", "");
   const [currentTab, setCurrentTab] = React.useState<string | undefined>(
     initialTab,
@@ -66,7 +73,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     return <Text>An error occurred</Text>;
   }
 
-  if (isLoading || chargesIsLoading) {
+  if (isLoading || chargesIsLoading || !data) {
     return <Spinner label="Loading charges..." />;
   }
 
@@ -135,94 +142,100 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     if (!chargeId) return null;
 
     return (
-      <PaymentDetailsUI
+      <ConnectPaymentDetails
         chargeId={chargeId}
-        onPaymentDetailsHide={() => setChargeId(undefined)}
-      ></PaymentDetailsUI>
+        visible={!!chargeId}
+        onClose={() => setChargeId(undefined)}
+      />
     );
   };
 
   return (
-    <Stack>
-      <PrimaryButton href="/">Back to main app</PrimaryButton>
-      <Pivot
-        onLinkClick={(a, b) => {
-          setCurrentTab(a?.props.itemKey);
-          window.location.hash = a?.props.itemKey ?? "";
-        }}
-        selectedKey={currentTab}
-        defaultSelectedKey="Payments"
-      >
-        <PivotItem headerText="Payments" itemKey="Payments">
-          <stripe-connect-payments />
-        </PivotItem>
-        <PivotItem headerText="Payouts" itemKey="Payouts">
-          <stripe-connect-payouts />
-        </PivotItem>
-        <PivotItem headerText="Payment details" itemKey="Payment details">
-          {renderPaymentDetailUI()}
-          <Stack>
-            <StackItem>
-              <Text variant="large">
-                Viewing embedded dashboard for account {props.account.id}
-              </Text>
-            </StackItem>
-            <StackItem>
-              <Link href="/">Back to home - </Link>
-              <Text>Payments</Text>
-              {charges && (
-                <DetailsList
-                  items={charges}
-                  columns={getColumns()}
-                  layoutMode={DetailsListLayoutMode.justified}
-                />
-              )}
-            </StackItem>
-          </Stack>
-        </PivotItem>
-        <PivotItem
-          headerText="Embedded onboarding"
-          itemKey="Embedded onboarding"
+    <ConnectComponentsProvider connectInstance={data}>
+      <Stack>
+        <PrimaryButton href="/">Back to main app</PrimaryButton>
+        <Pivot
+          onLinkClick={(a, b) => {
+            setCurrentTab(a?.props.itemKey);
+            window.location.hash = a?.props.itemKey ?? "";
+          }}
+          selectedKey={currentTab}
+          defaultSelectedKey="Payments"
         >
-          <OnboardingExperienceExample />
-        </PivotItem>
-        <PivotItem headerText="Account management" itemKey="Account management">
-          <stripe-connect-account-management />
-        </PivotItem>
-        <PivotItem headerText="Isolation test" itemKey="Isolation test">
-          <ExtractChargeFromStripeElements />
-          <stripe-connect-payments />
-        </PivotItem>
-        <PivotItem headerText="Customers" itemKey="Customers">
-          <CustomersTab accountId={props.account.id} />
-        </PivotItem>
-        <PivotItem headerText="Debug" itemKey="Debug">
-          <stripe-connect-debug-utils />
-          <PrimaryButton onClick={loginAsExpress}>
-            Login to express
-          </PrimaryButton>
-          <PrimaryButton href={`https://go/o/${props.account.id}`}>
-            Login as CA
-          </PrimaryButton>
-          <PrimaryButton href={`https://go/o/${props.platform.id}`}>
-            Login as CA
-          </PrimaryButton>
-        </PivotItem>
-        <PivotItem headerText="Theming" itemKey="Theming">
-          <div
-            style={{
-              backgroundColor: "var(--jorgecolor)",
-            }}
+          <PivotItem headerText="Payments" itemKey="Payments">
+            <ConnectPayments />
+          </PivotItem>
+          <PivotItem headerText="Payouts" itemKey="Payouts">
+            <ConnectPayouts />
+          </PivotItem>
+          <PivotItem headerText="Payment details" itemKey="Payment details">
+            {renderPaymentDetailUI()}
+            <Stack>
+              <StackItem>
+                <Text variant="large">
+                  Viewing embedded dashboard for account {props.account.id}
+                </Text>
+              </StackItem>
+              <StackItem>
+                <Link href="/">Back to home - </Link>
+                <Text>Payments</Text>
+                {charges && (
+                  <DetailsList
+                    items={charges}
+                    columns={getColumns()}
+                    layoutMode={DetailsListLayoutMode.justified}
+                  />
+                )}
+              </StackItem>
+            </Stack>
+          </PivotItem>
+          <PivotItem
+            headerText="Embedded onboarding"
+            itemKey="Embedded onboarding"
           >
-            {'This div has background color "var(--jorgecolor)"'}
-          </div>
-          <stripe-connect-debug-ui-config />
-          <stripe-connect-debug-ui-preview />
-        </PivotItem>
-        <PivotItem headerText="Pricing table" itemKey="Pricing table">
-          <PricingTable />
-        </PivotItem>
-      </Pivot>
-    </Stack>
+            <OnboardingExperienceExample />
+          </PivotItem>
+          <PivotItem
+            headerText="Account management"
+            itemKey="Account management"
+          >
+            <ConnectAccountManagement />
+          </PivotItem>
+          <PivotItem headerText="Isolation test" itemKey="Isolation test">
+            <ExtractChargeFromStripeElements />
+            <ConnectPayments />
+          </PivotItem>
+          <PivotItem headerText="Customers" itemKey="Customers">
+            <CustomersTab accountId={props.account.id} />
+          </PivotItem>
+          <PivotItem headerText="Debug" itemKey="Debug">
+            <stripe-connect-debug-utils />
+            <PrimaryButton onClick={loginAsExpress}>
+              Login to express
+            </PrimaryButton>
+            <PrimaryButton href={`https://go/o/${props.account.id}`}>
+              Login as CA
+            </PrimaryButton>
+            <PrimaryButton href={`https://go/o/${props.platform.id}`}>
+              Login as CA
+            </PrimaryButton>
+          </PivotItem>
+          <PivotItem headerText="Theming" itemKey="Theming">
+            <div
+              style={{
+                backgroundColor: "var(--jorgecolor)",
+              }}
+            >
+              {'This div has background color "var(--jorgecolor)"'}
+            </div>
+            <stripe-connect-debug-ui-config />
+            <stripe-connect-debug-ui-preview />
+          </PivotItem>
+          <PivotItem headerText="Pricing table" itemKey="Pricing table">
+            <PricingTable />
+          </PivotItem>
+        </Pivot>
+      </Stack>
+    </ConnectComponentsProvider>
   );
 };
