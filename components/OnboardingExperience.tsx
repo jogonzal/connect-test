@@ -15,12 +15,10 @@ export const OnboardingExperienceExample: React.FC = () => {
     );
   }
 
-  const onOnboardingComplete = () => {
+  const onOnboardingExited = () => {
     setAccountOnboarded(true);
     setChargesEnabled(true);
   };
 
-  return (
-    <ConnectAccountOnboarding onOnboardingComplete={onOnboardingComplete} />
-  );
+  return <ConnectAccountOnboarding onOnboardingExited={onOnboardingExited} />;
 };
