@@ -1,4 +1,4 @@
-import React from "react";
+import React, { DOMAttributes } from "react";
 
 export interface IStripeConnectAppearance {
   colors?: {
@@ -31,8 +31,12 @@ declare global {
   }
 }
 
-export type CustomElement<T> = Partial<
-  T & React.DOMAttributes<T> & { children?: React.ReactNode | undefined }
+type CustomElement<T> = Partial<
+  T &
+    DOMAttributes<T> & {
+      children?: React.ReactNode | undefined;
+      ref: React.RefObject<HTMLElement>;
+    }
 >;
 
 declare global {

@@ -22,6 +22,7 @@ import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElemen
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PaymentDetailsUI } from "./PaymentDetailsUI";
 import { PricingTable } from "./PricingTable";
+import { DebugConfigElement } from "./DebugConfigElement";
 
 export const EmbeddedDashboard = () => {
   const accountId = new URL(window.location.href).searchParams.get("account");
@@ -216,7 +217,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
           >
             {'This div has background color "var(--jorgecolor)"'}
           </div>
-          <stripe-connect-debug-ui-config />
+          <DebugConfigElement />
           <stripe-connect-debug-ui-preview />
         </PivotItem>
         <PivotItem headerText="Pricing table" itemKey="Pricing table">
