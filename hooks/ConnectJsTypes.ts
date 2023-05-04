@@ -1,4 +1,4 @@
-import React from "react";
+import React, { DOMAttributes } from "react";
 
 export type CustomElement<T> = Partial<
   T & React.DOMAttributes<T> & { children?: React.ReactNode | undefined }

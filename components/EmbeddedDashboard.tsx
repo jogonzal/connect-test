@@ -20,7 +20,6 @@ import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { CustomersTab } from "./CustomersTab";
 import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
-import { PaymentDetailsUI } from "./PaymentDetailsUI";
 import { PricingTable } from "./PricingTable";
 import {
   ConnectAccountManagement,
@@ -29,6 +28,7 @@ import {
   ConnectPayments,
   ConnectPayouts,
 } from "@stripe/react-connect-js";
+import { DebugConfigElement } from "./DebugConfigElement";
 
 export const EmbeddedDashboard = () => {
   const accountId = new URL(window.location.href).searchParams.get("account");
@@ -229,7 +229,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
               {'This div has background color "var(--jorgecolor)"'}
             </div>
             <stripe-connect-debug-ui-config />
-            <stripe-connect-debug-ui-preview />
+            <DebugConfigElement />
           </PivotItem>
           <PivotItem headerText="Pricing table" itemKey="Pricing table">
             <PricingTable />
