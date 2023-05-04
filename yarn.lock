@@ -309,18 +309,15 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
   integrity sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==
 
-"@stripe/connect-js@file:.yalc/@stripe/connect-js":
+"@stripe/connect-js@^1.0.0":
   version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@stripe/connect-js/-/connect-js-1.0.0.tgz#8cf11fe6e5c2f6d87caf56b08e8ab9391ce08bd2"
+  integrity sha512-DcXQ9eZ4C+D3hF44DlHZTx74FQ3ujxEivJ+oD+CbROHynL3TU+FRDw7HWkxbyjtYwcLbIrOyZs7YIWTeVpxc9Q==
 
-"@stripe/connect-js@file:.yalc/@stripe/react-connect-js/.yalc/@stripe/connect-js":
-  version "1.0.0"
-
-"@stripe/react-connect-js@file:.yalc/@stripe/react-connect-js":
-  version "1.0.0"
-  dependencies:
-    "@stripe/connect-js" "file:../../../Library/Caches/Yarn/v6/npm-@stripe-react-connect-js-1.0.0-323c5c83-730f-4532-be8b-28787684f8ff-1682627101685/node_modules/@stripe/react-connect-js/.yalc/@stripe/connect-js"
-    react "^18.2.0"
-    react-dom "^18.2.0"
+"@stripe/react-connect-js@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@stripe/react-connect-js/-/react-connect-js-1.0.1.tgz#1065c31733ee0f3082c816e94c49f992fb050180"
+  integrity sha512-6sDzew5JWykz/9yuQVyYBSJNZt8tTHUTdLGTqqmXcf22PdWpm2XazcvkbdY6Qo/2w0v6cCszk2jT0eAz+pP2Pg==
 
 "@stripe/react-stripe-js@^1.16.5":
   version "1.16.5"
@@ -1956,14 +1953,6 @@ react-dom@17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-dom@^18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
-  integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
-  dependencies:
-    loose-envify "^1.1.0"
-    scheduler "^0.23.0"
-
 react-ga@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-3.3.1.tgz#d8e1f4e05ec55ed6ff944dcb14b99011dfaf9504"
@@ -1990,13 +1979,6 @@ react@17.0.2:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-
-react@^18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
-  integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
-  dependencies:
-    loose-envify "^1.1.0"
 
 regenerator-runtime@^0.13.4:
   version "0.13.9"
@@ -2080,13 +2062,6 @@ scheduler@^0.20.2:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-
-scheduler@^0.23.0:
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.23.0.tgz#ba8041afc3d30eb206a487b6b384002e4e61fdfe"
-  integrity sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==
-  dependencies:
-    loose-envify "^1.1.0"
 
 semver@^6.3.0:
   version "6.3.0"

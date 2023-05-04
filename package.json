@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@fluentui/react": "^8.94.2",
-    "@stripe/connect-js": "file:.yalc/@stripe/connect-js",
-    "@stripe/react-connect-js": "file:.yalc/@stripe/react-connect-js",
+    "@stripe/connect-js": "^1.0.0",
+    "@stripe/react-connect-js": "^1.0.1",
     "@stripe/react-stripe-js": "^1.16.5",
     "@stripe/stripe-js": "^1.47.0",
     "dotenv": "^10.0.0",
