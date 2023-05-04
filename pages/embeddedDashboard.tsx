@@ -26,10 +26,6 @@ const Home: NextPage = () => {
         <title>Embedded test page</title>
         <link rel="icon" href="/favicon.ico" />
         <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-        <script
-          async
-          src="https://connect-js.stripe.com/v0.1/connect.js"
-        ></script>
         {/* // Color to test */}
         <style
           dangerouslySetInnerHTML={{

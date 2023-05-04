@@ -49,10 +49,6 @@ export default class MyDocument extends Document<Props> {
           <link rel="icon" href="/favicon.ico" />
           <script
             async
-            src="https://connect-js.stripe.com/v0.1/connect.js"
-          ></script>
-          <script
-            async
             src="https://js.stripe.com/v3/pricing-table.js"
           ></script>
 
