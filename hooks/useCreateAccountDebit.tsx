@@ -15,7 +15,7 @@ const createDebit = async (
   });
 
   if (!accountDebitResponse.ok) {
-    throw new Error("Failed to create account debit");
+    throw new Error(`Unexpected response code ${accountDebitResponse.status}`);
   }
 
   const accounts = await accountDebitResponse.json();

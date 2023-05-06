@@ -24,6 +24,9 @@ export const useCreateAccount = () => {
           prefill: params.prefill,
         }),
       });
+      if (!accountsResponse.ok) {
+        throw new Error(`Unexpected response code ${accountsResponse.status}`);
+      }
       const account = await accountsResponse.json();
       return account;
     },

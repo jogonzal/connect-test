@@ -13,7 +13,7 @@ const createTestCharge = async (accountId: string): Promise<Stripe.Charge> => {
   });
 
   if (!testChargeResponse.ok) {
-    throw new Error("Failed to create charge");
+    throw new Error(`Unexpected response code ${testChargeResponse.status}`);
   }
 
   const testCharge = await testChargeResponse.json();

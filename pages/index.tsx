@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { App } from "../components/App";
+import { ConnectedAccountList } from "../components/ConnectedAccountList";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
       </Head>
 
       <QueryClientProvider client={queryClient}>
-        <App />
+        <ConnectedAccountList />
       </QueryClientProvider>
     </div>
   );

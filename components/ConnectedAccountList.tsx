@@ -23,8 +23,9 @@ import { CreatePaymentDialog } from "./CreatePaymentDialog";
 import { CreateAccountDialog } from "./CreateAccountDialog";
 import { CreateTestDataDialog } from "./CreateTestDataDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
+import { serializeError } from "serialize-error";
 
-export const App: React.FC = () => {
+export const ConnectedAccountList: React.FC = () => {
   const [startingAfterStack, setStartingAfterStack] = React.useState<string[]>(
     [],
   );
@@ -68,6 +69,9 @@ export const App: React.FC = () => {
         type: type,
       }),
     });
+    if (!accountsResponse.ok) {
+      throw new Error(`Unexpected response code ${accountsResponse.status}`);
+    }
     const accountLink: Stripe.Response<Stripe.AccountLink> =
       await accountsResponse.json();
     window.open(accountLink.url);
@@ -195,7 +199,14 @@ export const App: React.FC = () => {
   };
 
   if (isGetAccountsError || isGetCurrentAccountError) {
-    return <Text>Failed to load accounts!</Text>;
+    return (
+      <Text>
+        Failed to load accounts!{" "}
+        {JSON.stringify(
+          serializeError(isGetAccountsError ?? isGetCurrentAccountError),
+        )}
+      </Text>
+    );
   }
 
   if (

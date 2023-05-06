@@ -15,7 +15,7 @@ const createPayout = async (
   });
 
   if (!listAccountsResponse.ok) {
-    throw new Error("Failed to create payout");
+    throw new Error(`Unexpected response code ${listAccountsResponse.status}`);
   }
 
   const accounts = await listAccountsResponse.json();

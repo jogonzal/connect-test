@@ -18,7 +18,9 @@ export const useGetCustomers = (accountId: string | null) => {
           connectedAccountId: accountId,
         }),
       });
-
+      if (!response.ok) {
+        throw new Error(`Unexpected response code ${response.status}`);
+      }
       const result: Stripe.ApiList<Stripe.Customer> = await response.json();
 
       return result;

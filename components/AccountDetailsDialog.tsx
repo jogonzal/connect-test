@@ -112,6 +112,9 @@ StripeConnect.onLoad = () => {
                   accountId: account.id,
                 }),
               });
+              if (!response.ok) {
+                throw new Error(`Unexpected response code ${response.status}`);
+              }
               const json = await response.json();
               console.log(json.url);
             }}

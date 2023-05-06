@@ -13,6 +13,9 @@ const getAccounts = async (
       "Content-Type": "application/json",
     },
   });
+  if (!listAccountsResponse.ok) {
+    throw new Error(`Unexpected response code ${listAccountsResponse.status}`);
+  }
   const accounts = await listAccountsResponse.json();
   return accounts;
 };

@@ -13,7 +13,7 @@ const redeemCode = async (code: string): Promise<Stripe.OAuthToken> => {
   });
 
   if (!response.ok) {
-    throw new Error("Invalid response code returned");
+    throw new Error(`Unexpected response code ${response.status}`);
   }
 
   const account: Stripe.Response<Stripe.OAuthToken> = await response.json();

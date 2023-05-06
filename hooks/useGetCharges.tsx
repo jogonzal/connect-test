@@ -13,7 +13,9 @@ const getCharges = async (
       connectedAccountId: account.id,
     }),
   });
-
+  if (!response.ok) {
+    throw new Error(`Unexpected response code ${response.status}`);
+  }
   const charges: Stripe.Response<Stripe.ApiList<Stripe.Charge>> =
     await response.json();
   return charges;

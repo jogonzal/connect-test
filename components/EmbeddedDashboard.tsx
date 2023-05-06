@@ -87,6 +87,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         accountId: props.account.id,
       }),
     });
+    if (!response.ok) {
+      throw new Error(`Unexpected response code ${response.status}`);
+    }
     const json = await response.json();
     window.open(json.url);
   };

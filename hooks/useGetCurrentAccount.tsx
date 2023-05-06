@@ -9,7 +9,9 @@ const getAccount = async (): Promise<Stripe.Account> => {
     },
     body: JSON.stringify({}),
   });
-
+  if (!response.ok) {
+    throw new Error(`Unexpected response code ${response.status}`);
+  }
   const account: Stripe.Response<Stripe.Account> = await response.json();
   return account;
 };
