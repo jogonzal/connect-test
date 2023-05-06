@@ -31,6 +31,8 @@ import {
 import { DebugConfigElement } from "./DebugConfigElement";
 
 export const EmbeddedDashboard = () => {
+  const initialTab =
+    new URL(window.location.href).hash.replaceAll("#", "") ?? "Payments";
   const accountId = new URL(window.location.href).searchParams.get("account");
 
   const { data: account, isLoading, error } = useGetAccount(accountId);
@@ -40,6 +42,8 @@ export const EmbeddedDashboard = () => {
     error: isPlatformError,
   } = useGetCurrentAccount();
 
+  const [currentTab, setCurrentTab] = React.useState<string>(initialTab);
+
   if (error || isPlatformError) {
     return <Text>Failed to get account</Text>;
   }
@@ -48,12 +52,24 @@ export const EmbeddedDashboard = () => {
     return <Spinner label="Getting account..." />;
   }
 
-  return <EmbeddedDashboardInternal account={account} platform={platform} />;
+  return (
+    <EmbeddedDashboardInternal
+      currentTab={currentTab}
+      account={account}
+      platform={platform}
+      onTabChanged={(tab: string) => {
+        setCurrentTab(tab);
+        window.location.hash = tab;
+      }}
+    />
+  );
 };
 
 type Props = {
   account: Stripe.Account;
   platform: Stripe.Account;
+  onTabChanged: (tab: string) => void;
+  currentTab: string;
 };
 
 export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
@@ -64,10 +80,6 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   } = useGetCharges(props.account);
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
   const { isLoading, error, data } = useConnectJSInit(props.account.id);
-  const initialTab = new URL(window.location.href).hash.replaceAll("#", "");
-  const [currentTab, setCurrentTab] = React.useState<string | undefined>(
-    initialTab,
-  );
 
   if (error || chargesError) {
     return <Text>An error occurred</Text>;
@@ -159,10 +171,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         <PrimaryButton href="/">Back to main app</PrimaryButton>
         <Pivot
           onLinkClick={(a, b) => {
-            setCurrentTab(a?.props.itemKey);
-            window.location.hash = a?.props.itemKey ?? "";
+            props.onTabChanged(a?.props.itemKey ?? "");
           }}
-          selectedKey={currentTab}
+          selectedKey={props.currentTab}
           defaultSelectedKey="Payments"
         >
           <PivotItem headerText="Payments" itemKey="Payments">
