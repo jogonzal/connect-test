@@ -12,7 +12,8 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 # Wishlist
 
-1. Better errors when APIs fail (i.e. no available balance when creating payout)
-2. Add create customer, create subscription and integrate the subscription management page
-3. Add crypto onramp test integration
-4. Account details page should have a header "viewing account details for XYZ, account type etc..."
+1. Better errors when APIs fail (i.e. transmit stripe API error body and print it in client)
+1. Client side routing vs. server side routing (i.e. get rid of nextjs and transition into Node + TS)
+1. Add create customer, create subscription and integrate the subscription management page
+1. Add crypto onramp test integration
+1. Account details page should have a header "viewing account details for XYZ, account type etc..."
