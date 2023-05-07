@@ -15,4 +15,4 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 1. Better errors when APIs fail (i.e. transmit stripe API error body and print it in client)
 1. Add create subscription in customers page and integrate the subscription management page
 1. Add crypto onramp test integration
-1. Move create payment buttons to payments tab
+1. Move create payment buttons to payments tab instead of having them in the table
