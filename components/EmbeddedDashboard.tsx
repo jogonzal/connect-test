@@ -3,6 +3,7 @@ import {
   DetailsListLayoutMode,
   Dropdown,
   IColumn,
+  Link,
   Pivot,
   PivotItem,
   PrimaryButton,
@@ -22,6 +23,7 @@ import { PricingTable } from "./PricingTable";
 import {
   ConnectAccountManagement,
   ConnectComponentsProvider,
+  ConnectNotificationBanner,
   ConnectPaymentDetails,
   ConnectPayments,
   ConnectPayouts,
@@ -34,6 +36,9 @@ import { fetchClientSecret } from "../hooks/fetchClientSecret";
 import { StripePublicKey } from "../config/ClientConfig";
 import { getReadableAccountType } from "../utils/getReadableAccountType";
 import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
+import { CreatePaymentDialog } from "./CreatePaymentDialog";
+import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
+import { CreateTestDataDialog } from "./CreateTestDataDialog";
 
 type Props = {
   account: Stripe.Account;
@@ -56,6 +61,14 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     isError: isCurrentAccountError,
     data: currentAccount,
   } = useGetCurrentAccount();
+
+  const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] =
+    React.useState<Stripe.Account | undefined>(undefined);
+  const [showPaymentDialogForMerchant, setShowPaymentDialogForMerchant] =
+    React.useState<Stripe.Account | undefined>(undefined);
+  const [showTestDataDialog, setShowTestDataDialog] = React.useState<
+    Stripe.Account | undefined
+  >(undefined);
 
   const [connectElementOption, setConnectElementOption] = React.useState(
     "stripe-connect-payments",
@@ -169,24 +182,151 @@ StripeConnect.init({
     navigator.clipboard.writeText(injectableScript);
   };
 
+  const renderAccountLoginLinks = () => {
+    const toRender = [];
+    if (props.account.type === "express") {
+      const url = `/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`;
+      toRender.push(
+        <>
+          {" | "}
+          <Link href={url}>Express login link</Link>
+        </>,
+      );
+    }
+
+    const loginAsUrl = `https://go/loginas/${props.account.id}`;
+    toRender.push(
+      <>
+        {" | "}
+        <Link href={loginAsUrl} target="_blank">
+          Standard dash LoginAs
+        </Link>
+      </>,
+    );
+
+    return toRender;
+  };
+
+  const onboardAccountHosted = async (
+    row: Stripe.Account,
+    type: Stripe.AccountLinkCreateParams.Type,
+  ) => {
+    const accountsResponse = await fetch("/api/create-account-link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accountId: row.id,
+        type: type,
+      }),
+    });
+    if (!accountsResponse.ok) {
+      throw new Error(`Unexpected response code ${accountsResponse.status}`);
+    }
+    const accountLink: Stripe.Response<Stripe.AccountLink> =
+      await accountsResponse.json();
+    window.open(accountLink.url);
+  };
+
+  const renderActions = () => {
+    if (props.account.charges_enabled) {
+      return (
+        <>
+          <Link onClick={() => setShowCheckoutDialogForMerchant(props.account)}>
+            Create payment
+          </Link>
+          {" | "}
+          <Link onClick={() => setShowTestDataDialog(props.account)}>Test</Link>
+          {" | "}
+          <Link
+            onClick={() =>
+              onboardAccountHosted(props.account, "account_onboarding")
+            }
+          >
+            Onboard (hosted)
+          </Link>
+          {" | "}
+          <Link
+            onClick={() =>
+              onboardAccountHosted(props.account, "account_update")
+            }
+          >
+            Update (hosted)
+          </Link>
+        </>
+      );
+    } else {
+      return (
+        <>
+          DisabledReason: {props.account.requirements?.disabled_reason}
+          {" | "}
+          <Link
+            onClick={() =>
+              onboardAccountHosted(props.account, "account_onboarding")
+            }
+          >
+            Onboard (hosted)
+          </Link>{" "}
+        </>
+      );
+    }
+  };
+
+  const renderDialogs = () => {
+    return (
+      <>
+        {showCheckoutDialogForMerchant && (
+          <CreatePaymentDialog
+            account={showCheckoutDialogForMerchant}
+            onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
+          />
+        )}
+        {showPaymentDialogForMerchant && (
+          <PaymentUIExperienceDialog
+            account={showPaymentDialogForMerchant}
+            onDismiss={() => setShowPaymentDialogForMerchant(undefined)}
+          />
+        )}
+        {showTestDataDialog && (
+          <CreateTestDataDialog
+            account={showTestDataDialog}
+            onDismiss={() => setShowTestDataDialog(undefined)}
+          />
+        )}
+      </>
+    );
+  };
+
   return (
     <ConnectComponentsProvider connectInstance={data}>
       <Stack>
-        <PrimaryButton onClick={props.onBackToMainAppClicked}>
-          Back to main app
-        </PrimaryButton>
-        <Text
-          styles={{
-            root: {
-              paddingBottom: "5px",
-              paddingTop: "5px",
-            },
-          }}
-        >
-          Viewing connected account <em>{props.account.id}</em> (
-          {getReadableAccountType(props.account)}) for platform{" "}
-          <em>{currentAccount.id}</em>
-        </Text>
+        {renderDialogs()}
+        <Stack horizontalAlign="space-between" horizontal>
+          <StackItem align="start">
+            <Stack>
+              <Text
+                styles={{
+                  root: {
+                    paddingBottom: "5px",
+                    paddingTop: "5px",
+                  },
+                }}
+              >
+                Viewing connected account <em>{props.account.id}</em> ( type:{" "}
+                {getReadableAccountType(props.account)},{" "}
+                {renderAccountLoginLinks()}) for platform{" "}
+                <em>{currentAccount.id}</em>
+              </Text>
+              <Text>{renderActions()}</Text>
+            </Stack>
+          </StackItem>
+          <StackItem align="center">
+            <PrimaryButton onClick={props.onBackToMainAppClicked}>
+              Back to main app
+            </PrimaryButton>
+          </StackItem>
+        </Stack>
         <Pivot
           onLinkClick={(a, b) => {
             props.onTabChanged(a?.props.itemKey ?? "");
@@ -215,19 +355,17 @@ StripeConnect.init({
               </StackItem>
             </Stack>
           </PivotItem>
-          <PivotItem
-            headerText="Embedded onboarding"
-            itemKey="Embedded onboarding"
-          >
+          <PivotItem headerText="Onboarding" itemKey="Embedded onboarding">
             <OnboardingExperienceExample />
           </PivotItem>
           <PivotItem
             headerText="Account management"
             itemKey="Account management"
           >
+            <ConnectNotificationBanner />
             <ConnectAccountManagement />
           </PivotItem>
-          <PivotItem headerText="Isolation test" itemKey="Isolation test">
+          <PivotItem headerText="Test" itemKey="Isolation test">
             <ExtractChargeFromStripeElements />
             <ConnectPayments />
           </PivotItem>

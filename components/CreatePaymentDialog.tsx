@@ -15,7 +15,6 @@ import { PaymentsUIClientSecret } from "./PaymentsUIClientSecret";
 type Props = {
   account: Stripe.Account;
   onDismiss: () => void;
-  onSuccessfulPayment: (account: Stripe.Account) => void;
 };
 
 export const CreatePaymentDialog: React.FC<Props> = (props) => {
@@ -31,6 +30,9 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
   const [paymentsUIClientSecret, setPaymentsUIClientSecret] = React.useState<
     string | undefined
   >(undefined);
+
+  const [successfulPayment, setSuccessfulPayment] =
+    React.useState<boolean>(false);
 
   const currentAccountFullDetails = props.account;
 
@@ -93,6 +95,17 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
   };
 
   const renderDialogContent = () => {
+    if (successfulPayment) {
+      return (
+        <Stack>
+          <StackItem>
+            <Text variant="large">Payment successful!</Text>
+          </StackItem>
+          <PrimaryButton onClick={props.onDismiss}>Close</PrimaryButton>
+        </Stack>
+      );
+    }
+
     if (paymentsUIClientSecret) {
       return (
         <Stack>
@@ -105,9 +118,9 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
               destinationCharge={destinationCharge}
               secret={paymentsUIClientSecret}
               account={currentAccountFullDetails}
-              onSuccessfulPayment={() =>
-                props.onSuccessfulPayment(currentAccountFullDetails)
-              }
+              onSuccessfulPayment={() => {
+                setSuccessfulPayment(true);
+              }}
               usePaymentUI={paymentUI}
             />
           </StackItem>

@@ -1,18 +1,14 @@
 import { Dialog, Stack, StackItem, Text, TextField } from "@fluentui/react";
 import * as React from "react";
-import { ReactNode } from "react";
 import { Stripe } from "stripe";
 
 type Props = {
-  account: Stripe.Account | undefined;
+  account: Stripe.Account;
   onDismiss: () => void;
 };
 
 export const PaymentUIExperienceDialog: React.FC<Props> = (props) => {
   const currentAccountFullDetails = props.account;
-  if (!currentAccountFullDetails) {
-    return null;
-  }
 
   return (
     <Dialog hidden={false} onDismiss={props.onDismiss}>
