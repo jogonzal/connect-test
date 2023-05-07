@@ -18,6 +18,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }),
   );
+
+  // Disable server side rendering
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   return (
     // Provide the client to your App
     <QueryClientProvider client={queryClient}>
