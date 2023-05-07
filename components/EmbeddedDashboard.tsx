@@ -3,7 +3,6 @@ import {
   DetailsListLayoutMode,
   Dropdown,
   IColumn,
-  Link,
   Pivot,
   PivotItem,
   PrimaryButton,
