@@ -9,7 +9,7 @@ export default async function handler(
   try {
     const accountId: string = req.body.accountId;
     console.log("Id is ", accountId);
-    const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
+    const redirectUrl = `${getHostUrl(req)}/account/${encodeURIComponent(
       accountId,
     )}`;
 

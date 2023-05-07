@@ -40,7 +40,7 @@ export default async function handler(
     );
 
     console.log("Id is ", connectedAccountId);
-    const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
+    const redirectUrl = `${getHostUrl(req)}/account/${encodeURIComponent(
       connectedAccountId,
     )}`;
 
