@@ -1,3 +1,3 @@
-import { ConnectedAccountList } from "../components/ConnectedAccountList";
+import { ConnectedAccountListPage } from "../components/ConnectedAccountListPage";
 
-export default ConnectedAccountList;
+export default ConnectedAccountListPage;
