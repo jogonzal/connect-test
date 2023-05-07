@@ -25,7 +25,7 @@ export const useRedeemCode = (code: string | null) => {
     ["RedeemCode", code],
     async (): Promise<Stripe.OAuthToken> => {
       if (!code) {
-        throw new Error("Please provide an code");
+        throw new Error("Please provide a code");
       }
 
       const account = await redeemCode(code);
