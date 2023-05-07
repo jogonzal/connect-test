@@ -14,13 +14,13 @@ import { useGetAccount } from "../hooks/useGetAccount";
 import { embeddedDashboardUrl } from "../utils/urls";
 
 type Props = {
-  account?: Stripe.Account;
+  account: Stripe.Account;
   onDismiss: () => void;
 };
 
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
   const account = props.account;
-  const obtainedAccount = useGetAccount(props.account?.id ?? "");
+  const obtainedAccount = useGetAccount(props.account.id);
   const router = useRouter();
 
   if (!account) {

@@ -16,9 +16,3 @@ export class MyAppDatabase extends Dexie {
 }
 
 export const db = new MyAppDatabase();
-
-const runAsync = async () => {
-  const arr: Stripe.Account[] = await db.starredAccounts.toArray();
-  console.log(`I have these elements: `, arr);
-};
-runAsync();

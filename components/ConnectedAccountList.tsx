@@ -182,7 +182,7 @@ export const ConnectedAccountList: React.FC<{
       },
       {
         key: "star",
-        name: "",
+        name: "Star",
         minWidth: 40,
         onRender: (row: Stripe.Account) => {
           const alreadyFavorited =
@@ -205,10 +205,12 @@ export const ConnectedAccountList: React.FC<{
   return (
     <>
       {/* Render dialogs */}
-      <AccountDetailsDialog
-        account={currentAccountFullDetails}
-        onDismiss={() => setCurrentAccountFullDetails(undefined)}
-      />
+      {currentAccountFullDetails && (
+        <AccountDetailsDialog
+          account={currentAccountFullDetails}
+          onDismiss={() => setCurrentAccountFullDetails(undefined)}
+        />
+      )}
       {showCheckoutDialogForMerchant && (
         <CreatePaymentDialog
           account={showCheckoutDialogForMerchant}
@@ -235,6 +237,7 @@ export const ConnectedAccountList: React.FC<{
         columns={getColumns()}
         layoutMode={DetailsListLayoutMode.justified}
         selectionMode={SelectionMode.none}
+        getKey={(item) => item.id}
       />
     </>
   );
