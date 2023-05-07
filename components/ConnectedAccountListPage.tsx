@@ -122,13 +122,13 @@ export const ConnectedAccountListPage: React.FC = () => {
                 </Stack>
               </Stack>
             </StackItem>
-            <Separator />
             {isGetStarredAccountsLoading && <Spinner label="Loading..." />}
             {isGetStarredAccountsError && (
               <Text>Failed to load starred accounts!</Text>
             )}
             {starredAccounts && starredAccounts.length > 0 && (
               <>
+                <Separator />
                 <Text variant="mediumPlus">Starred accounts</Text>
                 <ConnectedAccountList
                   displayStar={false}
@@ -139,19 +139,17 @@ export const ConnectedAccountListPage: React.FC = () => {
               </>
             )}
             <Separator />
-            {isGetAccountsLoading && <Spinner label="Loading..." />}
             {isGetAccountsError && <Text>Failed to load accounts!</Text>}
-            {accounts && starredAccounts !== undefined && (
-              <>
-                <Text variant="mediumPlus">All accounts</Text>
-                <ConnectedAccountList
-                  displayStar={true}
-                  accounts={accounts.data}
-                  onStarRefetch={refetchStarredAccounts}
-                  starredAccounts={starredAccounts}
-                />
-              </>
-            )}
+            <>
+              <Text variant="mediumPlus">All accounts</Text>
+              <ConnectedAccountList
+                displayStar={true}
+                accounts={accounts?.data ?? []}
+                onStarRefetch={refetchStarredAccounts}
+                starredAccounts={starredAccounts ?? []}
+              />
+              {isGetAccountsLoading && <Spinner label="Loading..." />}
+            </>
             <StackItem>
               <Stack horizontal>
                 <PrimaryButton
