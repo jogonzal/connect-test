@@ -9,7 +9,7 @@ export const useGetCustomers = (accountId: string | null) => {
         throw new Error("Please provide an account id");
       }
 
-      const response = await fetch("/api/get-customers", {
+      const response = await fetch("/api/list-customers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

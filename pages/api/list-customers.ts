@@ -10,18 +10,13 @@ export default async function handler(
 
     console.log("Id is ", connectedAccountId);
 
-    const paymentIntent = await StripeClient.paymentIntents.list(
-      {
-        expand: ["data.payment_method"],
-      },
-      {
-        stripeAccount: connectedAccountId,
-      },
-    );
+    const customers = await StripeClient.customers.list({
+      stripeAccount: connectedAccountId,
+    });
 
-    console.log("Obtained payment intents!", paymentIntent);
+    console.log("Obtained customers!", customers);
 
-    res.status(200).send(paymentIntent);
+    res.status(200).send(customers);
   } catch (error) {
     const errorAsAny = error as any;
     const errorMessage =

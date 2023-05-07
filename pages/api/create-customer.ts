@@ -6,27 +6,28 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const connectedAccountId: string = req.body.connectedAccountId;
+    const accountId: string = req.body.accountId;
+    console.log("Id is ", accountId);
+    const customer: any = req.body.customer;
 
-    console.log("Id is ", connectedAccountId);
-
-    const paymentIntent = await StripeClient.paymentIntents.list(
+    const customerData = await StripeClient.customers.create(
       {
-        expand: ["data.payment_method"],
+        name: customer.name,
+        description: customer.description,
       },
       {
-        stripeAccount: connectedAccountId,
+        stripeAccount: accountId,
       },
     );
 
-    console.log("Obtained payment intents!", paymentIntent);
+    console.log("Created customer!", customerData);
 
-    res.status(200).send(paymentIntent);
+    res.status(200).json(customerData);
   } catch (error) {
     const errorAsAny = error as any;
     const errorMessage =
       errorAsAny && errorAsAny.message ? errorAsAny.message : "unknown";
-    console.log("Error while querying", error);
+    console.log("Error while creating", error);
     res.status(500).json({ error: errorMessage });
   }
 }

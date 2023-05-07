@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getHostUrl } from "../../config/EnvironmentVariables";
 import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(

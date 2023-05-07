@@ -205,13 +205,7 @@ StripeConnect.init({
             {renderPaymentDetailUI()}
             <Stack>
               <StackItem>
-                <Text variant="large">
-                  Viewing embedded dashboard for account {props.account.id}
-                </Text>
-              </StackItem>
-              <StackItem>
-                <Link href="/">Back to home - </Link>
-                <Text>Payments</Text>
+                <Text>Payments (custom table)</Text>
                 {charges && (
                   <DetailsList
                     items={charges}

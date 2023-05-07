@@ -1,6 +1,5 @@
 import { Stripe } from "stripe";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getHostUrl } from "../../config/EnvironmentVariables";
 import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
@@ -24,11 +23,6 @@ export default async function handler(
     console.log("Using description...", productName);
 
     console.log("Id is ", connectedAccountId);
-    const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
-      connectedAccountId,
-    )}`;
-
-    console.log("Redirect url is ", redirectUrl);
 
     let customer: Stripe.Customer | undefined = undefined;
     if (useCustomer) {

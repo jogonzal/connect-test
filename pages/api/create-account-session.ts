@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getHostUrl } from "../../config/EnvironmentVariables";
 import { StripeClient } from "../../config/StripeUtils";
 
 export default async function handler(
@@ -9,11 +8,6 @@ export default async function handler(
   try {
     const accountId: string = req.body.accountId;
     console.log("Id is ", accountId);
-    const redirectUrl = `${getHostUrl(req)}?accountId=${encodeURIComponent(
-      accountId,
-    )}`;
-
-    console.log("Redirect url is ", redirectUrl);
 
     // Specify the API version to include the beta header
     const accountSessionResponse = await StripeClient.accountSessions.create({
