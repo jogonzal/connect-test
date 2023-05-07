@@ -314,13 +314,6 @@ StripeConnect.init({
             </PrimaryButton>
           </PivotItem>
           <PivotItem headerText="Theming" itemKey="Theming">
-            <div
-              style={{
-                backgroundColor: "var(--jorgecolor)",
-              }}
-            >
-              {'This div has background color "var(--jorgecolor)"'}
-            </div>
             <DebugConfigElement
               connectInstance={data as ExtendedStripeConnectInstance}
             />
