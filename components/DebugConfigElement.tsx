@@ -62,6 +62,7 @@ export const DebugConfigElement: React.FC<Props> = ({ connectInstance }) => {
     <>
       <stripe-connect-debug-ui-config ref={elementRef} />
       <pre>{JSON.stringify(appearance, null, "\t")}</pre>
+      <stripe-connect-debug-ui-preview />
     </>
   );
 };
