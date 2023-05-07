@@ -1,6 +1,7 @@
 import {
   DetailsList,
   DetailsListLayoutMode,
+  Dropdown,
   IColumn,
   Link,
   Pivot,
@@ -14,9 +15,7 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
-import { useGetAccount } from "../hooks/useGetAccount";
 import { useGetCharges } from "../hooks/useGetCharges";
-import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { CustomersTab } from "./CustomersTab";
 import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
@@ -32,44 +31,10 @@ import {
   DebugConfigElement,
   ExtendedStripeConnectInstance,
 } from "./DebugConfigElement";
-
-export const EmbeddedDashboard = () => {
-  const initialTab =
-    new URL(window.location.href).hash.replaceAll("#", "") ?? "Payments";
-  const accountId = new URL(window.location.href).searchParams.get("account");
-
-  const { data: account, isLoading, error } = useGetAccount(accountId);
-  const {
-    data: platform,
-    isLoading: isPlatformLoading,
-    error: isPlatformError,
-  } = useGetCurrentAccount();
-
-  const [currentTab, setCurrentTab] = React.useState<string>(initialTab);
-
-  if (error || isPlatformError) {
-    return <Text>Failed to get account</Text>;
-  }
-
-  if (isLoading || !account || isPlatformLoading || !platform) {
-    return <Spinner label="Getting account..." />;
-  }
-
-  return (
-    <EmbeddedDashboardInternal
-      currentTab={currentTab}
-      account={account}
-      platform={platform}
-      onTabChanged={(tab: string) => {
-        setCurrentTab(tab);
-        window.location.hash = tab;
-      }}
-      onBackToMainAppClicked={() => {
-        window.location.href = "/";
-      }}
-    />
-  );
-};
+import { fetchClientSecret } from "../hooks/fetchClientSecret";
+import { StripePublicKey } from "../config/ClientConfig";
+import { getReadableAccountType } from "../utils/getReadableAccountType";
+import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 
 type Props = {
   account: Stripe.Account;
@@ -87,13 +52,28 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   } = useGetCharges(props.account);
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
   const { isLoading, error, data } = useConnectJSInit(props.account.id);
+  const {
+    isLoading: isCurrentAccountLoading,
+    isError: isCurrentAccountError,
+    data: currentAccount,
+  } = useGetCurrentAccount();
 
-  if (error || chargesError) {
+  const [connectElementOption, setConnectElementOption] = React.useState(
+    "stripe-connect-payments",
+  );
+
+  if (error || chargesError || isCurrentAccountError) {
     return <Text>An error occurred</Text>;
   }
 
-  if (isLoading || chargesIsLoading || !data) {
-    return <Spinner label="Loading charges..." />;
+  if (
+    isLoading ||
+    chargesIsLoading ||
+    !data ||
+    isCurrentAccountLoading ||
+    !currentAccount
+  ) {
+    return <Spinner label="Loading..." />;
   }
 
   const loginAsExpress = async () => {
@@ -172,12 +152,42 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     );
   };
 
+  const copyEmbeddableScript = async () => {
+    const newSecret = await fetchClientSecret(props.account.id);
+    const injectableScript = `
+document.body.appendChild(document.createElement('${connectElementOption}'));
+const script = document.createElement('script')
+script.src = 'https://connect-js.stripe.com/v0.1/connect.js';
+document.head.appendChild(script)
+window.StripeConnect = window.StripeConnect || {};
+StripeConnect.onLoad = () => {
+StripeConnect.init({
+    clientSecret:'${newSecret}',
+    publishableKey: '${StripePublicKey}',
+});
+};`;
+    // Copy into clipboard
+    navigator.clipboard.writeText(injectableScript);
+  };
+
   return (
     <ConnectComponentsProvider connectInstance={data}>
       <Stack>
         <PrimaryButton onClick={props.onBackToMainAppClicked}>
           Back to main app
         </PrimaryButton>
+        <Text
+          styles={{
+            root: {
+              paddingBottom: "5px",
+              paddingTop: "5px",
+            },
+          }}
+        >
+          Viewing connected account <em>{props.account.id}</em> (
+          {getReadableAccountType(props.account)}) for platform{" "}
+          <em>{currentAccount.id}</em>
+        </Text>
         <Pivot
           onLinkClick={(a, b) => {
             props.onTabChanged(a?.props.itemKey ?? "");
@@ -236,11 +246,63 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
             <PrimaryButton onClick={loginAsExpress}>
               Login to express
             </PrimaryButton>
-            <PrimaryButton href={`https://go/o/${props.account.id}`}>
-              Login as CA
-            </PrimaryButton>
             <PrimaryButton href={`https://go/o/${props.platform.id}`}>
               Login as CA
+            </PrimaryButton>
+            <StackItem>
+              <Stack horizontal>
+                <StackItem>
+                  <PrimaryButton onClick={copyEmbeddableScript}>
+                    Copy embeddable script
+                  </PrimaryButton>
+                  <Dropdown
+                    selectedKey={connectElementOption}
+                    onChange={(_ev, opt) =>
+                      setConnectElementOption(
+                        opt?.key?.toString() ?? "stripe-connect-payments",
+                      )
+                    }
+                    options={[
+                      {
+                        key: "stripe-connect-payments",
+                        text: "stripe-connect-payments",
+                      },
+                      {
+                        key: "stripe-connect-payouts",
+                        text: "stripe-connect-payouts",
+                      },
+                      {
+                        key: "stripe-connect-account-management",
+                        text: "stripe-connect-account-management",
+                      },
+                      {
+                        key: "stripe-connect-account-onboarding",
+                        text: "stripe-connect-account-onboarding",
+                      },
+                      {
+                        key: "stripe-connect-debug-utils",
+                        text: "stripe-connect-debug-utils",
+                      },
+                    ]}
+                  />
+                </StackItem>
+              </Stack>
+            </StackItem>
+            <PrimaryButton
+              onClick={async () => {
+                const response = await fetch("/api/prefill-account", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    accountId: props.account.id,
+                  }),
+                });
+                // TODO: refresh account?
+              }}
+            >
+              Prefill account
             </PrimaryButton>
           </PivotItem>
           <PivotItem headerText="Theming" itemKey="Theming">
