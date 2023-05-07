@@ -24,6 +24,7 @@ import { CreateAccountDialog } from "./CreateAccountDialog";
 import { CreateTestDataDialog } from "./CreateTestDataDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 import { serializeError } from "serialize-error";
+import { useRouter } from "next/router";
 
 export const ConnectedAccountList: React.FC = () => {
   const [startingAfterStack, setStartingAfterStack] = React.useState<string[]>(
@@ -42,6 +43,7 @@ export const ConnectedAccountList: React.FC = () => {
     error: isGetCurrentAccountError,
     refetch: refetchCurrentAccount,
   } = useGetCurrentAccount();
+  const router = useRouter();
 
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
@@ -153,7 +155,15 @@ export const ConnectedAccountList: React.FC = () => {
           const toRender = [];
           const accountId = row.id;
           const url = embeddedDashboardUrl(accountId);
-          toRender.push(<Link href={url}>Embed</Link>);
+          toRender.push(
+            <Link
+              onClick={() => {
+                router.push(url);
+              }}
+            >
+              Embed
+            </Link>,
+          );
 
           if (row.type === "express") {
             const url = `/api/create-dashboard-login-link?connectedAccountId=${accountId}`;

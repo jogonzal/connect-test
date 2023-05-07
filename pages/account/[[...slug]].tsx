@@ -25,6 +25,7 @@ const AccountDetailPageInternal: React.FC<{
   accountId: string;
   activeTab: string;
 }> = ({ accountId, activeTab }) => {
+  const router = useRouter();
   const { data: account, isLoading, error } = useGetAccount(accountId);
   const {
     data: platform,
@@ -40,7 +41,19 @@ const AccountDetailPageInternal: React.FC<{
     return <Spinner label="Getting account..." />;
   }
 
-  return <EmbeddedDashboardInternal account={account} platform={platform} />;
+  return (
+    <EmbeddedDashboardInternal
+      account={account}
+      platform={platform}
+      onTabChanged={(tab) => {
+        router.push(`/account/${accountId}/${tab}`);
+      }}
+      currentTab={activeTab}
+      onBackToMainAppClicked={() => {
+        router.push("/");
+      }}
+    />
+  );
 };
 
 export default AccountDetailPage;

@@ -11,6 +11,7 @@ import {
   Text,
   TextField,
 } from "@fluentui/react";
+import { useRouter } from "next/router";
 import * as React from "react";
 import { Stripe } from "stripe";
 import { StripePublicKey } from "../config/ClientConfig";
@@ -29,6 +30,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
   const [connectElementOption, setConnectElementOption] = React.useState(
     "stripe-connect-payments",
   );
+  const router = useRouter();
 
   if (!account) {
     return null;
@@ -66,7 +68,11 @@ StripeConnect.onLoad = () => {
         <StackItem>
           <Text variant="large">Account {account.id}</Text>
         </StackItem>
-        <PrimaryButton href={embeddedDashboardUrl(account.id)}>
+        <PrimaryButton
+          onClick={() => {
+            router.push(embeddedDashboardUrl(account.id));
+          }}
+        >
           Embedded dashboard
         </PrimaryButton>
         <PrimaryButton

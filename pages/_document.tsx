@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import { Stylesheet, resetIds, initializeIcons } from "@fluentui/react";
+import { Stylesheet, resetIds } from "@fluentui/react";
 // Fluent UI React (Fabric) 7 or earlier
 // import { Stylesheet, resetIds } from 'office-ui-fabric-react';
 
@@ -17,15 +17,6 @@ type Props = {
   styleTags: any;
   serializedStylesheet: any;
 };
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
 
 // Now set up the document, and just reset the stylesheet.
 export default class MyDocument extends Document<Props> {
@@ -45,44 +36,44 @@ export default class MyDocument extends Document<Props> {
   render() {
     return (
       <Html>
-        <Head>
-          <link rel="icon" href="/favicon.ico" />
-          <script
-            async
-            src="https://js.stripe.com/v3/pricing-table.js"
-          ></script>
+        <div
+          style={{
+            fontFamily:
+              '"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif',
+          }}
+        >
+          <Head>
+            <link rel="icon" href="/favicon.ico" />
+            <script
+              async
+              src="https://js.stripe.com/v3/pricing-table.js"
+            ></script>
 
-          <style
-            type="text/css"
-            dangerouslySetInnerHTML={{ __html: this.props.styleTags }}
-          />
-          {/*<!--
+            <style
+              type="text/css"
+              dangerouslySetInnerHTML={{ __html: this.props.styleTags }}
+            />
+            {/*<!--
             This is one example on how to pass the data.
             The main purpose is to set the config before the Stylesheet gets initialized on the client.
             Use whatever method works best for your setup to achieve that.
           --> */}
-          <script
-            type="text/javascript"
-            dangerouslySetInnerHTML={{
-              __html: `
+            <script
+              type="text/javascript"
+              dangerouslySetInnerHTML={{
+                __html: `
             window.FabricConfig = window.FabricConfig || {};
             window.FabricConfig.serializedStylesheet = ${this.props.serializedStylesheet};
           `,
-            }}
-          />
-        </Head>
-        <body>
-          <QueryClientProvider client={queryClient}>
+              }}
+            />
+          </Head>
+          <body>
             <Main />
-          </QueryClientProvider>
-          <NextScript />
-        </body>
+            <NextScript />
+          </body>
+        </div>
       </Html>
     );
   }
-}
-
-// Only run in client
-if (typeof window !== "undefined") {
-  initializeIcons();
 }

@@ -9,12 +9,10 @@ export const useConnectJSInit = (accountId: string) => {
     const stripeConnect = await loadConnect();
     const secret = await fetchClientSecret(accountId);
 
-    return stripeConnect!.initialize({
+    return stripeConnect.initialize({
       publishableKey: publishableKey,
       clientSecret: secret,
-      appearance: {
-        colorPrimary: "#00FF00",
-      },
+      appearance: {},
       uiConfig: {
         overlay: "drawer",
       },

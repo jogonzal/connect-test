@@ -28,7 +28,10 @@ import {
   ConnectPayments,
   ConnectPayouts,
 } from "@stripe/react-connect-js";
-import { DebugConfigElement } from "./DebugConfigElement";
+import {
+  DebugConfigElement,
+  ExtendedStripeConnectInstance,
+} from "./DebugConfigElement";
 
 export const EmbeddedDashboard = () => {
   const initialTab =
@@ -61,6 +64,9 @@ export const EmbeddedDashboard = () => {
         setCurrentTab(tab);
         window.location.hash = tab;
       }}
+      onBackToMainAppClicked={() => {
+        window.location.href = "/";
+      }}
     />
   );
 };
@@ -70,6 +76,7 @@ type Props = {
   platform: Stripe.Account;
   onTabChanged: (tab: string) => void;
   currentTab: string;
+  onBackToMainAppClicked: () => void;
 };
 
 export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
@@ -168,7 +175,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   return (
     <ConnectComponentsProvider connectInstance={data}>
       <Stack>
-        <PrimaryButton href="/">Back to main app</PrimaryButton>
+        <PrimaryButton onClick={props.onBackToMainAppClicked}>
+          Back to main app
+        </PrimaryButton>
         <Pivot
           onLinkClick={(a, b) => {
             props.onTabChanged(a?.props.itemKey ?? "");
@@ -242,8 +251,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
             >
               {'This div has background color "var(--jorgecolor)"'}
             </div>
-            <stripe-connect-debug-ui-config />
-            <DebugConfigElement />
+            <DebugConfigElement
+              connectInstance={data as ExtendedStripeConnectInstance}
+            />
           </PivotItem>
           <PivotItem headerText="Pricing table" itemKey="Pricing table">
             <PricingTable />

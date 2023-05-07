@@ -1,12 +1,14 @@
 import * as React from "react";
 import { Link, Spinner, Text } from "@fluentui/react";
 import { useRedeemCode } from "../hooks/useRedeemCode";
+import { useRouter } from "next/router";
 
 export const OauthRedirectPage: React.FC = () => {
   const url = new URL(window.location.href);
   const code = url.searchParams.get("code");
   const error = url.searchParams.get("error");
   const error_description = url.searchParams.get("error");
+  const router = useRouter();
 
   const { data, isLoading, error: apiError } = useRedeemCode(code);
 
@@ -29,7 +31,13 @@ export const OauthRedirectPage: React.FC = () => {
   return (
     <Text>
       Successfully connected to account {data?.stripe_user_id}.{" "}
-      <Link href="/">Click here to go back to the main page</Link>
+      <Link
+        onClick={() => {
+          router.push("./");
+        }}
+      >
+        Click here to go back to the main page
+      </Link>
     </Text>
   );
 };
