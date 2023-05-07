@@ -304,6 +304,21 @@ StripeConnect.init({
             >
               Prefill account
             </PrimaryButton>
+            <PrimaryButton
+              onClick={async () => {
+                const response = await fetch("/api/add-capabilities", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    accountId: props.account.id,
+                  }),
+                });
+              }}
+            >
+              Add capabilities
+            </PrimaryButton>
           </PivotItem>
           <PivotItem headerText="Theming" itemKey="Theming">
             <div

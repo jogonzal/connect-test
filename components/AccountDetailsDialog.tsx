@@ -46,45 +46,8 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
             router.push(embeddedDashboardUrl(account.id));
           }}
         >
-          Embedded dashboard
+          Account dashboard
         </PrimaryButton>
-        <PrimaryButton
-          onClick={async () => {
-            const response = await fetch("/api/add-capabilities", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                accountId: account.id,
-              }),
-            });
-          }}
-        >
-          Add capabilities
-        </PrimaryButton>
-        {account.type === "express" && (
-          <PrimaryButton
-            onClick={async () => {
-              const response = await fetch("/api/express-login-link", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  accountId: account.id,
-                }),
-              });
-              if (!response.ok) {
-                throw new Error(`Unexpected response code ${response.status}`);
-              }
-              const json = await response.json();
-              console.log(json.url);
-            }}
-          >
-            Express login link
-          </PrimaryButton>
-        )}
         <StackItem>
           <TextField
             multiline
