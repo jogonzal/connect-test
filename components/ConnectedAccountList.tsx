@@ -191,6 +191,7 @@ export const ConnectedAccountList: React.FC<{
           return (
             <>
               <IconButton
+                style={{ height: "16px", width: "16px" }}
                 iconProps={displayStar ? starIcon : deleteIcon}
                 onClick={() => starOrDelete(row)}
                 disabled={!!alreadyFavorited}
