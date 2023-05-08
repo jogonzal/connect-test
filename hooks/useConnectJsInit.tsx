@@ -44,6 +44,7 @@ export const useConnectJSInit = (accountId: string) => {
         flagOverrides: {
           enable_embedded_theming_demo: true,
           enable_uiconfig_copy_link: true,
+          enable_developer_ids: true,
         },
       },
     } as any);
