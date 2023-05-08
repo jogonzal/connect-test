@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { initializeIcons } from "@fluentui/react";
+import { LocaleAndThemingOptions } from "../components/LocaleAndThemingOptions";
 
 // The code in this file gets included for all components!
 
@@ -26,10 +27,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     // Provide the client to your App
-    <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+      <LocaleAndThemingOptions />
+    </>
   );
 }
 
