@@ -5,6 +5,7 @@ import {
   StripeConnectInstance,
   loadConnect,
   IStripeConnectInitParams,
+  AppearanceOptions,
 } from "@stripe/connect-js";
 
 export const useConnectJSInit = (accountId: string) => {
@@ -13,10 +14,20 @@ export const useConnectJSInit = (accountId: string) => {
     const stripeConnect = await loadConnect();
     const secret = await fetchClientSecret(accountId);
 
+    const appearanceForLightMode: AppearanceOptions = {};
+    const appearanceForDarkMode = {
+      colorSecondaryButtonBackground: "#7F7A7A",
+      colorSecondaryButtonBorder: "#7F7A7A",
+      colorOffsetBackground: "#4F4F4F",
+    } as any;
+
+    const theme = localStorage.getItem("theme") || "Light";
+
     const initProps: IStripeConnectInitParams = {
       publishableKey: publishableKey,
       clientSecret: secret,
-      appearance: {},
+      appearance:
+        theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
       uiConfig: {
         overlay: "drawer",
       },

@@ -43,6 +43,8 @@ const darkTheme = createTheme({
     white: "#222222",
   },
 });
+darkTheme.name = "Dark";
+
 export const lightTheme = createTheme({
   defaultFontStyle: {},
   fonts: {
@@ -81,6 +83,7 @@ export const lightTheme = createTheme({
     white: "#ffffff",
   },
 });
+lightTheme.name = "Light";
 
 export const LocaleAndThemingOptions: React.FC = () => {
   const [currentTheme, setCurrentTheme] = React.useState<Theme>(
