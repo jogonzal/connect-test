@@ -13,6 +13,7 @@ declare global {
   namespace JSX {
     interface IntrinsicElements {
       ["stripe-connect-debug-utils"]: CustomElement<{}>;
+      ["tripe-connect-transactions"]: CustomElement<{}>;
       ["stripe-connect-debug-ui-config"]: CustomElement<{}>;
       ["stripe-connect-debug-ui-preview"]: CustomElement<{}>;
       ["stripe-pricing-table"]: CustomElement<{}>;

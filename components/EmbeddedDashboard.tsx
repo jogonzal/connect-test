@@ -337,6 +337,9 @@ StripeConnect.init({
           <PivotItem headerText="Payments" itemKey="Payments">
             <ConnectPayments />
           </PivotItem>
+          <PivotItem headerText="Transactions" itemKey="Transactions">
+            <stripe-connect-transactions />
+          </PivotItem>
           <PivotItem headerText="Payouts" itemKey="Payouts">
             <ConnectPayouts />
           </PivotItem>
