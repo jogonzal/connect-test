@@ -1,4 +1,4 @@
-import { Dropdown } from "@fluentui/react";
+import { Dropdown, Stack } from "@fluentui/react";
 import * as React from "react";
 import { createTheme, loadTheme } from "@fluentui/react";
 
@@ -86,32 +86,55 @@ export const LocaleAndThemingOptions: React.FC = () => {
   const [currentTheme, setCurrentTheme] = React.useState<Theme>(
     (localStorage.getItem("theme") as Theme) ?? "Light",
   );
+  const [currentLocale, setCurrentLocale] = React.useState<string>(
+    (localStorage.getItem("locale") as Theme) ?? "en-us",
+  );
 
   React.useEffect(() => {}, [currentTheme]);
 
   return (
     <div>
       <div style={{ position: "fixed", bottom: "0", right: "0" }}>
-        <Dropdown
-          options={[
-            {
-              key: "Light",
-              text: "Light",
-            },
-            {
-              key: "Dark",
-              text: "Dark",
-            },
-          ]}
-          selectedKey={currentTheme}
-          onChange={(_ev, item) => {
-            const newTheme = item?.key as Theme;
-            setCurrentTheme(newTheme);
-            localStorage.setItem("theme", newTheme);
-            ThemeUtils.loadTheme(newTheme);
-            window.location.reload();
-          }}
-        />
+        <Stack horizontal>
+          <Dropdown
+            options={[
+              {
+                key: "Light",
+                text: "Light",
+              },
+              {
+                key: "Dark",
+                text: "Dark",
+              },
+            ]}
+            selectedKey={currentTheme}
+            onChange={(_ev, item) => {
+              const newTheme = item?.key as Theme;
+              setCurrentTheme(newTheme);
+              localStorage.setItem("theme", newTheme);
+              ThemeUtils.loadTheme(newTheme);
+              window.location.reload();
+            }}
+          />
+          {/* <Dropdown
+            options={[
+              {
+                key: "en-us",
+                text: "en-us",
+              },
+              {
+                key: "es-mx",
+                text: "es-mx",
+              },
+            ]}
+            selectedKey={currentLocale}
+            onChange={(_ev, item) => {
+              const newLocale = item?.key as string;
+              setCurrentLocale(newLocale);
+              localStorage.setItem("locale", newLocale);
+            }}
+          /> */}
+        </Stack>
       </div>
     </div>
   );
