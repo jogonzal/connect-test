@@ -1,12 +1,8 @@
-import {
-  Dropdown,
-  ITheme,
-  registerOnThemeChangeCallback,
-} from "@fluentui/react";
+import { Dropdown } from "@fluentui/react";
 import * as React from "react";
 import { createTheme, loadTheme } from "@fluentui/react";
 
-type Theme = "Light" | "Dark";
+export type Theme = "Light" | "Dark";
 
 // Theme generator: https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html
 const darkTheme = createTheme({
@@ -87,11 +83,11 @@ export const lightTheme = createTheme({
 });
 
 export const LocaleAndThemingOptions: React.FC = () => {
-  const [currentTheme, setCurrentTheme] = React.useState<Theme>("Light");
+  const [currentTheme, setCurrentTheme] = React.useState<Theme>(
+    (localStorage.getItem("theme") as Theme) ?? "Light",
+  );
 
-  React.useEffect(() => {
-    ThemeUtils.loadTheme(currentTheme);
-  }, [currentTheme]);
+  React.useEffect(() => {}, [currentTheme]);
 
   return (
     <div>
@@ -109,7 +105,11 @@ export const LocaleAndThemingOptions: React.FC = () => {
           ]}
           selectedKey={currentTheme}
           onChange={(_ev, item) => {
-            setCurrentTheme(item?.key as Theme);
+            const newTheme = item?.key as Theme;
+            setCurrentTheme(newTheme);
+            localStorage.setItem("theme", newTheme);
+            ThemeUtils.loadTheme(newTheme);
+            window.location.reload();
           }}
         />
       </div>
@@ -122,18 +122,14 @@ export class ThemeUtils {
     switch (theme) {
       case "Light":
         loadTheme(lightTheme);
+        setTimeout(() => loadTheme(lightTheme), 100);
         break;
       case "Dark":
         loadTheme(darkTheme);
+        setTimeout(() => loadTheme(darkTheme), 100);
         break;
       default:
         throw new Error("Unhandled theme!");
     }
   }
 }
-
-registerOnThemeChangeCallback((theme: ITheme) => {
-  const root = document.getElementsByTagName("html")[0];
-  root.style.backgroundColor = theme.semanticColors.bodyBackground;
-  root.style.color = theme.semanticColors.bodyText;
-});

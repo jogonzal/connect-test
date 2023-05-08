@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import Stripe from "stripe";
-import { db } from "../clientsStorage/StarredAccountsDatabase";
+import { db } from "../clientsStorage/Database";
 
 export const useGetStarredAccounts = () => {
   return useQuery<Stripe.Account[], Error>(

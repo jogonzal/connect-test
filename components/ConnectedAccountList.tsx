@@ -12,13 +12,10 @@ import {
 import { useRouter } from "next/router";
 import * as React from "react";
 import Stripe from "stripe";
-import { db } from "../clientsStorage/StarredAccountsDatabase";
+import { db } from "../clientsStorage/Database";
 import { getReadableAccountType } from "../utils/getReadableAccountType";
 import { embeddedDashboardUrl } from "../utils/urls";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
-import { CreatePaymentDialog } from "./CreatePaymentDialog";
-import { CreateTestDataDialog } from "./CreateTestDataDialog";
-import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 
 const deleteIcon: IIconProps = { iconName: "Delete" };
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
