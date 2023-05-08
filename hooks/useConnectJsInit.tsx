@@ -19,6 +19,10 @@ export const useConnectJSInit = (accountId: string) => {
       colorSecondaryButtonBackground: "#7F7A7A",
       colorSecondaryButtonBorder: "#7F7A7A",
       colorOffsetBackground: "#4F4F4F",
+      colorText: "#FFFFFF",
+      colorSecondaryText: "#C4C4C4",
+      colorBorder: "#696969",
+      colorBorderHighlight: "#616161",
     } as any;
 
     const theme = localStorage.getItem("theme") || "Light";
