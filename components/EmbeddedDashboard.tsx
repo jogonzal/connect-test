@@ -138,6 +138,18 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         onRender: (row: Stripe.PaymentIntent) => row.application_fee_amount,
       },
       {
+        key: "edit_description_destionation",
+        name: "Edit description",
+        minWidth: 100,
+        onRender: (row: Stripe.PaymentIntent) => (
+          <>
+            <PrimaryButton onClick={() => onEditDescription(row.id)}>
+              Edit description
+            </PrimaryButton>
+          </>
+        ),
+      },
+      {
         key: "view_details",
         name: "details",
         minWidth: 100,
@@ -162,6 +174,23 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         onClose={() => setChargeId(undefined)}
       />
     );
+  };
+
+  const onEditDescription = async (id: string) => {
+    const response = await fetch("/api/edit-payment-intent", {
+      method: "POST",
+      body: JSON.stringify({
+        id,
+        accountId: props.account.id,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.log("failed!");
+    }
   };
 
   const copyEmbeddableScript = async () => {
