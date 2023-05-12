@@ -53,8 +53,12 @@ export const CreateTestDataDialog: React.FC<Props> = ({
     createTestChargeAsync();
   };
 
-  const onCreateAccountDebit = async () => {
-    createDebitAsync();
+  const onCreateAccountDebitViaCharge = async () => {
+    createDebitAsync({ method: "charge" });
+  };
+
+  const onCreateAccountDebitViaTransfer = async () => {
+    createDebitAsync({ method: "transfer" });
   };
 
   return (
@@ -77,8 +81,11 @@ export const CreateTestDataDialog: React.FC<Props> = ({
           {createChargeError && (
             <Text>Error! {JSON.stringify(createChargeError)}</Text>
           )}
-          <PrimaryButton onClick={onCreateAccountDebit}>
-            Create account debit
+          <PrimaryButton onClick={onCreateAccountDebitViaCharge}>
+            Create account debit (via charge)
+          </PrimaryButton>
+          <PrimaryButton onClick={onCreateAccountDebitViaTransfer}>
+            Create account debit (via transfer)
           </PrimaryButton>
           {createDebitLoading ?? <Spinner />}
           {createDebitData && <Text>Created!</Text>}

@@ -1,12 +1,16 @@
 import { useMutation } from "react-query";
 import Stripe from "stripe";
 
+export type AccountDebitCreateMethod = "charge" | "transfer";
+
 const createDebit = async (
   accountId: string,
+  method: AccountDebitCreateMethod,
 ): Promise<Stripe.ApiList<Stripe.Account>> => {
   const accountDebitResponse = await fetch("/api/create-account-debit", {
     body: JSON.stringify({
       accountId,
+      method,
     }),
     method: "POST",
     headers: {
@@ -23,10 +27,14 @@ const createDebit = async (
 };
 
 export const useCreateAccountDebit = (accountId: string) => {
-  return useMutation<Stripe.ApiList<Stripe.Account>, Error>(
+  return useMutation<
+    Stripe.ApiList<Stripe.Account>,
+    Error,
+    { method: AccountDebitCreateMethod }
+  >(
     "CreateAccountDebit-" + accountId,
-    async (): Promise<Stripe.ApiList<Stripe.Account>> => {
-      const accounts = await createDebit(accountId);
+    async ({ method }): Promise<Stripe.ApiList<Stripe.Account>> => {
+      const accounts = await createDebit(accountId, method);
 
       return accounts;
     },
