@@ -3,6 +3,7 @@ import {
   DetailsListLayoutMode,
   Dialog,
   IColumn,
+  Link,
   PrimaryButton,
   Spinner,
   Stack,
@@ -83,6 +84,18 @@ export const CustomersTab = ({ accountId }: { accountId: string }) => {
         name: "balance",
         minWidth: 100,
         onRender: (row: Stripe.Customer) => row.balance,
+      },
+      {
+        key: "portal",
+        name: "portal",
+        minWidth: 100,
+        onRender: (row: Stripe.Customer) => (
+          <Link
+            href={`/api/customer-portal?accountId=${accountId}&customerId=${row.id}`}
+          >
+            Customer poral
+          </Link>
+        ),
       },
     ];
   };

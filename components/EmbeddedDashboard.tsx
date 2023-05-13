@@ -484,9 +484,11 @@ StripeConnect.init({
             </PrimaryButton>
           </PivotItem>
           <PivotItem headerText="Theming" itemKey="Theming">
-            <DebugConfigElement
-              connectInstance={data as ExtendedStripeConnectInstance}
-            />
+            <div style={{ backgroundColor: "white" }}>
+              <DebugConfigElement
+                connectInstance={data as ExtendedStripeConnectInstance}
+              />
+            </div>
           </PivotItem>
           <PivotItem headerText="Pricing table" itemKey="Pricing table">
             <PricingTable />
