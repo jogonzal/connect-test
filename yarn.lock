@@ -309,10 +309,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
   integrity sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==
 
-"@stripe/connect-js@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@stripe/connect-js/-/connect-js-1.0.0.tgz#8cf11fe6e5c2f6d87caf56b08e8ab9391ce08bd2"
-  integrity sha512-DcXQ9eZ4C+D3hF44DlHZTx74FQ3ujxEivJ+oD+CbROHynL3TU+FRDw7HWkxbyjtYwcLbIrOyZs7YIWTeVpxc9Q==
+"@stripe/connect-js@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@stripe/connect-js/-/connect-js-1.0.2.tgz#f90ba5ea07cf581c33ba68b2b161c65eec5136f6"
+  integrity sha512-xUHfmXY983eu6JzXYyO/2idHjmBOCo0pF7RhcvkzuHaK5JzWpfbb+Rtvw3eBb81fKN3TIa2ugKnSQbfnw6oQUQ==
 
 "@stripe/react-connect-js@^1.0.1":
   version "1.0.1"

@@ -6,7 +6,7 @@ import {
   loadConnect,
   IStripeConnectInitParams,
   AppearanceOptions,
-} from "@stripe/connect-js";
+} from "@stripe/connect-js/pure";
 
 export const useConnectJSInit = (accountId: string) => {
   return useQuery<StripeConnectInstance, Error>("ConnectJSInit", async () => {
