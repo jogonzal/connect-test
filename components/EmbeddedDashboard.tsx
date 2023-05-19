@@ -114,6 +114,12 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
         onRender: (row: Stripe.PaymentIntent) => row.id,
       },
       {
+        key: "description",
+        name: "description",
+        minWidth: 150,
+        onRender: (row: Stripe.PaymentIntent) => row.description,
+      },
+      {
         key: "status",
         name: "status",
         minWidth: 100,

@@ -14,25 +14,37 @@ export default async function handler(
     console.log("Id is ", id);
     console.log("account id is ", accountId);
 
-    const paymentOnPlatform = await StripeClient.paymentIntents.retrieve(
-      "pi_3N6JL7LirQdaQn8E1Lpn7Dui",
-    );
+    // This is the full process if you only have the platform destination charge
+    // const paymentOnPlatform = await StripeClient.paymentIntents.retrieve(
+    //   "pi_3N6JL7LirQdaQn8E1Lpn7Dui",
+    // );
 
-    const latestCharge = await StripeClient.charges.retrieve(
-      paymentOnPlatform.latest_charge as string,
-    );
+    // const latestCharge = await StripeClient.charges.retrieve(
+    //   paymentOnPlatform.latest_charge as string,
+    // );
 
-    const transfer = await StripeClient.transfers.retrieve(
-      latestCharge.transfer as string,
-    );
+    // const transfer = await StripeClient.transfers.retrieve(
+    //   latestCharge.transfer as string,
+    // );
 
-    console.log("transfer is ", transfer);
+    // console.log("transfer is ", transfer);
 
-    const payment = await StripeClient.charges.retrieve(
-      transfer.destination_payment as string,
-      undefined,
+    // const payment = await StripeClient.charges.retrieve(
+    //   transfer.destination_payment as string,
+    //   undefined,
+    //   {
+    //     stripeAccount: transfer.destination as string,
+    //   },
+    // );
+
+    // This is the process for a connected account destination charge
+    const payment = await StripeClient.charges.update(
+      id,
       {
-        stripeAccount: transfer.destination as string,
+        description: "Custom description is here!",
+      },
+      {
+        stripeAccount: accountId,
       },
     );
 
