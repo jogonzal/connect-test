@@ -16,6 +16,7 @@ import { CreateAccountDialog } from "./CreateAccountDialog";
 import { serializeError } from "serialize-error";
 import { ConnectedAccountList } from "./ConnectedAccountList";
 import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
+import { FormattedMessage } from "react-intl";
 
 export const ConnectedAccountListPage: React.FC = () => {
   const [startingAfterStack, setStartingAfterStack] = React.useState<string[]>(
@@ -108,7 +109,11 @@ export const ConnectedAccountListPage: React.FC = () => {
                         href={`https://go/loginas/${currentAccount.id}`}
                         target="_blank"
                       >
-                        LoginAs
+                        <FormattedMessage
+                          defaultMessage="Login as"
+                          id="ConnectedAccountListPage.LoginAsLink"
+                          description="The link to login as from the connected account list page"
+                        />
                       </Link>
                     </Text>
                   </Stack>

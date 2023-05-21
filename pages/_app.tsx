@@ -12,6 +12,9 @@ import {
   Theme,
   ThemeUtils,
 } from "../components/LocaleAndThemingOptions";
+import Spanish from "../loc/es.json";
+import English from "../loc/en.json";
+import { IntlProvider } from "react-intl";
 
 registerOnThemeChangeCallback((theme: ITheme) => {
   console.log("Theme changed!");
@@ -19,10 +22,15 @@ registerOnThemeChangeCallback((theme: ITheme) => {
   root.style.backgroundColor = theme.semanticColors.bodyBackground;
   root.style.color = theme.semanticColors.bodyText;
 });
+export let initialLocale = "en";
 if (typeof localStorage !== "undefined") {
   const theme = localStorage.getItem("theme");
   if (theme) {
     ThemeUtils.loadTheme(theme as Theme);
+  }
+  const locale = localStorage.getItem("locale");
+  if (locale) {
+    initialLocale = locale;
   }
 }
 
@@ -46,12 +54,34 @@ function MyApp({ Component, pageProps }: AppProps) {
     return null;
   }
 
+  let messages;
+  switch (initialLocale) {
+    case "es":
+      messages = Spanish;
+      break;
+    case "en":
+      messages = English;
+      break;
+    default:
+      messages = English;
+      break;
+  }
+
   return (
     // Provide the client to your App
     <>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <IntlProvider
+          locale={initialLocale}
+          messages={messages}
+          onError={() => null}
+        >
+          {/* TODO: Fix this ts-ignore */}
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
+          <Component {...pageProps} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </IntlProvider>
       </QueryClientProvider>
       <LocaleAndThemingOptions />
     </>

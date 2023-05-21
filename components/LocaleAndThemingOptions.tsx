@@ -1,6 +1,7 @@
 import { Dropdown, Stack } from "@fluentui/react";
 import * as React from "react";
 import { createTheme, loadTheme } from "@fluentui/react";
+import { initialLocale } from "../pages/_app";
 
 export type Theme = "Light" | "Dark";
 
@@ -90,7 +91,7 @@ export const LocaleAndThemingOptions: React.FC = () => {
     (localStorage.getItem("theme") as Theme) ?? "Light",
   );
   const [currentLocale, setCurrentLocale] = React.useState<string>(
-    (localStorage.getItem("locale") as Theme) ?? "en-us",
+    initialLocale ?? "en-us",
   );
 
   React.useEffect(() => {}, [currentTheme]);
@@ -119,15 +120,15 @@ export const LocaleAndThemingOptions: React.FC = () => {
               window.location.reload();
             }}
           />
-          {/* <Dropdown
+          <Dropdown
             options={[
               {
-                key: "en-us",
-                text: "en-us",
+                key: "en",
+                text: "en",
               },
               {
-                key: "es-mx",
-                text: "es-mx",
+                key: "es",
+                text: "es",
               },
             ]}
             selectedKey={currentLocale}
@@ -135,8 +136,9 @@ export const LocaleAndThemingOptions: React.FC = () => {
               const newLocale = item?.key as string;
               setCurrentLocale(newLocale);
               localStorage.setItem("locale", newLocale);
+              window.location.reload();
             }}
-          /> */}
+          />
         </Stack>
       </div>
     </div>

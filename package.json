@@ -2,14 +2,17 @@
   "name": "my-app",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start -p $PORT",
+    "dev": "npm run i18n && next dev",
+    "build": "npm run i18n && next build",
+    "start": "npm run i18n && next start -p $PORT",
     "lint": "next lint",
     "types": "tsc --noemit",
-    "typescript-check": "npm run types",
-    "validate-change": "npm run types && npm run lint",
-    "validate-changes": "npm run validate-change"
+    "typescript-check": "yarn run types",
+    "validate-change": "yarn run types && yarn run lint",
+    "validate-changes": "yarn run validate-change",
+    "extract:i18n": "formatjs extract \"components/**/*.{ts,tsx}\" --format simple --id-interpolation-pattern '[sha512:contenthash:base64:6]' --out-file loc/en.json",
+    "compile:i18n": "formatjs compile-folder --ast --format simple loc loc/compiled-locales",
+    "i18n": "yarn run extract:i18n && yarn run compile:i18n"
   },
   "dependencies": {
     "@fluentui/react": "^8.94.2",
@@ -25,19 +28,23 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-ga": "^3.3.1",
+    "react-intl": "^6.4.2",
     "react-query": "^3.39.2",
     "serialize-error": "^11.0.0",
     "stripe": "^11.8.0-beta.1"
   },
   "devDependencies": {
+    "@formatjs/cli": "^6.1.1",
     "@types/node": "17.0.5",
     "@types/react": "17.0.50",
     "@types/react-dom": "17.0.17",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
+    "babel-plugin-formatjs": "^10.5.1",
     "eslint": "8.5.0",
     "eslint-config-next": "12.0.7",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-formatjs": "^4.10.1",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
     "typescript": "4.5.4"
