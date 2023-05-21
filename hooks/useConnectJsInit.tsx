@@ -7,6 +7,7 @@ import {
   IStripeConnectInitParams,
   AppearanceOptions,
 } from "@stripe/connect-js/pure";
+import { initialLocale } from "../pages/_app";
 
 export const useConnectJSInit = (accountId: string) => {
   return useQuery<StripeConnectInstance, Error>("ConnectJSInit", async () => {
@@ -35,6 +36,7 @@ export const useConnectJSInit = (accountId: string) => {
       uiConfig: {
         overlay: "drawer",
       },
+      locale: initialLocale,
     };
 
     return stripeConnect.initialize({
