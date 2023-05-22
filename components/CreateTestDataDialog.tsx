@@ -35,7 +35,15 @@ export const CreateTestDataDialog: React.FC<Props> = ({
     data: createChargeData,
     reset: createChargeReset,
     mutateAsync: createTestChargeAsync,
-  } = useCreateTestCharge(account.id);
+  } = useCreateTestCharge(
+    account.id,
+    "Test charge",
+    false,
+    false,
+    10000,
+    1000,
+    false,
+  );
 
   const {
     error: createDebitError,

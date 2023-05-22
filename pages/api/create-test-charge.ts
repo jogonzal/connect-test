@@ -8,20 +8,43 @@ export default async function handler(
   try {
     const accountId: string = req.body.accountId;
     console.log("Id is ", accountId);
+    const destinationCharge = req.body.destinationCharge;
+    const transferAmount = req.body.transferAmount;
+    const description = req.body.description;
+    const amount = req.body.amount;
+    const fee = req.body.fee;
+    const obo = req.body.obo;
 
-    const payment = await StripeClient.paymentIntents.create(
-      {
-        amount: 1000,
+    let payment;
+    if (destinationCharge) {
+      payment = await StripeClient.paymentIntents.create({
+        amount: amount,
         currency: "USD",
-        description: "TEST CHARGE",
         payment_method: "pm_card_bypassPending",
         confirmation_method: "manual",
         confirm: true,
-      },
-      {
-        stripeAccount: accountId,
-      },
-    );
+        application_fee_amount: transferAmount ? undefined : fee,
+        transfer_data: {
+          destination: accountId,
+          amount: transferAmount ? amount - fee : undefined,
+        },
+        on_behalf_of: obo ? accountId : undefined,
+      });
+    } else {
+      payment = await StripeClient.paymentIntents.create(
+        {
+          amount: amount,
+          currency: "USD",
+          description: description,
+          payment_method: "pm_card_bypassPending",
+          confirmation_method: "manual",
+          confirm: true,
+        },
+        {
+          stripeAccount: accountId,
+        },
+      );
+    }
 
     console.log("Created payment!", payment);
 

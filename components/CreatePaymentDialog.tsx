@@ -3,6 +3,7 @@ import {
   Dialog,
   PrimaryButton,
   Separator,
+  Spinner,
   Stack,
   StackItem,
   Text,
@@ -11,6 +12,7 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { PaymentsUIClientSecret } from "./PaymentsUIClientSecret";
+import { useCreateTestCharge } from "../hooks/useCreateTestCharge";
 
 type Props = {
   account: Stripe.Account;
@@ -33,6 +35,22 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
 
   const [successfulPayment, setSuccessfulPayment] =
     React.useState<boolean>(false);
+
+  const {
+    error: createChargeError,
+    isLoading: createChargeLoading,
+    data: createChargeData,
+    reset: createChargeReset,
+    mutateAsync: createTestChargeAsync,
+  } = useCreateTestCharge(
+    props.account.id,
+    productName,
+    destinationCharge,
+    useTransferAmount,
+    amount,
+    applicationFee,
+    useOBO,
+  );
 
   const currentAccountFullDetails = props.account;
 
@@ -92,6 +110,10 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
 
     const clientSecret: string = await paymentIntentResponse.text();
     setPaymentsUIClientSecret(clientSecret);
+  };
+
+  const onCreateDirectly = async () => {
+    await createTestChargeAsync();
   };
 
   const renderDialogContent = () => {
@@ -177,6 +199,14 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
             Payment Element
           </PrimaryButton>
           <PrimaryButton onClick={onCardUIClicked}>Card Element</PrimaryButton>
+          <PrimaryButton onClick={onCreateDirectly}>
+            Create directly
+          </PrimaryButton>
+          {createChargeLoading ?? <Spinner />}
+          {createChargeData && <Text>Created!</Text>}
+          {createChargeError && (
+            <Text>Error! {JSON.stringify(createChargeError)}</Text>
+          )}
         </StackItem>
       </Stack>
     );
