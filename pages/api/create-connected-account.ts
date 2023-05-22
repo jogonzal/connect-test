@@ -144,10 +144,10 @@ export default async function handler(
           dob: {
             day: 1,
             month: 1,
-            year: 1990,
+            year: 1901,
           },
           phone: "4257537115",
-          ssn_last_4: "1234",
+          ssn_last_4: "0000",
         },
         settings: {
           card_payments: {
