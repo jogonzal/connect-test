@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "npm run i18n && next dev",
     "build": "npm run i18n && next build",
-    "start": "npm run i18n && next start -p $PORT",
+    "start": "next start -p $PORT",
     "lint": "next lint",
     "types": "tsc --noemit",
     "typescript-check": "yarn run types",
