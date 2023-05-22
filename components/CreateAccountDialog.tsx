@@ -149,7 +149,7 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
         {prefill && (
           <Text>
             If you are prompted to verify information, FirstName: Jenny,
-            LastName: Rosen, SSN: 1234
+            LastName: Rosen, SSN: 1234, DOB: 01/01/1901
           </Text>
         )}
         <PrimaryButton onClick={onCreateAccountClicked}>
