@@ -7,8 +7,10 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const searchParams = new URLSearchParams(req.url!.split("?")[1]);
+    const searchParams = new URLSearchParams(req.url?.split("?")[1]);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const connectedAccountId: string = searchParams.get("accountId")!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const customerId: string = searchParams.get("customerId")!;
 
     console.log("Id is ", connectedAccountId);
