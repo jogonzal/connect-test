@@ -23,6 +23,7 @@ import { PricingTable } from "./PricingTable";
 import {
   ConnectAccountManagement,
   ConnectComponentsProvider,
+  ConnectInstantPayouts,
   ConnectNotificationBanner,
   ConnectPaymentDetails,
   ConnectPayments,
@@ -377,6 +378,7 @@ StripeConnect.init({
           </PivotItem>
           <PivotItem headerText="Payouts" itemKey="Payouts">
             <ConnectPayouts />
+            <ConnectInstantPayouts />
           </PivotItem>
           <PivotItem headerText="Payment details" itemKey="Payment details">
             {renderPaymentDetailUI()}
