@@ -377,8 +377,8 @@ StripeConnect.init({
             <stripe-connect-transactions />
           </PivotItem>
           <PivotItem headerText="Payouts" itemKey="Payouts">
-            <ConnectPayouts />
             <ConnectInstantPayouts />
+            <ConnectPayouts />
           </PivotItem>
           <PivotItem headerText="Payment details" itemKey="Payment details">
             {renderPaymentDetailUI()}
