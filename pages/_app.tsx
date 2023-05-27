@@ -14,7 +14,7 @@ import {
 } from "../components/LocaleAndThemingOptions";
 import Spanish from "../loc/es.json";
 import English from "../loc/en.json";
-import { IntlProvider } from "react-intl";
+// import { IntlProvider } from "react-intl";
 
 registerOnThemeChangeCallback((theme: ITheme) => {
   console.log("Theme changed!");
@@ -71,17 +71,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     // Provide the client to your App
     <>
       <QueryClientProvider client={queryClient}>
-        <IntlProvider
+        {/* <IntlProvider
           locale={initialLocale}
           messages={messages}
           onError={() => null}
-        >
-          {/* TODO: Fix this ts-ignore */}
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-          {/* @ts-ignore */}
-          <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </IntlProvider>
+        > */}
+        {/* TODO: Fix this ts-ignore */}
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+        {/* @ts-ignore */}
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+        {/* </IntlProvider> */}
       </QueryClientProvider>
       <LocaleAndThemingOptions />
     </>
