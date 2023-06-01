@@ -47,6 +47,7 @@ export const useConnectJSInit = (accountId: string) => {
           enable_embedded_theming_demo: true,
           enable_uiconfig_copy_link: true,
           enable_developer_ids: true,
+          enable_new_theming: true,
           // Until I am enabled
           enable_balance_transactions_component: true,
         },
