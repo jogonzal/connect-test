@@ -14,12 +14,15 @@ export default async function handler(
     const amount = req.body.amount;
     const fee = req.body.fee;
     const obo = req.body.obo;
+    const currency = req.body.currency;
+
+    console.log("Currency is", currency);
 
     let payment;
     if (destinationCharge) {
       payment = await StripeClient.paymentIntents.create({
         amount: amount,
-        currency: "USD",
+        currency: currency ?? "USD",
         payment_method: "pm_card_bypassPending",
         confirmation_method: "manual",
         confirm: true,
@@ -34,7 +37,7 @@ export default async function handler(
       payment = await StripeClient.paymentIntents.create(
         {
           amount: amount,
-          currency: "USD",
+          currency: currency ?? "USD",
           description: description,
           payment_method: "pm_card_bypassPending",
           confirmation_method: "manual",

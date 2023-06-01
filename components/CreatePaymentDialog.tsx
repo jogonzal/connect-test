@@ -1,6 +1,7 @@
 import {
   Checkbox,
   Dialog,
+  Dropdown,
   PrimaryButton,
   Separator,
   Spinner,
@@ -33,6 +34,8 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
     string | undefined
   >(undefined);
 
+  const [currency, setCurrency] = React.useState<string>("USD");
+
   const [successfulPayment, setSuccessfulPayment] =
     React.useState<boolean>(false);
 
@@ -50,6 +53,7 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
     amount,
     applicationFee,
     useOBO,
+    currency,
   );
 
   const currentAccountFullDetails = props.account;
@@ -191,6 +195,26 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
                 />
               </>
             )}
+            <Dropdown
+              selectedKey={currency}
+              onChange={(ev, val) => setCurrency((val?.key as string) ?? "USD")}
+              placeholder="USD"
+              options={[
+                {
+                  key: "USD",
+                  text: "USD",
+                },
+                {
+                  key: "EUR",
+                  text: "EUR",
+                },
+                {
+                  key: "GBP",
+                  text: "GBP",
+                },
+              ]}
+              label="Account type"
+            />
           </Stack>
         </StackItem>
         <StackItem>
