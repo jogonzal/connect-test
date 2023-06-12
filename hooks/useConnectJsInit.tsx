@@ -51,6 +51,7 @@ export const useConnectJSInit = (accountId: string) => {
           // Until I am enabled
           enable_balance_transactions_component: true,
           enable_embedded_account_management: true,
+          enable_embedded_account_onboarding: true,
         },
       },
     } as any);
