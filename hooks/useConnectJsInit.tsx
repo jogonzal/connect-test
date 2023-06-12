@@ -50,6 +50,7 @@ export const useConnectJSInit = (accountId: string) => {
           enable_new_theming: true,
           // Until I am enabled
           enable_balance_transactions_component: true,
+          enable_embedded_account_management: true,
         },
       },
     } as any);
