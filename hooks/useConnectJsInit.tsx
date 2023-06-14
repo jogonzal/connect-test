@@ -6,13 +6,59 @@ import {
   loadConnect,
   IStripeConnectInitParams,
   AppearanceOptions,
+  StripeConnectWrapper,
 } from "@stripe/connect-js/pure";
 import { initialLocale } from "../pages/_app";
+
+const injectScript = (): HTMLScriptElement => {
+  const shouldloadConnectJsLocal = window.location.search
+    .toLowerCase()
+    .includes("localconnectjs");
+
+  const script = document.createElement("script");
+  script.src = shouldloadConnectJsLocal
+    ? "http://localhost:3001/v0.1/connect.js"
+    : "https://connect-js.stripe.com/v0.1/connect.js";
+
+  const head = document.head;
+
+  if (!head) {
+    throw new Error(
+      "Expected document.head not to be null. Connect.js requires a <head> element.",
+    );
+  }
+
+  document.head.appendChild(script);
+
+  return script;
+};
+
+export const loadConnectPrivate = (): Promise<StripeConnectWrapper> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const script = injectScript();
+      script.addEventListener("load", () => {
+        if ((window as any).StripeConnect) {
+          const wrapper = (window as any).StripeConnect;
+          resolve(wrapper);
+        } else {
+          reject(new Error("Connect.js did not load the necessary objects"));
+        }
+      });
+
+      script.addEventListener("error", () => {
+        reject(new Error("Failed to load Connect.js"));
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
 export const useConnectJSInit = (accountId: string) => {
   return useQuery<StripeConnectInstance, Error>("ConnectJSInit", async () => {
     const publishableKey = StripePublicKey;
-    const stripeConnect = await loadConnect();
+    const stripeConnect = await loadConnectPrivate();
     const secret = await fetchClientSecret(accountId);
 
     const appearanceForLightMode: AppearanceOptions = {};
@@ -39,7 +85,7 @@ export const useConnectJSInit = (accountId: string) => {
       locale: initialLocale,
     };
 
-    return stripeConnect.initialize({
+    return (stripeConnect as any).init({
       ...initProps,
       // Overriding these flags so it is easier to test
       metaOptions: {
