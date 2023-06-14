@@ -33,7 +33,7 @@ export const OauthRedirectPage: React.FC = () => {
       Successfully connected to account {data?.stripe_user_id}.{" "}
       <Link
         onClick={() => {
-          router.push("./");
+          router.push("./" + window.location.search);
         }}
       >
         Click here to go back to the main page

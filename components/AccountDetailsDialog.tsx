@@ -43,7 +43,9 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         </StackItem>
         <PrimaryButton
           onClick={() => {
-            router.push(embeddedDashboardUrl(account.id));
+            router.push(
+              embeddedDashboardUrl(account.id) + window.location.search,
+            );
           }}
         >
           Account dashboard

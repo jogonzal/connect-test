@@ -85,7 +85,7 @@ export const ConnectedAccountList: React.FC<{
             <ActionButton
               style={{ height: "16px", width: "16px" }}
               onClick={() => {
-                router.push(url);
+                router.push(url + window.location.search);
               }}
               iconProps={dashboardIcon}
             >

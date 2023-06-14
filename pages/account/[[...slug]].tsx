@@ -46,11 +46,11 @@ const AccountDetailPageInternal: React.FC<{
       account={account}
       platform={platform}
       onTabChanged={(tab) => {
-        router.push(`/account/${accountId}/${tab}`);
+        router.push(`/account/${accountId}/${tab}` + window.location.search);
       }}
       currentTab={activeTab}
       onBackToMainAppClicked={() => {
-        router.push("/");
+        router.push("/" + window.location.search);
       }}
     />
   );
