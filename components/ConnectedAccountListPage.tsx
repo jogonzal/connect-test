@@ -99,7 +99,7 @@ export const ConnectedAccountListPage: React.FC = () => {
             <StackItem>
               <Stack>
                 <StackItem>
-                  <Text variant="large">Jorgea&apos;s connect test app</Text>
+                  <Text variant="large">Connect test app</Text>
                 </StackItem>
                 <Stack horizontal horizontalAlign="space-between">
                   <Stack verticalAlign="center">

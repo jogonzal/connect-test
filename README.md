@@ -1,4 +1,4 @@
-This project is deployed at: https://jorgeconnectplatform.herokuapp.com/
+This project is deployed at: https://connecttest.onrender.com/
 
 ## Getting Started
 
