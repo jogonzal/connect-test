@@ -34,7 +34,7 @@ export const useConnectJSInit = (accountId: string) => {
       appearance:
         theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
       uiConfig: {
-        overlay: "drawer",
+        overlay: "dialog",
       },
       locale: initialLocale,
     };
