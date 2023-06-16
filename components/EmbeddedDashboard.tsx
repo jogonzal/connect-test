@@ -405,13 +405,13 @@ StripeConnect.init({
             <ConnectNotificationBanner />
             <ConnectAccountManagement />
           </PivotItem>
-          <PivotItem headerText="Test" itemKey="Isolation test">
+          {/* <PivotItem headerText="Test" itemKey="Isolation test">
             <ExtractChargeFromStripeElements />
             <ConnectPayments />
-          </PivotItem>
-          <PivotItem headerText="Customers" itemKey="Customers">
+          </PivotItem> */}
+          {/* <PivotItem headerText="Customers" itemKey="Customers">
             <CustomersTab accountId={props.account.id} />
-          </PivotItem>
+          </PivotItem> */}
           <PivotItem headerText="Debug" itemKey="Debug">
             <stripe-connect-debug-utils />
             <PrimaryButton onClick={loginAsExpress}>
@@ -498,9 +498,9 @@ StripeConnect.init({
               />
             </div>
           </PivotItem>
-          <PivotItem headerText="Pricing table" itemKey="Pricing table">
+          {/* <PivotItem headerText="Pricing table" itemKey="Pricing table">
             <PricingTable />
-          </PivotItem>
+          </PivotItem> */}
         </Pivot>
       </Stack>
     </ConnectComponentsProvider>
