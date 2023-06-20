@@ -405,21 +405,17 @@ StripeConnect.init({
             <ConnectNotificationBanner />
             <ConnectAccountManagement />
           </PivotItem>
-          {/* <PivotItem headerText="Test" itemKey="Isolation test">
+          <PivotItem headerText="Test" itemKey="Test">
+            <Text>Testing extracting information from Connect elements</Text>
             <ExtractChargeFromStripeElements />
             <ConnectPayments />
-          </PivotItem> */}
-          {/* <PivotItem headerText="Customers" itemKey="Customers">
+            <Text>Testing Pricing table</Text>
+            <PricingTable />
+            <p>This is not a real connect element:</p>
             <CustomersTab accountId={props.account.id} />
-          </PivotItem> */}
+          </PivotItem>
           <PivotItem headerText="Debug" itemKey="Debug">
             <stripe-connect-debug-utils />
-            <PrimaryButton onClick={loginAsExpress}>
-              Login to express
-            </PrimaryButton>
-            <PrimaryButton href={`https://go/o/${props.platform.id}`}>
-              Login as CA
-            </PrimaryButton>
             <StackItem>
               <Stack horizontal>
                 <StackItem>
@@ -496,11 +492,9 @@ StripeConnect.init({
               <DebugConfigElement
                 connectInstance={data as ExtendedStripeConnectInstance}
               />
+              <stripe-connect-debug-ui-preview />
             </div>
           </PivotItem>
-          {/* <PivotItem headerText="Pricing table" itemKey="Pricing table">
-            <PricingTable />
-          </PivotItem> */}
         </Pivot>
       </Stack>
     </ConnectComponentsProvider>
