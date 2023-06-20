@@ -67,9 +67,8 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     React.useState<Stripe.Account | undefined>(undefined);
   const [showPaymentDialogForMerchant, setShowPaymentDialogForMerchant] =
     React.useState<Stripe.Account | undefined>(undefined);
-  const [showTestDataDialog, setShowTestDataDialog] = React.useState<
-    Stripe.Account | undefined
-  >(undefined);
+  const [showCreateTestDataDialog, setShgowCreateTestDataDialog] =
+    React.useState<Stripe.Account | undefined>(undefined);
 
   const [connectElementOption, setConnectElementOption] = React.useState(
     "stripe-connect-payments",
@@ -270,10 +269,12 @@ StripeConnect.init({
       return (
         <>
           <Link onClick={() => setShowCheckoutDialogForMerchant(props.account)}>
-            Create payment
+            Create payment (card element, checkout, payment element)
           </Link>
           {" | "}
-          <Link onClick={() => setShowTestDataDialog(props.account)}>Test</Link>
+          <Link onClick={() => setShgowCreateTestDataDialog(props.account)}>
+            Create test data (payout, payment, account debit)
+          </Link>
           {" | "}
           <Link
             onClick={() =>
@@ -324,10 +325,10 @@ StripeConnect.init({
             onDismiss={() => setShowPaymentDialogForMerchant(undefined)}
           />
         )}
-        {showTestDataDialog && (
+        {showCreateTestDataDialog && (
           <CreateTestDataDialog
-            account={showTestDataDialog}
-            onDismiss={() => setShowTestDataDialog(undefined)}
+            account={showCreateTestDataDialog}
+            onDismiss={() => setShgowCreateTestDataDialog(undefined)}
           />
         )}
       </>
