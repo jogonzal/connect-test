@@ -70,6 +70,7 @@ export const useConnectJSInit = (accountId: string) => {
       colorSecondaryText: "#C4C4C4",
       colorBorder: "#696969",
       colorBorderHighlight: "#616161",
+      colorBackground: "#222222",
     } as any;
 
     const theme = localStorage.getItem("theme") || "Light";
