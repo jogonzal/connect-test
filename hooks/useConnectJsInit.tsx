@@ -101,7 +101,6 @@ export const useConnectJSInit = (accountId: string) => {
           enable_embedded_account_onboarding: true,
           enable_standard_account_access: true,
           enable_standard_auth_popup_reload: true,
-          enable_embedded_support: true,
         },
       },
     } as any);
