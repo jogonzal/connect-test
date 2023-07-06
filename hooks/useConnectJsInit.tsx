@@ -56,51 +56,54 @@ export const loadConnectPrivate = (): Promise<StripeConnectWrapper> => {
 };
 
 export const useConnectJSInit = (accountId: string) => {
-  return useQuery<StripeConnectInstance, Error>("ConnectJSInit", async () => {
-    const publishableKey = StripePublicKey;
-    const stripeConnect = await loadConnectPrivate();
-    const secret = await fetchClientSecret(accountId);
+  return useQuery<StripeConnectInstance, Error>(
+    ["ConnectJSInit", accountId],
+    async () => {
+      const publishableKey = StripePublicKey;
+      const stripeConnect = await loadConnectPrivate();
+      const secret = await fetchClientSecret(accountId);
 
-    const appearanceForLightMode: AppearanceOptions = {};
-    const appearanceForDarkMode = {
-      colorSecondaryButtonBackground: "#7F7A7A",
-      colorSecondaryButtonBorder: "#7F7A7A",
-      colorOffsetBackground: "#4F4F4F",
-      colorText: "#FFFFFF",
-      colorSecondaryText: "#C4C4C4",
-      colorBorder: "#696969",
-      colorBorderHighlight: "#616161",
-      colorBackground: "#222222",
-    } as any;
+      const appearanceForLightMode: AppearanceOptions = {};
+      const appearanceForDarkMode = {
+        colorSecondaryButtonBackground: "#7F7A7A",
+        colorSecondaryButtonBorder: "#7F7A7A",
+        colorOffsetBackground: "#4F4F4F",
+        colorText: "#FFFFFF",
+        colorSecondaryText: "#C4C4C4",
+        colorBorder: "#696969",
+        colorBorderHighlight: "#616161",
+        colorBackground: "#222222",
+      } as any;
 
-    const theme = localStorage.getItem("theme") || "Light";
+      const theme = localStorage.getItem("theme") || "Light";
 
-    const initProps: IStripeConnectInitParams = {
-      publishableKey: publishableKey,
-      clientSecret: secret,
-      appearance:
-        theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
-      uiConfig: {
-        overlay: "dialog",
-      },
-      locale: initialLocale,
-    };
-
-    return (stripeConnect as any).init({
-      ...initProps,
-      // Overriding these flags so it is easier to test
-      metaOptions: {
-        flagOverrides: {
-          enable_uiconfig_copy_link: true,
-          enable_developer_ids: true,
-          // Until I am enabled
-          enable_balance_transactions_component: true,
-          enable_embedded_account_management: true,
-          enable_embedded_account_onboarding: true,
-          enable_standard_account_access: true,
-          enable_standard_auth_popup_reload: true,
+      const initProps: IStripeConnectInitParams = {
+        publishableKey: publishableKey,
+        clientSecret: secret,
+        appearance:
+          theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
+        uiConfig: {
+          overlay: "dialog",
         },
-      },
-    } as any);
-  });
+        locale: initialLocale,
+      };
+
+      return (stripeConnect as any).init({
+        ...initProps,
+        // Overriding these flags so it is easier to test
+        metaOptions: {
+          flagOverrides: {
+            enable_uiconfig_copy_link: true,
+            enable_developer_ids: true,
+            // Until I am enabled
+            enable_balance_transactions_component: true,
+            enable_embedded_account_management: true,
+            enable_embedded_account_onboarding: true,
+            enable_standard_account_access: true,
+            enable_standard_auth_popup_reload: true,
+          },
+        },
+      } as any);
+    },
+  );
 };
