@@ -1,5 +1,5 @@
-import { ConnectAccountOnboarding } from "@stripe/react-connect-js";
 import * as React from "react";
+import { ConnectAccountOnboarding } from "../hooks/ConnectJsTypes";
 
 export const OnboardingExperienceExample: React.FC = () => {
   const [accountOnboarded, setAccountOnboarded] =

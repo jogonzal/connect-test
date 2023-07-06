@@ -1,5 +1,6 @@
 import * as React from "react";
 import { StripeConnectInstance } from "@stripe/connect-js";
+import { ConnectDebugUIConfig } from "../hooks/ConnectJsTypes";
 
 export type ExtendedStripeConnectInstance = StripeConnectInstance & {
   getCurrentConnectJSOptions: () =>
@@ -22,17 +23,12 @@ export const DebugConfigElement: React.FC<Props> = ({ connectInstance }) => {
   const [appearanceOrder, setAppearanceOrder] = React.useState<string[]>([]);
   const elementRef = React.useRef<HTMLElement>(null);
 
+  const onConnectJSOptionsUpdated = (event: any) => {
+    setAppearance(event.detail.values.appearance);
+    setAppearanceOrder(event.detail.appearanceOptionsOrder);
+  };
+
   React.useEffect(() => {
-    if (!elementRef.current) {
-      return;
-    }
-
-    const currentElement = elementRef.current;
-    const eventListener = (event: CustomEvent) => {
-      setAppearance(event.detail.values.appearance);
-      setAppearanceOrder(event.detail.appearanceOptionsOrder);
-    };
-
     // Ensure we have the initial values coming from the element
     // (this helps ensure initial state is consistent in scenarios where they were changed in a different page on the same session)
     const initialUpdateValues = connectInstance?.getCurrentConnectJSOptions();
@@ -44,23 +40,13 @@ export const DebugConfigElement: React.FC<Props> = ({ connectInstance }) => {
     if (initialAppearanceOrder) {
       setAppearanceOrder(initialAppearanceOrder || []);
     }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - TS2769 - No overload matches this call.  Overload 1 of 2...
-    currentElement.addEventListener("connectjsoptionsupdated", eventListener);
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - TS2769 - No overload matches this call.  Overload 1 of 2...
-      currentElement.removeEventListener(
-        "connectjsoptionsupdated",
-        eventListener,
-      );
-    };
   }, [connectInstance, elementRef, setAppearance, setAppearanceOrder]);
 
   return (
     <>
-      <stripe-connect-debug-ui-config ref={elementRef} />
+      <ConnectDebugUIConfig
+        onConnectJSOptionsUpdated={onConnectJSOptionsUpdated}
+      />
       <pre>{JSON.stringify(appearance, null, "\t")}</pre>
     </>
   );

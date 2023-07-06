@@ -21,10 +21,7 @@ import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElemen
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PricingTable } from "./PricingTable";
 import {
-  ConnectAccountManagement,
   ConnectComponentsProvider,
-  ConnectInstantPayouts,
-  ConnectNotificationBanner,
   ConnectPaymentDetails,
   ConnectPayments,
   ConnectPayouts,
@@ -40,6 +37,14 @@ import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { CreatePaymentDialog } from "./CreatePaymentDialog";
 import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 import { CreateTestDataDialog } from "./CreateTestDataDialog";
+import {
+  ConnectAccountManagement,
+  ConnectDebugUIPreview,
+  ConnectDebugUtils,
+  ConnectInstantPayouts,
+  ConnectNotificationBanner,
+  ConnectTransactions,
+} from "../hooks/ConnectJsTypes";
 
 type Props = {
   account: Stripe.Account;
@@ -375,7 +380,7 @@ StripeConnect.init({
             <ConnectPayments />
           </PivotItem>
           <PivotItem headerText="Transactions" itemKey="Transactions">
-            <stripe-connect-transactions />
+            <ConnectTransactions />
           </PivotItem>
           <PivotItem headerText="Payouts" itemKey="Payouts">
             <ConnectInstantPayouts />
@@ -416,7 +421,7 @@ StripeConnect.init({
             <CustomersTab accountId={props.account.id} />
           </PivotItem>
           <PivotItem headerText="Debug" itemKey="Debug">
-            <stripe-connect-debug-utils />
+            <ConnectDebugUtils />
             <StackItem>
               <Stack horizontal>
                 <StackItem>
@@ -493,7 +498,7 @@ StripeConnect.init({
               <DebugConfigElement
                 connectInstance={data as ExtendedStripeConnectInstance}
               />
-              <stripe-connect-debug-ui-preview />
+              <ConnectDebugUIPreview />
             </div>
           </PivotItem>
         </Pivot>
