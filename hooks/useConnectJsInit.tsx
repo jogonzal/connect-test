@@ -55,10 +55,18 @@ export const loadConnectPrivate = (): Promise<StripeConnectWrapper> => {
   });
 };
 
+const connectJsInstanceCache: Record<string, StripeConnectInstance> = {};
+
 export const useConnectJSInit = (accountId: string) => {
   return useQuery<StripeConnectInstance, Error>(
     ["ConnectJSInit", accountId],
     async () => {
+      if (connectJsInstanceCache[accountId]) {
+        return connectJsInstanceCache[accountId];
+      }
+
+      console.log("Initializing ConectJS for account", accountId);
+
       const publishableKey = StripePublicKey;
       const stripeConnect = await loadConnectPrivate();
       const secret = await fetchClientSecret(accountId);
@@ -88,7 +96,7 @@ export const useConnectJSInit = (accountId: string) => {
         locale: initialLocale,
       };
 
-      return (stripeConnect as any).init({
+      const instance = (stripeConnect as any).init({
         ...initProps,
         // Overriding these flags so it is easier to test
         metaOptions: {
@@ -104,6 +112,9 @@ export const useConnectJSInit = (accountId: string) => {
           },
         },
       } as any);
+
+      connectJsInstanceCache[accountId] = instance;
+      return instance;
     },
   );
 };
