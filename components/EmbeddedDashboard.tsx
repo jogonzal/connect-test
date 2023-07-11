@@ -39,10 +39,14 @@ import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 import { CreateTestDataDialog } from "./CreateTestDataDialog";
 import {
   ConnectAccountManagement,
+  ConnectAppOnboarding,
+  ConnectAppSettings,
+  ConnectCapitalOverview,
   ConnectDebugUIPreview,
   ConnectDebugUtils,
   ConnectInstantPayouts,
   ConnectNotificationBanner,
+  ConnectPaymentMethodSettings,
   ConnectTransactions,
 } from "../hooks/ConnectJsTypes";
 
@@ -385,6 +389,16 @@ StripeConnect.init({
           <PivotItem headerText="Payouts" itemKey="Payouts">
             <ConnectInstantPayouts />
             <ConnectPayouts />
+          </PivotItem>
+          <PivotItem headerText="Apps" itemKey="Apps">
+            <ConnectAppOnboarding />
+            <ConnectAppSettings />
+          </PivotItem>
+          <PivotItem headerText="Capital" itemKey="Capital">
+            <ConnectCapitalOverview />
+          </PivotItem>
+          <PivotItem headerText="LPM" itemKey="LPM">
+            <ConnectPaymentMethodSettings />
           </PivotItem>
           <PivotItem headerText="Payment details" itemKey="Payment details">
             {renderPaymentDetailUI()}

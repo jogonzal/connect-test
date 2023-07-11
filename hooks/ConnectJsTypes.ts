@@ -68,6 +68,38 @@ export const ConnectAccountManagement = (): JSX.Element => {
   return wrapper;
 };
 
+export const ConnectPaymentMethodSettings = (): JSX.Element => {
+  const { wrapper } = useCreateComponent(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    "stripe-connect-payment-method-settings" as any,
+  );
+  return wrapper;
+};
+
+export const ConnectAppSettings = (): JSX.Element => {
+  const { wrapper } = useCreateComponent(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    "stripe-connect-app-settings" as any,
+  );
+  return wrapper;
+};
+
+export const ConnectAppOnboarding = (): JSX.Element => {
+  const { wrapper } = useCreateComponent(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    "stripe-connect-payment-method-settings" as any,
+  );
+  return wrapper;
+};
+
+export const ConnectCapitalOverview = (): JSX.Element => {
+  const { wrapper } = useCreateComponent(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    "stripe-connect-capital-overview" as any,
+  );
+  return wrapper;
+};
+
 export const ConnectAccountOnboarding = ({
   onOnboardingExited,
 }: {
