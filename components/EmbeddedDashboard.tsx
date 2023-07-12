@@ -391,8 +391,8 @@ StripeConnect.init({
             <ConnectPayouts />
           </PivotItem>
           <PivotItem headerText="Apps" itemKey="Apps">
-            <ConnectAppOnboarding />
-            <ConnectAppSettings />
+            <ConnectAppOnboarding app="com.example.accounting-demo-app" />
+            <ConnectAppSettings app="com.example.accounting-demo-app" />
           </PivotItem>
           <PivotItem headerText="Capital" itemKey="Capital">
             <ConnectCapitalOverview />

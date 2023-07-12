@@ -1,4 +1,8 @@
-import { useAttachEvent, useCreateComponent } from "@stripe/react-connect-js";
+import {
+  useAttachEvent,
+  useCreateComponent,
+  useAttachAttribute,
+} from "@stripe/react-connect-js";
 import React from "react";
 
 export type CustomElement<T> = Partial<
@@ -76,19 +80,25 @@ export const ConnectPaymentMethodSettings = (): JSX.Element => {
   return wrapper;
 };
 
-export const ConnectAppSettings = (): JSX.Element => {
-  const { wrapper } = useCreateComponent(
+export const ConnectAppSettings = ({ app }: { app: string }): JSX.Element => {
+  const { wrapper, component } = useCreateComponent(
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     "stripe-connect-app-settings" as any,
   );
+
+  useAttachAttribute(component, "app", app);
+
   return wrapper;
 };
 
-export const ConnectAppOnboarding = (): JSX.Element => {
-  const { wrapper } = useCreateComponent(
+export const ConnectAppOnboarding = ({ app }: { app: string }): JSX.Element => {
+  const { wrapper, component } = useCreateComponent(
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     "stripe-connect-app-onboarding" as any,
   );
+
+  useAttachAttribute(component, "app", app);
+
   return wrapper;
 };
 
