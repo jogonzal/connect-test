@@ -87,7 +87,7 @@ export const ConnectAppSettings = (): JSX.Element => {
 export const ConnectAppOnboarding = (): JSX.Element => {
   const { wrapper } = useCreateComponent(
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    "stripe-connect-payment-method-settings" as any,
+    "stripe-connect-app-onboarding" as any,
   );
   return wrapper;
 };
