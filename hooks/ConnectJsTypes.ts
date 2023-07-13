@@ -87,6 +87,7 @@ export const ConnectAppSettings = ({ app }: { app: string }): JSX.Element => {
   );
 
   useAttachAttribute(component, "app", app);
+  useAttachAttribute(component, "test", true);
 
   return wrapper;
 };
@@ -98,6 +99,7 @@ export const ConnectAppOnboarding = ({ app }: { app: string }): JSX.Element => {
   );
 
   useAttachAttribute(component, "app", app);
+  useAttachAttribute(component, "test", true);
 
   return wrapper;
 };
