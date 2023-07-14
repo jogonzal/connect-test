@@ -38,6 +38,8 @@ export const OauthRedirectPage: React.FC = () => {
       >
         Click here to go back to the main page
       </Link>
+      <Text>Full data:</Text>
+      <pre>{JSON.stringify(data, null, "\t")}</pre>
     </Text>
   );
 };
