@@ -78,6 +78,27 @@ export const ConnectedAccountListPage: React.FC = () => {
     );
   }
 
+  const renderSpecialAccountsSection = () => {
+    if (currentAccount?.id !== "acct_1MZRIlLirQdaQn8E") {
+      return null;
+    }
+
+    // Special accounts related to platform acct_1MZRIlLirQdaQn8E
+    const specialAccounts = [
+      /*Standard CBSP:*/ "acct_1NBR5cQ55yzNh0Wh",
+      /*Standard Non-CBSP:*/ "acct_1NTYufAm9SMRj986",
+      /*Express:*/ "acct_1MhgrJPu4nAj1Tce",
+      /*Custom:*/ "acct_1N9FIXQ26HdRlxHg",
+      /*UA1:*/ "acct_1NUwRpPwYwgmBZjm",
+      /*UA2:*/ "acct_1N61ByQ7NMZInEnp",
+      /*UA3:*/ "acct_1NUwSMPxxtPxBTFe",
+      /*UA7:*/ "acct_1NUwSoPqPnXR0qy5",
+    ];
+
+    // TODO: Fetch these accounts from the API and display them
+    return null;
+  };
+
   return (
     <>
       {/* Render dialogs */}
@@ -128,6 +149,7 @@ export const ConnectedAccountListPage: React.FC = () => {
                 </Stack>
               </Stack>
             </StackItem>
+            <StackItem>{renderSpecialAccountsSection()}</StackItem>
             {isGetStarredAccountsLoading && <Spinner label="Loading..." />}
             {isGetStarredAccountsError && (
               <Text>Failed to load starred accounts!</Text>
