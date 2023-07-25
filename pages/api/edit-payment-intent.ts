@@ -1,6 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { StripeClient } from "../../config/StripeUtils";
 
+function getRandomString(length: number) {
+  const randomChars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += randomChars.charAt(
+      Math.floor(Math.random() * randomChars.length),
+    );
+  }
+  return result;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -38,10 +50,26 @@ export default async function handler(
     // );
 
     // This is the process for a connected account destination charge
+    const customer = await StripeClient.customers.create(
+      {
+        email: `jorgeatest+${getRandomString(5)}@stripe.com`,
+        name: "JorgeA test",
+        description: "JorgeA test",
+      },
+      {
+        stripeAccount: accountId,
+      },
+    );
     const payment = await StripeClient.charges.update(
       id,
       {
-        description: "Custom description is here!",
+        description: `Custom description is here! ${getRandomString(10)}}`,
+        customer: customer.id,
+        metadata: {
+          order_id: "6735",
+          field2: "custom field 2",
+          randomContent: getRandomString(10),
+        },
       },
       {
         stripeAccount: accountId,
