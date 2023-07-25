@@ -49,6 +49,7 @@ export default async function handler(
     //   },
     // );
 
+    // Use acct_1NSl4oIbXwj4KOo1 for demo
     // This is the process for a connected account destination charge
     const customer = await StripeClient.customers.create(
       {
