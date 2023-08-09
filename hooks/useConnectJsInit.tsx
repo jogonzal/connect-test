@@ -8,17 +8,31 @@ import {
   AppearanceOptions,
   StripeConnectWrapper,
 } from "@stripe/connect-js/pure";
-import { initialLocale } from "../pages/_app";
+import {
+  getConnectJSSourceInStorage,
+  getLocaleInStorage,
+  getThemeInStorage,
+} from "../clientsStorage/LocalStorageEntry";
+import { assertNever } from "@fluentui/react";
 
 const injectScript = (): HTMLScriptElement => {
-  const shouldloadConnectJsLocal = window.location.search
-    .toLowerCase()
-    .includes("localconnectjs");
-
   const script = document.createElement("script");
-  script.src = shouldloadConnectJsLocal
-    ? "http://localhost:3001/v0.1/connect.js"
-    : "https://connect-js.stripe.com/v0.1/connect.js";
+
+  const src = getConnectJSSourceInStorage();
+  switch (src) {
+    case "local":
+      script.src = "http://localhost:3001/v0.1/connect.js";
+      break;
+    case "prod":
+      script.src = "https://connect-js.stripe.com/v0.1/connect.js";
+      break;
+    case "prototype":
+      script.src =
+        "https://connectjstest.blob.core.windows.net/viframetest/dist/v0.1/connect.js";
+      break;
+    default:
+      assertNever(src);
+  }
 
   const head = document.head;
 
@@ -83,7 +97,7 @@ export const useConnectJSInit = (accountId: string) => {
         colorBackground: "#222222",
       } as any;
 
-      const theme = localStorage.getItem("theme") || "Light";
+      const theme = getThemeInStorage();
 
       const initProps: IStripeConnectInitParams = {
         publishableKey: publishableKey,
@@ -93,7 +107,7 @@ export const useConnectJSInit = (accountId: string) => {
         uiConfig: {
           overlay: "dialog",
         },
-        locale: initialLocale,
+        locale: getLocaleInStorage(),
       };
 
       const instance = (stripeConnect as any).init({

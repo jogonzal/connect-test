@@ -1,7 +1,15 @@
 import { Dropdown, Stack } from "@fluentui/react";
 import * as React from "react";
 import { createTheme, loadTheme } from "@fluentui/react";
-import { initialLocale } from "../pages/_app";
+import {
+  ConnectJSSource,
+  getConnectJSSourceInStorage,
+  getLocaleInStorage,
+  getThemeInStorage,
+  setConnectJSSourceInStorage,
+  setLocaleInStorage,
+  setThemeInStorage,
+} from "../clientsStorage/LocalStorageEntry";
 
 export type Theme = "Light" | "Dark";
 
@@ -88,11 +96,13 @@ lightTheme.name = "Light";
 
 export const LocaleAndThemingOptions: React.FC = () => {
   const [currentTheme, setCurrentTheme] = React.useState<Theme>(
-    (localStorage.getItem("theme") as Theme) ?? "Light",
+    getThemeInStorage(),
   );
   const [currentLocale, setCurrentLocale] = React.useState<string>(
-    initialLocale ?? "en-us",
+    getLocaleInStorage(),
   );
+  const [currentConnectJSSource, setCurrentConnectJSSource] =
+    React.useState<string>(getConnectJSSourceInStorage());
 
   React.useEffect(() => {}, [currentTheme]);
 
@@ -115,7 +125,7 @@ export const LocaleAndThemingOptions: React.FC = () => {
             onChange={(_ev, item) => {
               const newTheme = item?.key as Theme;
               setCurrentTheme(newTheme);
-              localStorage.setItem("theme", newTheme);
+              setThemeInStorage(newTheme);
               ThemeUtils.loadTheme(newTheme);
               window.location.reload();
             }}
@@ -135,7 +145,31 @@ export const LocaleAndThemingOptions: React.FC = () => {
             onChange={(_ev, item) => {
               const newLocale = item?.key as string;
               setCurrentLocale(newLocale);
-              localStorage.setItem("locale", newLocale);
+              setLocaleInStorage(newLocale);
+              window.location.reload();
+            }}
+          />
+          <Dropdown
+            style={{ width: "100px" }}
+            options={[
+              {
+                key: "local",
+                text: "local",
+              },
+              {
+                key: "prod",
+                text: "prod",
+              },
+              {
+                key: "prototype",
+                text: "prototype",
+              },
+            ]}
+            selectedKey={currentConnectJSSource}
+            onChange={(_ev, item) => {
+              const newSource = item?.key as ConnectJSSource;
+              setCurrentConnectJSSource(newSource);
+              setConnectJSSourceInStorage(newSource);
               window.location.reload();
             }}
           />

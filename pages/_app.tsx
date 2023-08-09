@@ -14,6 +14,10 @@ import {
 } from "../components/LocaleAndThemingOptions";
 import Spanish from "../loc/es.json";
 import English from "../loc/en.json";
+import {
+  getLocaleInStorage,
+  getThemeInStorage,
+} from "../clientsStorage/LocalStorageEntry";
 // import { IntlProvider } from "react-intl";
 
 registerOnThemeChangeCallback((theme: ITheme) => {
@@ -22,17 +26,12 @@ registerOnThemeChangeCallback((theme: ITheme) => {
   root.style.backgroundColor = theme.semanticColors.bodyBackground;
   root.style.color = theme.semanticColors.bodyText;
 });
-export let initialLocale = "en";
-if (typeof localStorage !== "undefined") {
-  const theme = localStorage.getItem("theme");
-  if (theme) {
-    ThemeUtils.loadTheme(theme as Theme);
-  }
-  const locale = localStorage.getItem("locale");
-  if (locale) {
-    initialLocale = locale;
-  }
+
+const theme = getThemeInStorage();
+if (theme) {
+  ThemeUtils.loadTheme(theme as Theme);
 }
+const locale = getLocaleInStorage();
 
 // The code in this file gets included for all components!
 
@@ -55,7 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   let messages;
-  switch (initialLocale) {
+  switch (locale) {
     case "es":
       messages = Spanish;
       break;
