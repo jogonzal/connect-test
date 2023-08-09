@@ -25,9 +25,13 @@ const injectScript = (): HTMLScriptElement => {
     case "prod":
       script.src = "https://connect-js.stripe.com/v0.1/connect.js";
       break;
-    case "prototype":
+    case "prototype-cdn":
       script.src =
         "https://connectjstestcdn.azureedge.net/viframetest/dist/v0.1/connect.js";
+      break;
+    case "prototype-storage":
+      script.src =
+        "https://connectjstest.blob.core.windows.net/viframetest/dist/v0.1/connect.js";
       break;
     default:
       assertNever(src);

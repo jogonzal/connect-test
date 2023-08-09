@@ -51,7 +51,11 @@ export const setLocaleInStorage = (locale: string) => {
   localStorageWrapper.setItem("locale", locale);
 };
 
-export type ConnectJSSource = "prod" | "local" | "prototype";
+export type ConnectJSSource =
+  | "prod"
+  | "local"
+  | "prototype-cdn"
+  | "prototype-storage";
 
 export const getConnectJSSourceInStorage = (): ConnectJSSource => {
   return (

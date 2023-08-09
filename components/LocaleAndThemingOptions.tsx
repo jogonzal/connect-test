@@ -161,8 +161,12 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 text: "prod",
               },
               {
-                key: "prototype",
-                text: "prototype",
+                key: "prototype-storage",
+                text: "prototype-storage",
+              },
+              {
+                key: "prototype-cdn",
+                text: "prototype-cdn",
               },
             ]}
             selectedKey={currentConnectJSSource}
