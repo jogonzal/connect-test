@@ -3,7 +3,6 @@ import { StripePublicKey } from "../config/ClientConfig";
 import { fetchClientSecret } from "./fetchClientSecret";
 import {
   StripeConnectInstance,
-  loadConnect,
   IStripeConnectInitParams,
   AppearanceOptions,
   StripeConnectWrapper,
