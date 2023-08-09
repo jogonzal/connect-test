@@ -25,3 +25,4 @@ Lower pri
 1. Add crypto onramp test integration
 1. Replace strings with localized versions
 1. Make theming work without full page reload
+1. Allow for pinning accounts from the account page
