@@ -161,12 +161,20 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 text: "prod",
               },
               {
-                key: "prototype-storage",
-                text: "prototype-storage",
+                key: "popoverinline-storage",
+                text: "popoverinline-storage",
               },
               {
-                key: "prototype-cdn",
-                text: "prototype-cdn",
+                key: "popoverinline-cdn",
+                text: "popoverinline-cdn",
+              },
+              {
+                key: "popoveraccesory-cdn",
+                text: "popoveraccesory-cdn",
+              },
+              {
+                key: "popoveraccesory-cdn",
+                text: "popoveraccesory-cdn",
               },
             ]}
             selectedKey={currentConnectJSSource}

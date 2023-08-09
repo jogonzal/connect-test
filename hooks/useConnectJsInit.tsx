@@ -25,13 +25,21 @@ const injectScript = (): HTMLScriptElement => {
     case "prod":
       script.src = "https://connect-js.stripe.com/v0.1/connect.js";
       break;
-    case "prototype-cdn":
+    case "popoverinline-cdn":
       script.src =
-        "https://connectjstestcdn.azureedge.net/viframetest/dist/v0.1/connect.js";
+        "https://connectjstestcdn.azureedge.net/vpopoverinline/dist/v0.1/connect.js";
       break;
-    case "prototype-storage":
+    case "popoverinline-storage":
       script.src =
-        "https://connectjstest.blob.core.windows.net/viframetest/dist/v0.1/connect.js";
+        "https://connectjstest.blob.core.windows.net/vpopoverinline/dist/v0.1/connect.js";
+      break;
+    case "popoveraccesory-cdn":
+      script.src =
+        "https://connectjstestcdn.azureedge.net/vpopoveraccesory/dist/v0.1/connect.js";
+      break;
+    case "popoveraccesory-storage":
+      script.src =
+        "https://connectjstest.blob.core.windows.net/vpopoveraccesory/dist/v0.1/connect.js";
       break;
     default:
       assertNever(src);

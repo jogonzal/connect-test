@@ -54,8 +54,10 @@ export const setLocaleInStorage = (locale: string) => {
 export type ConnectJSSource =
   | "prod"
   | "local"
-  | "prototype-cdn"
-  | "prototype-storage";
+  | "popoverinline-cdn"
+  | "popoverinline-storage"
+  | "popoveraccesory-cdn"
+  | "popoveraccesory-storage";
 
 export const getConnectJSSourceInStorage = (): ConnectJSSource => {
   return (
