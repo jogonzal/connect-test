@@ -169,8 +169,8 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 text: "popoverinline-cdn",
               },
               {
-                key: "popoveraccesory-cdn",
-                text: "popoveraccesory-cdn",
+                key: "popoveraccesory-storage",
+                text: "popoveraccesory-storage",
               },
               {
                 key: "popoveraccesory-cdn",
