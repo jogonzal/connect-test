@@ -150,7 +150,7 @@ export const LocaleAndThemingOptions: React.FC = () => {
             }}
           />
           <Dropdown
-            style={{ width: "100px" }}
+            style={{ width: "150px" }}
             options={[
               {
                 key: "local",
