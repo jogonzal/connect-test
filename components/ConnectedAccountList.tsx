@@ -26,7 +26,14 @@ export const ConnectedAccountList: React.FC<{
   displayStar: boolean;
   onStarRefetch: () => void;
   starredAccounts: Stripe.Account[];
-}> = ({ accounts, displayStar, onStarRefetch, starredAccounts }) => {
+  hideAccountTypeColumn?: boolean;
+}> = ({
+  accounts,
+  displayStar,
+  onStarRefetch,
+  starredAccounts,
+  hideAccountTypeColumn,
+}) => {
   const router = useRouter();
 
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
@@ -42,7 +49,7 @@ export const ConnectedAccountList: React.FC<{
   };
 
   const getColumns = (): IColumn[] => {
-    return [
+    const columns: IColumn[] = [
       {
         key: "name",
         name: "Account Name",
@@ -54,12 +61,6 @@ export const ConnectedAccountList: React.FC<{
         name: "ID",
         minWidth: 160,
         onRender: (row: Stripe.Account) => row?.id,
-      },
-      {
-        key: "type",
-        name: "Account Type",
-        minWidth: 100,
-        onRender: (row: Stripe.Account) => getReadableAccountType(row),
       },
       {
         key: "viewAccount",
@@ -117,6 +118,17 @@ export const ConnectedAccountList: React.FC<{
         },
       },
     ];
+
+    if (!hideAccountTypeColumn) {
+      columns.splice(2, 0, {
+        key: "type",
+        name: "Account Type",
+        minWidth: 100,
+        onRender: (row: Stripe.Account) => getReadableAccountType(row),
+      });
+    }
+
+    return columns;
   };
 
   return (

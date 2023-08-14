@@ -16,6 +16,7 @@ import { CreateAccountDialog } from "./CreateAccountDialog";
 import { serializeError } from "serialize-error";
 import { ConnectedAccountList } from "./ConnectedAccountList";
 import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
+import { specialAccountsData } from "./specialAccountList";
 // import { FormattedMessage } from "react-intl";
 
 export const ConnectedAccountListPage: React.FC = () => {
@@ -78,25 +79,32 @@ export const ConnectedAccountListPage: React.FC = () => {
     );
   }
 
+  if (isGetStarredAccountsLoading || starredAccounts === undefined) {
+    return <Spinner label="Loading..." />;
+  }
+  if (isGetStarredAccountsError) {
+    return <Text>Failed to load starred accounts!</Text>;
+  }
+
   const renderSpecialAccountsSection = () => {
+    // Special accounts are only available for the specific test platform
     if (currentAccount?.id !== "acct_1MZRIlLirQdaQn8E") {
       return null;
     }
 
-    // Special accounts related to platform acct_1MZRIlLirQdaQn8E
-    const specialAccounts = [
-      /*Standard CBSP:*/ "acct_1NBR5cQ55yzNh0Wh",
-      /*Standard Non-CBSP:*/ "acct_1NTYufAm9SMRj986",
-      /*Express:*/ "acct_1MhgrJPu4nAj1Tce",
-      /*Custom:*/ "acct_1N9FIXQ26HdRlxHg",
-      /*UA1:*/ "acct_1NUwRpPwYwgmBZjm",
-      /*UA2:*/ "acct_1N61ByQ7NMZInEnp",
-      /*UA3:*/ "acct_1NUwSMPxxtPxBTFe",
-      /*UA7:*/ "acct_1NUwSoPqPnXR0qy5",
-    ];
-
-    // TODO: Fetch these accounts from the API and display them
-    return null;
+    return (
+      <>
+        <Separator />
+        <Text variant="mediumPlus">Shared test accounts</Text>
+        <ConnectedAccountList
+          displayStar={true}
+          accounts={Object.values(specialAccountsData)}
+          onStarRefetch={refetchStarredAccounts}
+          starredAccounts={starredAccounts}
+          hideAccountTypeColumn
+        />
+      </>
+    );
   };
 
   return (
@@ -149,12 +157,7 @@ export const ConnectedAccountListPage: React.FC = () => {
                 </Stack>
               </Stack>
             </StackItem>
-            <StackItem>{renderSpecialAccountsSection()}</StackItem>
-            {isGetStarredAccountsLoading && <Spinner label="Loading..." />}
-            {isGetStarredAccountsError && (
-              <Text>Failed to load starred accounts!</Text>
-            )}
-            {starredAccounts && starredAccounts.length > 0 && (
+            {starredAccounts.length > 0 && (
               <>
                 <Separator />
                 <Text variant="mediumPlus">Starred accounts</Text>
@@ -166,6 +169,7 @@ export const ConnectedAccountListPage: React.FC = () => {
                 />
               </>
             )}
+            <StackItem>{renderSpecialAccountsSection()}</StackItem>
             <Separator />
             {isGetAccountsError && <Text>Failed to load accounts!</Text>}
             <>
