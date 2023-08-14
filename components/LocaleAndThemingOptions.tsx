@@ -164,18 +164,18 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 key: "popoverinline-storage",
                 text: "popoverinline-storage",
               },
-              {
-                key: "popoverinline-cdn",
-                text: "popoverinline-cdn",
-              },
+              // {
+              //   key: "popoverinline-cdn",
+              //   text: "popoverinline-cdn",
+              // },
               {
                 key: "popoveraccesory-storage",
                 text: "popoveraccesory-storage",
               },
-              {
-                key: "popoveraccesory-cdn",
-                text: "popoveraccesory-cdn",
-              },
+              // {
+              //   key: "popoveraccesory-cdn",
+              //   text: "popoveraccesory-cdn",
+              // },
             ]}
             selectedKey={currentConnectJSSource}
             onChange={(_ev, item) => {
