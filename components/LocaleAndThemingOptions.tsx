@@ -162,7 +162,7 @@ export const LocaleAndThemingOptions: React.FC = () => {
               },
               {
                 key: "popoverinline-storage",
-                text: "popoverinline-storage",
+                text: "popoverinline",
               },
               // {
               //   key: "popoverinline-cdn",
@@ -170,7 +170,7 @@ export const LocaleAndThemingOptions: React.FC = () => {
               // },
               {
                 key: "popoveraccesory-storage",
-                text: "popoveraccesory-storage",
+                text: "popoveraccesory",
               },
               // {
               //   key: "popoveraccesory-cdn",
