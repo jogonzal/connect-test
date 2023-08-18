@@ -49,14 +49,31 @@ import {
   ConnectPaymentMethodSettings,
   ConnectTransactions,
 } from "../hooks/ConnectJsTypes";
+import { assertNever } from "./assertNever";
 
 type Props = {
   account: Stripe.Account;
   platform: Stripe.Account;
-  onTabChanged: (tab: string) => void;
-  currentTab: string;
+  onSelectedComponentChanged: (tab: string) => void;
+  selectedComponent: ComponentPage;
   onBackToMainAppClicked: () => void;
 };
+
+const componentPageList = [
+  "Payments",
+  "Transactions",
+  "Payouts",
+  "Apps",
+  "Capital",
+  "LPM",
+  "Payment Details",
+  "Onboarding",
+  "Account management",
+  "Test",
+  "Debug",
+  "Theming",
+] as const;
+export type ComponentPage = typeof componentPageList[number];
 
 export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   const {
@@ -344,63 +361,33 @@ StripeConnect.init({
     );
   };
 
-  return (
-    <ConnectComponentsProvider connectInstance={data}>
-      <Stack>
-        {renderDialogs()}
-        <Stack horizontalAlign="space-between" horizontal>
-          <StackItem align="start">
-            <Stack>
-              <Text
-                styles={{
-                  root: {
-                    paddingBottom: "5px",
-                    paddingTop: "5px",
-                  },
-                }}
-              >
-                Viewing connected account <em>{props.account.id}</em> ( type:{" "}
-                {getReadableAccountType(props.account)},{" "}
-                {renderAccountLoginLinks()}) for platform{" "}
-                <em>{currentAccount.id}</em>
-              </Text>
-              <Text>{renderActions()}</Text>
-            </Stack>
-          </StackItem>
-          <StackItem align="center">
-            <PrimaryButton onClick={props.onBackToMainAppClicked}>
-              Back to main app
-            </PrimaryButton>
-          </StackItem>
-        </Stack>
-        <Pivot
-          onLinkClick={(a, b) => {
-            props.onTabChanged(a?.props.itemKey ?? "");
-          }}
-          selectedKey={props.currentTab}
-          defaultSelectedKey="Payments"
-        >
-          <PivotItem headerText="Payments" itemKey="Payments">
-            <ConnectPayments />
-          </PivotItem>
-          <PivotItem headerText="Transactions" itemKey="Transactions">
-            <ConnectTransactions />
-          </PivotItem>
-          <PivotItem headerText="Payouts" itemKey="Payouts">
+  const renderCurrentPage = (currentPage: ComponentPage) => {
+    switch (currentPage) {
+      case "Payments":
+        return <ConnectPayments />;
+      case "Transactions":
+        return <ConnectTransactions />;
+      case "Payouts":
+        return (
+          <>
             <ConnectInstantPayouts />
             <ConnectPayouts />
-          </PivotItem>
-          <PivotItem headerText="Apps" itemKey="Apps">
+          </>
+        );
+      case "Apps":
+        return (
+          <>
             <ConnectAppOnboarding app="com.example.accounting-demo-app" />
             <ConnectAppSettings app="com.example.accounting-demo-app" />
-          </PivotItem>
-          <PivotItem headerText="Capital" itemKey="Capital">
-            <ConnectCapitalOverview />
-          </PivotItem>
-          <PivotItem headerText="LPM" itemKey="LPM">
-            <ConnectPaymentMethodSettings />
-          </PivotItem>
-          <PivotItem headerText="Payment details" itemKey="Payment details">
+          </>
+        );
+      case "Capital":
+        return <ConnectCapitalOverview />;
+      case "LPM":
+        return <ConnectPaymentMethodSettings />;
+      case "Payment Details":
+        return (
+          <>
             {renderPaymentDetailUI()}
             <Stack>
               <StackItem>
@@ -414,18 +401,22 @@ StripeConnect.init({
                 )}
               </StackItem>
             </Stack>
-          </PivotItem>
-          <PivotItem headerText="Onboarding" itemKey="Embedded onboarding">
-            <OnboardingExperienceExample />
-          </PivotItem>
-          <PivotItem
-            headerText="Account management"
-            itemKey="Account management"
-          >
+          </>
+        );
+      case "Onboarding":
+        return <OnboardingExperienceExample />;
+      case "Account management":
+        return (
+          <>
+            {" "}
             <ConnectNotificationBanner />
             <ConnectAccountManagement />
-          </PivotItem>
-          <PivotItem headerText="Test" itemKey="Test">
+          </>
+        );
+      case "Test":
+        return (
+          <>
+            {" "}
             <Text>Testing extracting information from Connect elements</Text>
             <ExtractChargeFromStripeElements />
             <ConnectPayments />
@@ -433,8 +424,11 @@ StripeConnect.init({
             <PricingTable />
             <p>This is not a real connect element:</p>
             <CustomersTab accountId={props.account.id} />
-          </PivotItem>
-          <PivotItem headerText="Debug" itemKey="Debug">
+          </>
+        );
+      case "Debug":
+        return (
+          <>
             <ConnectDebugUtils />
             <StackItem>
               <Stack horizontal>
@@ -506,16 +500,63 @@ StripeConnect.init({
             >
               Add capabilities
             </PrimaryButton>
-          </PivotItem>
-          <PivotItem headerText="Theming" itemKey="Theming">
-            <div style={{ backgroundColor: "white" }}>
-              <DebugConfigElement
-                connectInstance={data as ExtendedStripeConnectInstance}
-              />
-              <ConnectDebugUIPreview />
-            </div>
-          </PivotItem>
-        </Pivot>
+          </>
+        );
+      case "Theming":
+        return (
+          <div style={{ backgroundColor: "white" }}>
+            <DebugConfigElement
+              connectInstance={data as ExtendedStripeConnectInstance}
+            />
+            <ConnectDebugUIPreview />
+          </div>
+        );
+      default:
+        assertNever(currentPage);
+        return <ConnectPayments />;
+    }
+  };
+
+  return (
+    <ConnectComponentsProvider connectInstance={data}>
+      <Stack>
+        {renderDialogs()}
+        <Stack horizontalAlign="space-between" horizontal>
+          <StackItem align="start">
+            <Stack>
+              <Text
+                styles={{
+                  root: {
+                    paddingBottom: "5px",
+                    paddingTop: "5px",
+                  },
+                }}
+              >
+                Viewing connected account <em>{props.account.id}</em> ( type:{" "}
+                {getReadableAccountType(props.account)},{" "}
+                {renderAccountLoginLinks()}) for platform{" "}
+                <em>{currentAccount.id}</em>
+              </Text>
+              <Text>{renderActions()}</Text>
+            </Stack>
+          </StackItem>
+          <StackItem align="center">
+            <PrimaryButton onClick={props.onBackToMainAppClicked}>
+              Back to main app
+            </PrimaryButton>
+          </StackItem>
+        </Stack>
+        <Dropdown
+          selectedKey={props.selectedComponent}
+          onChange={(ev, val) =>
+            props.onSelectedComponentChanged((val?.key as string) ?? "USD")
+          }
+          options={componentPageList.map((p) => ({
+            key: p,
+            text: p,
+          }))}
+        />
+        {renderCurrentPage(props.selectedComponent)}
       </Stack>
     </ConnectComponentsProvider>
   );

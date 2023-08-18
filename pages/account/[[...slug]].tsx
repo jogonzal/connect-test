@@ -3,7 +3,10 @@ import * as React from "react";
 import { Spinner, Text } from "@fluentui/react";
 import { useGetAccount } from "../../hooks/useGetAccount";
 import { useGetCurrentAccount } from "../../hooks/useGetCurrentAccount";
-import { EmbeddedDashboardInternal } from "../../components/EmbeddedDashboard";
+import {
+  ComponentPage,
+  EmbeddedDashboardInternal,
+} from "../../components/EmbeddedDashboard";
 
 export const AccountDetailPage: React.FC = () => {
   const router = useRouter();
@@ -14,7 +17,7 @@ export const AccountDetailPage: React.FC = () => {
   }
 
   const accountId = slug[0];
-  const activeTab = slug[1] ?? "payments";
+  const activeTab = slug[1] ?? "Payments";
 
   return (
     <AccountDetailPageInternal accountId={accountId} activeTab={activeTab} />
@@ -45,10 +48,10 @@ const AccountDetailPageInternal: React.FC<{
     <EmbeddedDashboardInternal
       account={account}
       platform={platform}
-      onTabChanged={(tab) => {
+      onSelectedComponentChanged={(tab) => {
         router.push(`/account/${accountId}/${tab}` + window.location.search);
       }}
-      currentTab={activeTab}
+      selectedComponent={activeTab as ComponentPage}
       onBackToMainAppClicked={() => {
         router.push("/" + window.location.search);
       }}
