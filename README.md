@@ -14,7 +14,6 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 High pri
 
-1. Add a "useful account types" section in the beginning
 1. Allow pinning from the details view of an account
 
 Lower pri

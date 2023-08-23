@@ -3,6 +3,8 @@ import {
   DetailsListLayoutMode,
   Dropdown,
   IColumn,
+  IIconProps,
+  IconButton,
   Link,
   Pivot,
   PivotItem,
@@ -50,6 +52,11 @@ import {
   ConnectTransactions,
 } from "../hooks/ConnectJsTypes";
 import { assertNever } from "./assertNever";
+import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
+import { db } from "../clientsStorage/Database";
+
+const starIcon: IIconProps = { iconName: "FavoriteStar" };
+const starFilledIcon: IIconProps = { iconName: "FavoriteStarFill" };
 
 type Props = {
   account: Stripe.Account;
@@ -88,6 +95,12 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     isError: isCurrentAccountError,
     data: currentAccount,
   } = useGetCurrentAccount();
+  const {
+    data: starredAccounts,
+    isLoading: isGetStarredAccountsLoading,
+    error: isGetStarredAccountsError,
+    refetch: refetchStarredAccounts,
+  } = useGetStarredAccounts();
 
   const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] =
     React.useState<Stripe.Account | undefined>(undefined);
@@ -516,6 +529,30 @@ StripeConnect.init({
         return <ConnectPayments />;
     }
   };
+  const alreadyFavorited = starredAccounts?.find(
+    (x) => x.id === props.account.id,
+  );
+
+  const starOrDelete = async (row: Stripe.Account) => {
+    if (!alreadyFavorited) {
+      await db.starredAccounts.add(row);
+    } else {
+      await db.starredAccounts.delete(row.id);
+    }
+    refetchStarredAccounts();
+  };
+
+  const renderStarAction = () => {
+    return (
+      <>
+        <IconButton
+          style={{ height: "16px", width: "16px" }}
+          iconProps={alreadyFavorited ? starFilledIcon : starIcon}
+          onClick={() => starOrDelete(props.account)}
+        />
+      </>
+    );
+  };
 
   return (
     <ConnectComponentsProvider connectInstance={data}>
@@ -536,6 +573,7 @@ StripeConnect.init({
                 {getReadableAccountType(props.account)},{" "}
                 {renderAccountLoginLinks()}) for platform{" "}
                 <em>{currentAccount.id}</em>
+                <Text> {renderStarAction()}</Text>
               </Text>
               <Text>{renderActions()}</Text>
             </Stack>
