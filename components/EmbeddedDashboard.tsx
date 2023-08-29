@@ -359,6 +359,14 @@ StripeConnect.init({
     }
   };
 
+  const logoutEmbedded = () => {
+    if (!data) {
+      throw new Error("Embedded components are not defined");
+    }
+
+    (data as any).logout();
+  };
+
   const renderDialogs = () => {
     return (
       <>
@@ -452,6 +460,9 @@ StripeConnect.init({
       case "Debug":
         return (
           <>
+            <PrimaryButton onClick={logoutEmbedded}>
+              Logout of connect embedded components
+            </PrimaryButton>
             <ConnectDebugUtils />
             <StackItem>
               <Stack horizontal>
