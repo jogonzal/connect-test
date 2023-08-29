@@ -22,8 +22,11 @@ const injectScript = (): HTMLScriptElement => {
     case "local":
       script.src = "http://localhost:3001/v0.1/connect.js";
       break;
-    case "prod":
+    case "prodv0.1":
       script.src = "https://connect-js.stripe.com/v0.1/connect.js";
+      break;
+    case "prodv1.0":
+      script.src = "https://connect-js.stripe.com/v1.0/connect.js";
       break;
     case "popoverinline-cdn":
       script.src =
@@ -40,6 +43,10 @@ const injectScript = (): HTMLScriptElement => {
     case "popoveraccesory-storage":
       script.src =
         "https://connectjstest.blob.core.windows.net/vpopoveraccesory/dist/v0.1/connect.js";
+      break;
+    case "bstripecdn":
+      script.src =
+        "https://b.stripecdn.com/submerchant-surfaces-statics-srv/assets/v0.1/connect.js";
       break;
     default:
       assertNever(src);

@@ -157,12 +157,20 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 text: "local",
               },
               {
-                key: "prod",
-                text: "prod",
+                key: "prodv0.1",
+                text: "prodv0.1",
+              },
+              {
+                key: "prodv1.0",
+                text: "prodv1.0",
               },
               {
                 key: "popoverinline-storage",
                 text: "popoverinline",
+              },
+              {
+                key: "bstripecdn",
+                text: "b.stripecdn (prod)",
               },
               // {
               //   key: "popoverinline-cdn",

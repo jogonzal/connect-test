@@ -52,8 +52,10 @@ export const setLocaleInStorage = (locale: string) => {
 };
 
 export type ConnectJSSource =
-  | "prod"
+  | "prodv0.1"
+  | "prodv1.0"
   | "local"
+  | "bstripecdn"
   | "popoverinline-cdn"
   | "popoverinline-storage"
   | "popoveraccesory-cdn"
@@ -62,7 +64,7 @@ export type ConnectJSSource =
 export const getConnectJSSourceInStorage = (): ConnectJSSource => {
   return (
     (localStorageWrapper.getItem("connectjssource") as ConnectJSSource) ??
-    "prod"
+    "prodv0.1"
   );
 };
 
