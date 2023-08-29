@@ -54,6 +54,7 @@ import {
 import { assertNever } from "./assertNever";
 import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
 import { db } from "../clientsStorage/Database";
+import { useCreateTestIntervention } from "../hooks/useCreateTestIntervention";
 
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
 const starFilledIcon: IIconProps = { iconName: "FavoriteStarFill" };
@@ -101,6 +102,11 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     error: isGetStarredAccountsError,
     refetch: refetchStarredAccounts,
   } = useGetStarredAccounts();
+  const {
+    isLoading: isCreateTestInterventionLoading,
+    isError: isCreateTestInterventionError,
+    mutate: createTestIntervention,
+  } = useCreateTestIntervention(props.account.id);
 
   const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] =
     React.useState<Stripe.Account | undefined>(undefined);
@@ -329,6 +335,10 @@ StripeConnect.init({
             }
           >
             Update (hosted)
+          </Link>
+          {" | "}
+          <Link onClick={() => createTestIntervention()}>
+            Create test intervention
           </Link>
         </>
       );
