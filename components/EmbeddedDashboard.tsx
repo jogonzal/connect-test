@@ -90,7 +90,11 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     error: chargesError,
   } = useGetCharges(props.account);
   const [chargeId, setChargeId] = React.useState<string | undefined>(undefined);
-  const { isLoading, error, data } = useConnectJSInit(props.account.id);
+  const {
+    isLoading,
+    error,
+    data: stripeConnect,
+  } = useConnectJSInit(props.account.id);
   const {
     isLoading: isCurrentAccountLoading,
     isError: isCurrentAccountError,
@@ -126,7 +130,7 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   if (
     isLoading ||
     chargesIsLoading ||
-    !data ||
+    !stripeConnect?.stripeConnectInstance ||
     isCurrentAccountLoading ||
     !currentAccount
   ) {
@@ -360,11 +364,11 @@ StripeConnect.init({
   };
 
   const logoutEmbedded = () => {
-    if (!data) {
+    if (!stripeConnect) {
       throw new Error("Embedded components are not defined");
     }
 
-    (data as any).logout();
+    stripeConnect.stripeConnectWrapper.logout();
   };
 
   const renderDialogs = () => {
@@ -540,7 +544,9 @@ StripeConnect.init({
         return (
           <div style={{ backgroundColor: "white" }}>
             <DebugConfigElement
-              connectInstance={data as ExtendedStripeConnectInstance}
+              connectInstance={
+                stripeConnect.stripeConnectInstance as ExtendedStripeConnectInstance
+              }
             />
             <ConnectDebugUIPreview />
           </div>
@@ -576,7 +582,9 @@ StripeConnect.init({
   };
 
   return (
-    <ConnectComponentsProvider connectInstance={data}>
+    <ConnectComponentsProvider
+      connectInstance={stripeConnect.stripeConnectInstance}
+    >
       <Stack>
         {renderDialogs()}
         <Stack horizontalAlign="space-between" horizontal>

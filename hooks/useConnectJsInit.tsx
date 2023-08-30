@@ -87,66 +87,82 @@ export const loadConnectPrivate = (): Promise<StripeConnectWrapper> => {
   });
 };
 
-const connectJsInstanceCache: Record<string, StripeConnectInstance> = {};
+const connectJsCache: Record<
+  string,
+  {
+    stripeConnectInstance: StripeConnectInstance;
+    stripeConnectWrapper: StripeConnectWrapper;
+  }
+> = {};
 
 export const useConnectJSInit = (accountId: string) => {
-  return useQuery<StripeConnectInstance, Error>(
-    ["ConnectJSInit", accountId],
-    async () => {
-      if (connectJsInstanceCache[accountId]) {
-        return connectJsInstanceCache[accountId];
-      }
-
-      console.log("Initializing ConectJS for account", accountId);
-
-      const publishableKey = StripePublicKey;
-      const stripeConnect = await loadConnectPrivate();
-      const secret = await fetchClientSecret(accountId);
-
-      const appearanceForLightMode: AppearanceOptions = {};
-      const appearanceForDarkMode = {
-        colorSecondaryButtonBackground: "#7F7A7A",
-        colorSecondaryButtonBorder: "#7F7A7A",
-        colorOffsetBackground: "#4F4F4F",
-        colorText: "#FFFFFF",
-        colorSecondaryText: "#C4C4C4",
-        colorBorder: "#696969",
-        colorBorderHighlight: "#616161",
-        colorBackground: "#222222",
-      } as any;
-
-      const theme = getThemeInStorage();
-
-      const initProps: IStripeConnectInitParams = {
-        publishableKey: publishableKey,
-        clientSecret: secret,
-        appearance:
-          theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
-        uiConfig: {
-          overlay: "dialog",
-        },
-        locale: getLocaleInStorage(),
-      };
-
-      const instance = (stripeConnect as any).init({
-        ...initProps,
-        // Overriding these flags so it is easier to test
-        metaOptions: {
-          flagOverrides: {
-            enable_uiconfig_copy_link: true,
-            enable_developer_ids: true,
-            // Until I am enabled
-            enable_balance_transactions_component: true,
-            enable_embedded_account_management: true,
-            enable_embedded_account_onboarding: true,
-            enable_standard_account_access: true,
-            enable_standard_auth_popup_reload: true,
-          },
-        },
-      } as any);
-
-      connectJsInstanceCache[accountId] = instance;
-      return instance;
+  return useQuery<
+    {
+      stripeConnectInstance: StripeConnectInstance;
+      stripeConnectWrapper: StripeConnectWrapper;
     },
-  );
+    Error
+  >(["ConnectJSInit", accountId], async () => {
+    if (connectJsCache[accountId]) {
+      return connectJsCache[accountId];
+    }
+
+    console.log("Initializing ConectJS for account", accountId);
+
+    const publishableKey = StripePublicKey;
+    const stripeConnect: StripeConnectWrapper = await loadConnectPrivate();
+    const secret = await fetchClientSecret(accountId);
+
+    const appearanceForLightMode: AppearanceOptions = {};
+    const appearanceForDarkMode = {
+      colorSecondaryButtonBackground: "#7F7A7A",
+      colorSecondaryButtonBorder: "#7F7A7A",
+      colorOffsetBackground: "#4F4F4F",
+      colorText: "#FFFFFF",
+      colorSecondaryText: "#C4C4C4",
+      colorBorder: "#696969",
+      colorBorderHighlight: "#616161",
+      colorBackground: "#222222",
+    } as any;
+
+    const theme = getThemeInStorage();
+
+    const initProps: IStripeConnectInitParams = {
+      publishableKey: publishableKey,
+      clientSecret: secret,
+      appearance:
+        theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
+      uiConfig: {
+        overlay: "dialog",
+      },
+      locale: getLocaleInStorage(),
+    };
+
+    const instance = (stripeConnect as any).init({
+      ...initProps,
+      // Overriding these flags so it is easier to test
+      metaOptions: {
+        flagOverrides: {
+          enable_uiconfig_copy_link: true,
+          enable_developer_ids: true,
+          // Until I am enabled
+          enable_balance_transactions_component: true,
+          enable_embedded_account_management: true,
+          enable_embedded_account_onboarding: true,
+          enable_standard_account_access: true,
+          enable_standard_auth_popup_reload: true,
+        },
+      },
+    } as any);
+
+    connectJsCache[accountId] = {
+      stripeConnectInstance: instance,
+      stripeConnectWrapper: stripeConnect,
+    };
+
+    return {
+      stripeConnectInstance: instance,
+      stripeConnectWrapper: stripeConnect,
+    };
+  });
 };
