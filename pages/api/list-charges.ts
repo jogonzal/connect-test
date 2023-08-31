@@ -17,8 +17,6 @@ export default async function handler(
       },
     );
 
-    console.log("Obtained charges!", charge);
-
     res.status(200).send(charge);
   } catch (error) {
     const errorAsAny = error as any;
