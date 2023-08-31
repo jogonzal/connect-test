@@ -12,6 +12,11 @@ export default async function handler(
     // Specify the API version to include the beta header
     const accountSessionResponse = await StripeClient.accountSessions.create({
       account: accountId,
+      components: {
+        account_onboarding: {
+          enabled: true,
+        },
+      },
     });
 
     (accountSessionResponse as any).publicKey =
