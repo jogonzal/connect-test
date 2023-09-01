@@ -48,9 +48,9 @@ export default async function handler(
         app_settings: {
           enabled: true,
         },
-        // balances: {
-        //   enabled: true,
-        // },
+        balances: {
+          enabled: true,
+        },
         capital_overview: {
           enabled: true,
         },
