@@ -4,7 +4,7 @@ import { StripePrivateKey } from "./EnvironmentVariables";
 
 export const StripeClient = new Stripe(StripePrivateKey, {
   apiVersion:
-    "2022-11-15; embedded_connect_beta=v1;unified_accounts_beta=v1" as any, // Current npm package version
+    "2022-11-15; embedded_connect_beta=v2;unified_accounts_beta=v1" as any, // Current npm package version
   // Uncomment this to target local devbox
   // host: process.env.USER + '-api-mydev.dev.stripe.me',
   // protocol: 'http',
