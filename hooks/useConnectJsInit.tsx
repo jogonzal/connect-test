@@ -9,6 +9,7 @@ import {
 } from "@stripe/connect-js/pure";
 import {
   getConnectJSSourceInStorage,
+  getConnectJsSpecificCommitInStorage,
   getLocaleInStorage,
   getThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
@@ -18,6 +19,7 @@ const injectScript = (): HTMLScriptElement => {
   const script = document.createElement("script");
 
   const src = getConnectJSSourceInStorage();
+  const specificCommit = getConnectJsSpecificCommitInStorage();
   switch (src) {
     case "local":
       script.src = "http://localhost:3001/v0.1/connect.js";
@@ -47,6 +49,9 @@ const injectScript = (): HTMLScriptElement => {
     case "bstripecdn":
       script.src =
         "https://b.stripecdn.com/submerchant-surfaces-statics-srv/assets/v0.1/connect.js";
+      break;
+    case "specificcommit":
+      script.src = `https://connect-js.stripe.com/v0.1/connectjs-${specificCommit}.js`;
       break;
     default:
       assertNever(src);

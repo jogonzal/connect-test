@@ -59,7 +59,8 @@ export type ConnectJSSource =
   | "popoverinline-cdn"
   | "popoverinline-storage"
   | "popoveraccesory-cdn"
-  | "popoveraccesory-storage";
+  | "popoveraccesory-storage"
+  | "specificcommit";
 
 export const getConnectJSSourceInStorage = (): ConnectJSSource => {
   return (
@@ -70,4 +71,12 @@ export const getConnectJSSourceInStorage = (): ConnectJSSource => {
 
 export const setConnectJSSourceInStorage = (source: ConnectJSSource) => {
   localStorageWrapper.setItem("connectjssource", source);
+};
+
+export const getConnectJsSpecificCommitInStorage = (): string | undefined => {
+  return localStorageWrapper.getItem("connectjsspecificcommit") ?? undefined;
+};
+
+export const setConnectJsSpecificCommitInStorage = (commit: string) => {
+  localStorageWrapper.setItem("connectjsspecificcommit", commit);
 };

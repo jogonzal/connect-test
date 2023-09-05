@@ -7,6 +7,7 @@ import {
   getLocaleInStorage,
   getThemeInStorage,
   setConnectJSSourceInStorage,
+  setConnectJsSpecificCommitInStorage,
   setLocaleInStorage,
   setThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
@@ -172,6 +173,10 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 key: "bstripecdn",
                 text: "b.stripecdn (prod)",
               },
+              {
+                key: "specificcommit",
+                text: "Specific commit",
+              },
               // {
               //   key: "popoverinline-cdn",
               //   text: "popoverinline-cdn",
@@ -188,8 +193,20 @@ export const LocaleAndThemingOptions: React.FC = () => {
             selectedKey={currentConnectJSSource}
             onChange={(_ev, item) => {
               const newSource = item?.key as ConnectJSSource;
+
+              if (newSource === "specificcommit") {
+                const specificCommit = window.prompt(
+                  "Enter specific commit hash:",
+                );
+                if (!specificCommit) {
+                  throw new Error("Need commit");
+                }
+                setConnectJsSpecificCommitInStorage(specificCommit);
+              }
+
               setCurrentConnectJSSource(newSource);
               setConnectJSSourceInStorage(newSource);
+
               window.location.reload();
             }}
           />
