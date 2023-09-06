@@ -14,7 +14,7 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 High pri
 
-1. Allow pinning from the details view of an account
+1. Allow writing to cookies to switch platform
 
 Lower pri
 
