@@ -368,7 +368,7 @@ StripeConnect.init({
       throw new Error("Embedded components are not defined");
     }
 
-    stripeConnect.stripeConnectWrapper.logout();
+    stripeConnect.stripeConnectInstance.logout();
   };
 
   const renderDialogs = () => {
