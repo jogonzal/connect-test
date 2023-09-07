@@ -14,7 +14,7 @@ import {
   getThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
 import { assertNever } from "@fluentui/react";
-import { loadConnect } from "@stripe/connect-js";
+import { loadConnect } from "@stripe/connect-js/pure";
 
 const injectScript = (): HTMLScriptElement => {
   const script = document.createElement("script");
