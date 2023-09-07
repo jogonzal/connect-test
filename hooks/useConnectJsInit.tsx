@@ -14,6 +14,7 @@ import {
   getThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
 import { assertNever } from "@fluentui/react";
+import { loadConnect } from "@stripe/connect-js";
 
 const injectScript = (): HTMLScriptElement => {
   const script = document.createElement("script");
@@ -76,8 +77,12 @@ export const loadConnectPrivate = (): Promise<StripeConnectWrapper> => {
       const script = injectScript();
       script.addEventListener("load", () => {
         if ((window as any).StripeConnect) {
-          const wrapper = (window as any).StripeConnect;
-          resolve(wrapper);
+          loadConnect()
+            .then((connect) => {
+              console.log("loadconnect returned", connect);
+              resolve(connect);
+            })
+            .catch(reject);
         } else {
           reject(new Error("Connect.js did not load the necessary objects"));
         }
@@ -143,7 +148,7 @@ export const useConnectJSInit = (accountId: string) => {
       locale: getLocaleInStorage(),
     };
 
-    const instance = (stripeConnect as any).init({
+    const instance = stripeConnect.initialize({
       ...initProps,
       // Overriding these flags so it is easier to test
       metaOptions: {
