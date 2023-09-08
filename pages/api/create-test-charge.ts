@@ -15,15 +15,22 @@ export default async function handler(
     const fee = req.body.fee;
     const obo = req.body.obo;
     const currency = req.body.currency;
+    const disputed = req.body.disputed;
 
     console.log("Currency is", currency);
+
+    const paymentMethod = disputed
+      ? "pm_card_createDispute"
+      : "pm_card_bypassPending";
+
+    console.log("Using payment method", paymentMethod);
 
     let payment;
     if (destinationCharge) {
       payment = await StripeClient.paymentIntents.create({
         amount: amount,
         currency: currency ?? "USD",
-        payment_method: "pm_card_bypassPending",
+        payment_method: paymentMethod,
         confirmation_method: "manual",
         confirm: true,
         application_fee_amount: transferAmount ? undefined : fee,
@@ -39,7 +46,7 @@ export default async function handler(
           amount: amount,
           currency: currency ?? "USD",
           description: description,
-          payment_method: "pm_card_bypassPending",
+          payment_method: paymentMethod,
           confirmation_method: "manual",
           confirm: true,
         },

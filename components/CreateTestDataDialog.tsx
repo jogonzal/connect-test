@@ -44,6 +44,7 @@ export const CreateTestDataDialog: React.FC<Props> = ({
     1000,
     false,
     "USD",
+    false,
   );
 
   const {

@@ -48,13 +48,13 @@ export const OnboardingExperienceExample: React.FC = () => {
       </Stack.Item>
       <Stack.Item>
         <ConnectAccountOnboarding
-          fullTermsOfServiceUrl={fullTos}
-          recipientTermsOfServiceUrl={recipientTos}
-          privacyPolicyUrl={privacyPolicy}
-          skipTermsOfServiceCollection={skipTos === "true"}
           onExit={() => {
             console.log("The account has exited onboarding");
           }}
+          fullTermsOfServiceUrl={fullTos} // Optional
+          recipientTermsOfServiceUrl={recipientTos}
+          privacyPolicyUrl={privacyPolicy}
+          skipTermsOfServiceCollection={skipTos === "true"}
         />
       </Stack.Item>
     </Stack>

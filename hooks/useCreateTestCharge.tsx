@@ -10,6 +10,7 @@ const createTestCharge = async (
   fee: number,
   obo: boolean,
   currency: string,
+  disputed: boolean,
 ): Promise<Stripe.Charge> => {
   const testChargeResponse = await fetch("/api/create-test-charge", {
     body: JSON.stringify({
@@ -21,6 +22,7 @@ const createTestCharge = async (
       fee,
       obo,
       currency,
+      disputed,
     }),
     method: "POST",
     headers: {
@@ -45,6 +47,7 @@ export const useCreateTestCharge = (
   fee: number,
   obo: boolean,
   currency: string,
+  disputed: boolean,
 ) => {
   return useMutation<Stripe.Charge, Error>(
     "CreateTestCharge-" + accountId,
@@ -58,6 +61,7 @@ export const useCreateTestCharge = (
         fee,
         obo,
         currency,
+        disputed,
       );
 
       return charge;

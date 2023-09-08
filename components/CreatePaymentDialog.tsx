@@ -39,6 +39,8 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
   const [successfulPayment, setSuccessfulPayment] =
     React.useState<boolean>(false);
 
+  const [disputed, setDisputed] = React.useState<boolean>(false);
+
   const {
     error: createChargeError,
     isLoading: createChargeLoading,
@@ -54,6 +56,7 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
     applicationFee,
     useOBO,
     currency,
+    disputed,
   );
 
   const currentAccountFullDetails = props.account;
@@ -175,6 +178,11 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
               label="App fee"
               value={applicationFee.toString()}
               onChange={(ev, s) => setApplicationFee(parseInt(s ?? "0"))}
+            />
+            <Checkbox
+              label="Disputed (only works for 'create directly')"
+              checked={disputed}
+              onChange={(ev, s) => setDisputed(!!s)}
             />
             <Checkbox
               label="Destination charge"
