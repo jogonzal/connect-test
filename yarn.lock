@@ -658,10 +658,10 @@
   dependencies:
     "@rollup/plugin-json" "^6.0.0"
 
-"@stripe/react-connect-js@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@stripe/react-connect-js/-/react-connect-js-1.3.1.tgz#222df8fe30fe69d1da199888cc68fa7f6c0087ac"
-  integrity sha512-I50kSnK1srHdi8vafxAJUzr+h4F4G4thvivRuIIKEOuEVgBLZ9zUbVSJakRwVyX55majojUWfWo9o6dllDCKxg==
+"@stripe/react-connect-js@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@stripe/react-connect-js/-/react-connect-js-1.4.0.tgz#d56cf358729b0c68d1ab3b113021f6912088778b"
+  integrity sha512-BX9XDsNxMP9GNqjLUQfMvwb+iMj+tJbarvKRqsr4G/efEs0ITcPT8kGYbx970/qFY67phRu5Dae9j+XJio6S7w==
 
 "@stripe/react-stripe-js@^2.1.2":
   version "2.1.2"

@@ -112,43 +112,6 @@ export const ConnectCapitalOverview = (): JSX.Element => {
   return wrapper;
 };
 
-// Include this React component
-export const ConnectAccountOnboarding = ({
-  onExit,
-  fullTos,
-  recipientTos,
-  privacyPolicy,
-  skipTos,
-}: {
-  onExit: () => void;
-  fullTos: string;
-  recipientTos: string;
-  privacyPolicy: string;
-  skipTos: string;
-}): JSX.Element | null => {
-  const { wrapper, component: onboarding } = useCreateComponent(
-    "account-onboarding" as any,
-  );
-
-  useAttachEvent(onboarding, "exit" as any, onExit);
-
-  // Optional: make sure to follow our policy instructions above
-  useAttachAttribute(onboarding, "full-terms-of-service-url" as any, fullTos);
-  useAttachAttribute(
-    onboarding,
-    "recipient-terms-of-service-url" as any,
-    recipientTos,
-  );
-  useAttachAttribute(onboarding, "privacy-policy-url" as any, privacyPolicy);
-  useAttachAttribute(
-    onboarding,
-    "skip-terms-of-service-collection" as any,
-    skipTos,
-  );
-
-  return wrapper;
-};
-
 export const ConnectDebugUIConfig = ({
   onConnectJSOptionsUpdated,
 }: {

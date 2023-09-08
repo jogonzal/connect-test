@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ConnectAccountOnboarding } from "../hooks/ConnectJsTypes";
 import { Stack, TextField } from "@fluentui/react";
+import { ConnectAccountOnboarding } from "@stripe/react-connect-js";
 
 export const OnboardingExperienceExample: React.FC = () => {
   const [fullTos, setFullTos] = React.useState("https://www.example.com/tos");
@@ -48,10 +48,10 @@ export const OnboardingExperienceExample: React.FC = () => {
       </Stack.Item>
       <Stack.Item>
         <ConnectAccountOnboarding
-          fullTos={fullTos}
-          recipientTos={recipientTos}
-          privacyPolicy={privacyPolicy}
-          skipTos={skipTos}
+          fullTermsOfServiceUrl={fullTos}
+          recipientTermsOfServiceUrl={recipientTos}
+          privacyPolicyUrl={privacyPolicy}
+          skipTermsOfServiceCollection={skipTos === "true"}
           onExit={() => {
             console.log("The account has exited onboarding");
           }}
