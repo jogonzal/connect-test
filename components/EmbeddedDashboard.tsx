@@ -67,7 +67,7 @@ const componentPageList = [
   "Capital",
   "LPM",
   "Payment Details",
-  "Onboarding",
+  "Account Onboarding",
   "Account management",
   "Test",
   "Debug",
@@ -82,9 +82,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     data: stripeConnect,
   } = useConnectJSInit(props.account.id);
   const {
-    isLoading: isCurrentAccountLoading,
-    isError: isCurrentAccountError,
-    data: currentAccount,
+    isLoading: isPlatformAccountLoading,
+    isError: isPlatformAccountError,
+    data: platformAccount,
   } = useGetCurrentAccount();
   const {
     data: starredAccounts,
@@ -100,15 +100,15 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     "stripe-connect-payments",
   );
 
-  if (error || isCurrentAccountError) {
+  if (error || isPlatformAccountError) {
     return <Text>An error occurred</Text>;
   }
 
   if (
     isLoading ||
     !stripeConnect?.stripeConnectInstance ||
-    isCurrentAccountLoading ||
-    !currentAccount
+    isPlatformAccountLoading ||
+    !platformAccount
   ) {
     return <Spinner label="Loading..." />;
   }
@@ -132,28 +132,36 @@ StripeConnect.init({
   };
 
   const renderAccountLoginLinks = () => {
-    const toRender = [];
-    if (props.account.type === "express" || props.account.type === "custom") {
-      const url = `/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`;
-      toRender.push(
+    const renderExpressLoginLink = () => {
+      if (props.account.type === "express" || props.account.type === "custom") {
+        const url = `/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`;
+        return (
+          <>
+            {" | "}
+            <Link href={url}>Express login link</Link>
+          </>
+        );
+      }
+    };
+
+    const renderStandardLoginLink = () => {
+      const loginAsUrl = `https://go/loginas/${props.account.id}`;
+      return (
         <>
           {" | "}
-          <Link href={url}>Express login link</Link>
-        </>,
+          <Link href={loginAsUrl} target="_blank">
+            Standard dashboard LoginAs
+          </Link>
+        </>
       );
-    }
+    };
 
-    const loginAsUrl = `https://go/loginas/${props.account.id}`;
-    toRender.push(
+    return (
       <>
-        {" | "}
-        <Link href={loginAsUrl} target="_blank">
-          Standard dashboard LoginAs
-        </Link>
-      </>,
+        {renderExpressLoginLink()}
+        {renderStandardLoginLink()}
+      </>
     );
-
-    return toRender;
   };
 
   const logoutEmbedded = () => {
@@ -202,8 +210,8 @@ StripeConnect.init({
       case "LPM":
         return <ConnectPaymentMethodSettings />;
       case "Payment Details":
-        return <CustomPaymentsTable account={currentAccount} />;
-      case "Onboarding":
+        return <CustomPaymentsTable account={props.account} />;
+      case "Account Onboarding":
         return <OnboardingExperienceExample />;
       case "Account management":
         return (
@@ -339,7 +347,7 @@ StripeConnect.init({
                 Viewing connected account <em>{props.account.id}</em> ( type:{" "}
                 {getReadableAccountType(props.account)},{" "}
                 {renderAccountLoginLinks()}) for platform{" "}
-                <em>{currentAccount.id}</em>
+                <em>{platformAccount.id}</em>
                 <Text> {renderStarAction()}</Text>
               </Text>
               <Text

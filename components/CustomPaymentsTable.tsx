@@ -12,6 +12,22 @@ import { ConnectPaymentDetails } from "@stripe/react-connect-js";
 import * as React from "react";
 import Stripe from "stripe";
 import { useGetCharges } from "../hooks/useGetCharges";
+import { CreateTestDataAction } from "./CreateTestDataAction";
+import { useEditPaymentIntent } from "../hooks/useEditPaymentIntent";
+
+const EditPaymentIntentButton = ({
+  id,
+  accountId,
+}: {
+  id: string;
+  accountId: string;
+}) => {
+  const editPaymentIntentHook = useEditPaymentIntent(accountId, id);
+
+  return (
+    <CreateTestDataAction buttonText="Edit" hookData={editPaymentIntentHook} />
+  );
+};
 
 export const CustomPaymentsTable = ({
   account,
@@ -32,6 +48,8 @@ export const CustomPaymentsTable = ({
   if (chargesIsLoading) {
     return <Spinner label="Loading..." />;
   }
+
+  console.log("Got charges", charges);
 
   const getColumns = (): IColumn[] => {
     return [
@@ -76,11 +94,7 @@ export const CustomPaymentsTable = ({
         name: "Edit description",
         minWidth: 100,
         onRender: (row: Stripe.PaymentIntent) => (
-          <>
-            <PrimaryButton onClick={() => onEditDescription(row.id)}>
-              Edit description
-            </PrimaryButton>
-          </>
+          <EditPaymentIntentButton id={row.id} accountId={account.id} />
         ),
       },
       {
@@ -110,23 +124,6 @@ export const CustomPaymentsTable = ({
     );
   };
 
-  const onEditDescription = async (id: string) => {
-    const response = await fetch("/api/edit-payment-intent", {
-      method: "POST",
-      body: JSON.stringify({
-        id,
-        accountId: account.id,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      console.log("failed!");
-    }
-  };
-
   return (
     <>
       {renderPaymentDetailUI()}
@@ -135,7 +132,7 @@ export const CustomPaymentsTable = ({
           <Text>Payments (custom table)</Text>
           {charges && (
             <DetailsList
-              items={charges}
+              items={charges.data}
               columns={getColumns()}
               layoutMode={DetailsListLayoutMode.justified}
             />

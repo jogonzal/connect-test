@@ -79,7 +79,6 @@ export const loadConnectPrivate = (): Promise<StripeConnectWrapper> => {
         if ((window as any).StripeConnect) {
           loadConnect()
             .then((connect) => {
-              console.log("loadconnect returned", connect);
               resolve(connect);
             })
             .catch(reject);

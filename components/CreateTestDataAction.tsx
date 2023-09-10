@@ -8,21 +8,23 @@ import {
 } from "@fluentui/react";
 import * as React from "react";
 
-type Props = {
+type Props<T = void> = {
   buttonText: string;
   hookData: {
     error: Error | null;
     isLoading: boolean;
     isSuccess: boolean;
     reset: () => void;
-    mutateAsync: () => void;
+    mutateAsync: (params: T) => void;
   };
+  params?: T;
 };
 
-export const CreateTestDataAction: React.FC<Props> = ({
+export function CreateTestDataAction<T>({
   buttonText: buttonName,
   hookData,
-}) => {
+  params,
+}: Props<T>) {
   const { error, isLoading, isSuccess, reset, mutateAsync } = hookData;
 
   return (
@@ -31,7 +33,7 @@ export const CreateTestDataAction: React.FC<Props> = ({
         <Stack horizontal verticalAlign="center">
           <StackItem>
             <PrimaryButton
-              onClick={mutateAsync}
+              onClick={() => mutateAsync(params as T)}
               disabled={isLoading}
               style={{ marginRight: "4px" }}
             >
@@ -53,4 +55,4 @@ export const CreateTestDataAction: React.FC<Props> = ({
       </StackItem>
     </Stack>
   );
-};
+}
