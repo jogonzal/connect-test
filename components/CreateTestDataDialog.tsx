@@ -115,7 +115,7 @@ export const CreateTestDataDialog: React.FC<Props> = ({
             <PrimaryButton
               onClick={() => setShowAdvancedChargeCreateDialog(account)}
             >
-              Create test charge (advanced)
+              Create test charge (advanced, using payment element or checkout)
             </PrimaryButton>
             <CreateTestDataAction
               buttonText="Create test payout"
