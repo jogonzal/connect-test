@@ -133,25 +133,25 @@ export const ConnectedAccountListPage: React.FC = () => {
                 <Stack horizontal horizontalAlign="space-between">
                   <Stack verticalAlign="center">
                     <Text>
-                      Current platform {currentAccount.id}{" "}
+                      Using platform{" "}
+                      <Link href={`https://go/o/${currentAccount.id}`}>
+                        {currentAccount.id}
+                      </Link>
+                      {" ("}
                       <Link
                         href={`https://go/loginas/${currentAccount.id}`}
                         target="_blank"
                       >
                         Login as
-                        {/* <FormattedMessage
-                          defaultMessage="Login as"
-                          id="ConnectedAccountListPage.LoginAsLink"
-                          description="The link to login as from the connected account list page"
-                        /> */}
                       </Link>
+                      {")"}
                     </Text>
                   </Stack>
                   <Stack>
                     <PrimaryButton
                       onClick={() => setShowCreateAccountDialog(true)}
                     >
-                      Create account
+                      Create new connected account
                     </PrimaryButton>
                   </Stack>
                 </Stack>

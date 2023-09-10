@@ -14,13 +14,14 @@ import * as React from "react";
 import { Stripe } from "stripe";
 import { PaymentsUIClientSecret } from "./PaymentsUIClientSecret";
 import { useCreateTestCharge } from "../hooks/useCreateTestCharge";
+import { CreateTestDataAction } from "./CreateTestDataAction";
 
 type Props = {
   account: Stripe.Account;
   onDismiss: () => void;
 };
 
-export const CreatePaymentDialog: React.FC<Props> = (props) => {
+export const CreateAdvancedChargeDialog: React.FC<Props> = (props) => {
   const [productName, setProductName] = React.useState("Test product");
   const [amount, setAmount] = React.useState(1000);
   const [applicationFee, setApplicationFee] = React.useState(100);
@@ -41,13 +42,7 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
 
   const [disputed, setDisputed] = React.useState<boolean>(false);
 
-  const {
-    error: createChargeError,
-    isLoading: createChargeLoading,
-    data: createChargeData,
-    reset: createChargeReset,
-    mutateAsync: createTestChargeAsync,
-  } = useCreateTestCharge(
+  const createTestChargeHook = useCreateTestCharge(
     props.account.id,
     productName,
     destinationCharge,
@@ -117,10 +112,6 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
 
     const clientSecret: string = await paymentIntentResponse.text();
     setPaymentsUIClientSecret(clientSecret);
-  };
-
-  const onCreateDirectly = async () => {
-    await createTestChargeAsync();
   };
 
   const renderDialogContent = () => {
@@ -220,8 +211,12 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
                   key: "GBP",
                   text: "GBP",
                 },
+                {
+                  key: "MXN",
+                  text: "MXN",
+                },
               ]}
-              label="Account type"
+              label="Currency"
             />
           </Stack>
         </StackItem>
@@ -231,14 +226,10 @@ export const CreatePaymentDialog: React.FC<Props> = (props) => {
             Payment Element
           </PrimaryButton>
           <PrimaryButton onClick={onCardUIClicked}>Card Element</PrimaryButton>
-          <PrimaryButton onClick={onCreateDirectly}>
-            Create directly
-          </PrimaryButton>
-          {createChargeLoading ?? <Spinner />}
-          {createChargeData && <Text>Created!</Text>}
-          {createChargeError && (
-            <Text>Error! {JSON.stringify(createChargeError)}</Text>
-          )}
+          <CreateTestDataAction
+            buttonText="Create via API"
+            hookData={createTestChargeHook}
+          />
         </StackItem>
       </Stack>
     );

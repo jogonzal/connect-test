@@ -1,13 +1,9 @@
 import {
-  DetailsList,
-  DetailsListLayoutMode,
+  DefaultButton,
   Dropdown,
-  IColumn,
   IIconProps,
   IconButton,
   Link,
-  Pivot,
-  PivotItem,
   PrimaryButton,
   Spinner,
   Stack,
@@ -17,14 +13,12 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
-import { useGetCharges } from "../hooks/useGetCharges";
 import { CustomersTab } from "./CustomersTab";
 import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PricingTable } from "./PricingTable";
 import {
   ConnectComponentsProvider,
-  ConnectPaymentDetails,
   ConnectPayments,
   ConnectPayouts,
 } from "@stripe/react-connect-js";
@@ -36,8 +30,6 @@ import { fetchClientSecret } from "../hooks/fetchClientSecret";
 import { StripePublicKey } from "../config/ClientConfig";
 import { getReadableAccountType } from "../utils/getReadableAccountType";
 import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
-import { CreatePaymentDialog } from "./CreatePaymentDialog";
-import { PaymentUIExperienceDialog } from "./PaymentUIExperienceDialog";
 import { CreateTestDataDialog } from "./CreateTestDataDialog";
 import {
   ConnectAccountManagement,
@@ -54,7 +46,6 @@ import {
 import { assertNever } from "./assertNever";
 import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
 import { db } from "../clientsStorage/Database";
-import { useCreateTestIntervention } from "../hooks/useCreateTestIntervention";
 import { CustomPaymentsTable } from "./CustomPaymentsTable";
 
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
@@ -101,17 +92,8 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     error: isGetStarredAccountsError,
     refetch: refetchStarredAccounts,
   } = useGetStarredAccounts();
-  const {
-    isLoading: isCreateTestInterventionLoading,
-    isError: isCreateTestInterventionError,
-    mutate: createTestIntervention,
-  } = useCreateTestIntervention(props.account.id);
 
-  const [showCheckoutDialogForMerchant, setShowCheckoutDialogForMerchant] =
-    React.useState<Stripe.Account | undefined>(undefined);
-  const [showPaymentDialogForMerchant, setShowPaymentDialogForMerchant] =
-    React.useState<Stripe.Account | undefined>(undefined);
-  const [showCreateTestDataDialog, setShgowCreateTestDataDialog] =
+  const [showCreateTestDataDialog, setShowCreateTestDataDialog] =
     React.useState<Stripe.Account | undefined>(undefined);
 
   const [connectElementOption, setConnectElementOption] = React.useState(
@@ -130,23 +112,6 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   ) {
     return <Spinner label="Loading..." />;
   }
-
-  const loginAsExpress = async () => {
-    const response = await fetch("/api/express-login-link", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        accountId: props.account.id,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(`Unexpected response code ${response.status}`);
-    }
-    const json = await response.json();
-    window.open(json.url);
-  };
 
   const copyEmbeddableScript = async () => {
     const newSecret = await fetchClientSecret(props.account.id);
@@ -168,7 +133,7 @@ StripeConnect.init({
 
   const renderAccountLoginLinks = () => {
     const toRender = [];
-    if (props.account.type === "express") {
+    if (props.account.type === "express" || props.account.type === "custom") {
       const url = `/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`;
       toRender.push(
         <>
@@ -183,84 +148,12 @@ StripeConnect.init({
       <>
         {" | "}
         <Link href={loginAsUrl} target="_blank">
-          Standard dash LoginAs
+          Standard dashboard LoginAs
         </Link>
       </>,
     );
 
     return toRender;
-  };
-
-  const onboardAccountHosted = async (
-    row: Stripe.Account,
-    type: Stripe.AccountLinkCreateParams.Type,
-  ) => {
-    const accountsResponse = await fetch("/api/create-account-link", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        accountId: row.id,
-        type: type,
-      }),
-    });
-    if (!accountsResponse.ok) {
-      throw new Error(`Unexpected response code ${accountsResponse.status}`);
-    }
-    const accountLink: Stripe.Response<Stripe.AccountLink> =
-      await accountsResponse.json();
-    window.open(accountLink.url);
-  };
-
-  const renderActions = () => {
-    if (props.account.charges_enabled) {
-      return (
-        <>
-          <Link onClick={() => setShowCheckoutDialogForMerchant(props.account)}>
-            Create payment (card element, checkout, payment element)
-          </Link>
-          {" | "}
-          <Link onClick={() => setShgowCreateTestDataDialog(props.account)}>
-            Create test data (payout, payment, account debit)
-          </Link>
-          {" | "}
-          <Link
-            onClick={() =>
-              onboardAccountHosted(props.account, "account_onboarding")
-            }
-          >
-            Onboard (hosted)
-          </Link>
-          {" | "}
-          <Link
-            onClick={() =>
-              onboardAccountHosted(props.account, "account_update")
-            }
-          >
-            Update (hosted)
-          </Link>
-          {" | "}
-          <Link onClick={() => createTestIntervention()}>
-            Create test intervention
-          </Link>
-        </>
-      );
-    } else {
-      return (
-        <>
-          DisabledReason: {props.account.requirements?.disabled_reason}
-          {" | "}
-          <Link
-            onClick={() =>
-              onboardAccountHosted(props.account, "account_onboarding")
-            }
-          >
-            Onboard (hosted)
-          </Link>{" "}
-        </>
-      );
-    }
   };
 
   const logoutEmbedded = () => {
@@ -274,22 +167,10 @@ StripeConnect.init({
   const renderDialogs = () => {
     return (
       <>
-        {showCheckoutDialogForMerchant && (
-          <CreatePaymentDialog
-            account={showCheckoutDialogForMerchant}
-            onDismiss={() => setShowCheckoutDialogForMerchant(undefined)}
-          />
-        )}
-        {showPaymentDialogForMerchant && (
-          <PaymentUIExperienceDialog
-            account={showPaymentDialogForMerchant}
-            onDismiss={() => setShowPaymentDialogForMerchant(undefined)}
-          />
-        )}
         {showCreateTestDataDialog && (
           <CreateTestDataDialog
             account={showCreateTestDataDialog}
-            onDismiss={() => setShgowCreateTestDataDialog(undefined)}
+            onDismiss={() => setShowCreateTestDataDialog(undefined)}
           />
         )}
       </>
@@ -391,37 +272,6 @@ StripeConnect.init({
                 </StackItem>
               </Stack>
             </StackItem>
-            <PrimaryButton
-              onClick={async () => {
-                const response = await fetch("/api/prefill-account", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    accountId: props.account.id,
-                  }),
-                });
-                // TODO: refresh account?
-              }}
-            >
-              Prefill account
-            </PrimaryButton>
-            <PrimaryButton
-              onClick={async () => {
-                const response = await fetch("/api/add-capabilities", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    accountId: props.account.id,
-                  }),
-                });
-              }}
-            >
-              Add capabilities
-            </PrimaryButton>
           </>
         );
       case "Theming":
@@ -465,6 +315,10 @@ StripeConnect.init({
     );
   };
 
+  const renderAccountOnboardedStatus = (account: Stripe.Account) => {
+    return `Details submitted: ${account.details_submitted ? "Yes" : "No"} | `;
+  };
+
   return (
     <ConnectComponentsProvider
       connectInstance={stripeConnect.stripeConnectInstance}
@@ -488,13 +342,33 @@ StripeConnect.init({
                 <em>{currentAccount.id}</em>
                 <Text> {renderStarAction()}</Text>
               </Text>
-              <Text>{renderActions()}</Text>
+              <Text
+                style={{
+                  paddingBottom: "5px",
+                }}
+              >
+                {renderAccountOnboardedStatus(props.account)}
+                Charges enabled: {props.account.charges_enabled
+                  ? "Yes"
+                  : "No"}{" "}
+                | Payouts enabled:{" "}
+                {props.account.payouts_enabled ? "Yes" : "No"}{" "}
+              </Text>
+              <PrimaryButton
+                onClick={() => setShowCreateTestDataDialog(props.account)}
+                style={{
+                  marginBottom: "5px",
+                }}
+              >
+                Create test data (charges, payouts, account debits,
+                interventions...)
+              </PrimaryButton>
             </Stack>
           </StackItem>
           <StackItem align="center">
-            <PrimaryButton onClick={props.onBackToMainAppClicked}>
+            <DefaultButton onClick={props.onBackToMainAppClicked}>
               Back to main app
-            </PrimaryButton>
+            </DefaultButton>
           </StackItem>
         </Stack>
         <Dropdown
@@ -506,6 +380,9 @@ StripeConnect.init({
             key: p,
             text: p,
           }))}
+          style={{
+            marginBottom: "5px",
+          }}
         />
         {renderCurrentPage(props.selectedComponent)}
       </Stack>

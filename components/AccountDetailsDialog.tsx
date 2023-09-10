@@ -39,7 +39,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
     return (
       <Stack>
         <StackItem>
-          <Text variant="large">Account {account.id}</Text>
+          <Text variant="large">Viewing metadata for account {account.id}</Text>
         </StackItem>
         <PrimaryButton
           onClick={() => {
@@ -48,7 +48,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
             );
           }}
         >
-          Account dashboard
+          Open embedded dashboard
         </PrimaryButton>
         <StackItem>
           <TextField

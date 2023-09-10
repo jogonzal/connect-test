@@ -1,42 +1,5 @@
-import { useMutation } from "react-query";
 import Stripe from "stripe";
-
-const createTestCharge = async (
-  accountId: string,
-  description: string,
-  destinationCharge: boolean,
-  transferAmount: boolean,
-  amount: number,
-  fee: number,
-  obo: boolean,
-  currency: string,
-  disputed: boolean,
-): Promise<Stripe.Charge> => {
-  const testChargeResponse = await fetch("/api/create-test-charge", {
-    body: JSON.stringify({
-      accountId,
-      description,
-      destinationCharge,
-      transferAmount,
-      amount,
-      fee,
-      obo,
-      currency,
-      disputed,
-    }),
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!testChargeResponse.ok) {
-    throw new Error(`Unexpected response code ${testChargeResponse.status}`);
-  }
-
-  const testCharge = await testChargeResponse.json();
-  return testCharge;
-};
+import { useApiMutationHook } from "./useApiMutationHook";
 
 export const useCreateTestCharge = (
   accountId: string,
@@ -49,22 +12,19 @@ export const useCreateTestCharge = (
   currency: string,
   disputed: boolean,
 ) => {
-  return useMutation<Stripe.Charge, Error>(
-    "CreateTestCharge-" + accountId,
-    async (): Promise<Stripe.Charge> => {
-      const charge = await createTestCharge(
-        accountId,
-        description,
-        destinationCharge,
-        transferAmount,
-        amount,
-        fee,
-        obo,
-        currency,
-        disputed,
-      );
-
-      return charge;
+  return useApiMutationHook<Stripe.Charge>({
+    id: "CreateTestCharge-" + accountId,
+    path: "/api/create-test-charge",
+    body: {
+      accountId,
+      description,
+      destinationCharge,
+      transferAmount,
+      amount,
+      fee,
+      obo,
+      currency,
+      disputed,
     },
-  );
+  });
 };

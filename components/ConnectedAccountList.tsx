@@ -64,13 +64,11 @@ export const ConnectedAccountList: React.FC<{
       },
       {
         key: "viewAccount",
-        name: "Account",
+        name: "Metadata",
         minWidth: 60,
         onRender: (row: Stripe.Account) => {
           return (
-            <Link onClick={() => setCurrentAccountFullDetails(row)}>
-              Account
-            </Link>
+            <Link onClick={() => setCurrentAccountFullDetails(row)}>View</Link>
           );
         },
       },

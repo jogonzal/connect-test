@@ -1,16 +1,23 @@
 import * as React from "react";
 import {
   Dialog,
+  Link,
   PrimaryButton,
-  Spinner,
+  Separator,
   Stack,
   StackItem,
+  Toggle,
   Text,
 } from "@fluentui/react";
 import Stripe from "stripe";
 import { useCreatePayout } from "../hooks/useCreatePayout";
 import { useCreateTestCharge } from "../hooks/useCreateTestCharge";
 import { useCreateAccountDebit } from "../hooks/useCreateAccountDebit";
+import { useCreateTestIntervention } from "../hooks/useCreateTestIntervention";
+import { CreateAdvancedChargeDialog } from "./CreateAdvancedChargeDialog";
+import { CreateTestDataAction } from "./CreateTestDataAction";
+import { usePrefillAccount } from "../hooks/usePrefillAccount";
+import { useAddCapabilities } from "../hooks/useAddCapabilities";
 
 type Props = {
   account: Stripe.Account;
@@ -21,21 +28,9 @@ export const CreateTestDataDialog: React.FC<Props> = ({
   account,
   onDismiss,
 }) => {
-  const {
-    error: createPayoutError,
-    isLoading: createPayoutLoading,
-    data: createPayoutData,
-    reset: createPayoutReset,
-    mutateAsync: createPayoutAsync,
-  } = useCreatePayout(account.id);
+  const createTestPayoutHook = useCreatePayout(account.id);
 
-  const {
-    error: createChargeError,
-    isLoading: createChargeLoading,
-    data: createChargeData,
-    reset: createChargeReset,
-    mutateAsync: createTestChargeAsync,
-  } = useCreateTestCharge(
+  const createTestChargeHook = useCreateTestCharge(
     account.id,
     "Test charge",
     false,
@@ -47,63 +42,133 @@ export const CreateTestDataDialog: React.FC<Props> = ({
     false,
   );
 
-  const {
-    error: createDebitError,
-    isLoading: createDebitLoading,
-    data: createDebitData,
-    reset: createDebitReset,
-    mutateAsync: createDebitAsync,
-  } = useCreateAccountDebit(account.id);
+  const createTestInterventionHook = useCreateTestIntervention(account.id);
 
-  const onCreateTestPayout = async () => {
-    createPayoutAsync();
+  const [accountDebitCharge, setAccountDebitCharge] =
+    React.useState<boolean>(false);
+  const createAccountDebitHook = useCreateAccountDebit(
+    account.id,
+    accountDebitCharge ? "charge" : "transfer",
+  );
+
+  const prefillAccountHook = usePrefillAccount({ accountId: account.id });
+  const addCapabilitiesHook = useAddCapabilities({ accountId: account.id });
+
+  const [showAdvancedChargeCreateDialog, setShowAdvancedChargeCreateDialog] =
+    React.useState<Stripe.Account | undefined>(undefined);
+
+  const onboardAccountHosted = async (
+    row: Stripe.Account,
+    type: Stripe.AccountLinkCreateParams.Type,
+  ) => {
+    const accountsResponse = await fetch("/api/create-account-link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accountId: row.id,
+        type: type,
+      }),
+    });
+    if (!accountsResponse.ok) {
+      throw new Error(`Unexpected response code ${accountsResponse.status}`);
+    }
+    const accountLink: Stripe.Response<Stripe.AccountLink> =
+      await accountsResponse.json();
+    window.open(accountLink.url);
   };
 
-  const onCreateTestCharge = async () => {
-    createTestChargeAsync();
-  };
-
-  const onCreateAccountDebitViaCharge = async () => {
-    createDebitAsync({ method: "charge" });
-  };
-
-  const onCreateAccountDebitViaTransfer = async () => {
-    createDebitAsync({ method: "transfer" });
+  const renderDialogs = () => {
+    return (
+      <>
+        {showAdvancedChargeCreateDialog && (
+          <CreateAdvancedChargeDialog
+            account={showAdvancedChargeCreateDialog}
+            onDismiss={() => setShowAdvancedChargeCreateDialog(undefined)}
+          />
+        )}
+      </>
+    );
   };
 
   return (
-    <Dialog hidden={false} onDismiss={onDismiss}>
-      <Stack>
-        <StackItem>
-          <PrimaryButton onClick={onCreateTestCharge}>
-            Create test charge to add balance
-          </PrimaryButton>
-          {createPayoutLoading ?? <Spinner />}
-          {createPayoutData && <Text>Created!</Text>}
-          {createPayoutError && (
-            <Text>Error! {JSON.stringify(createPayoutError)}</Text>
-          )}
-          <PrimaryButton onClick={onCreateTestPayout}>
-            Create test payout
-          </PrimaryButton>
-          {createChargeLoading ?? <Spinner />}
-          {createChargeData && <Text>Created!</Text>}
-          {createChargeError && (
-            <Text>Error! {JSON.stringify(createChargeError)}</Text>
-          )}
-          <PrimaryButton onClick={onCreateAccountDebitViaCharge}>
-            Create account debit (via charge)
-          </PrimaryButton>
-          <PrimaryButton onClick={onCreateAccountDebitViaTransfer}>
-            Create account debit (via transfer)
-          </PrimaryButton>
-          {createDebitLoading ?? <Spinner />}
-          {createDebitData && <Text>Created!</Text>}
-          {createDebitError && (
-            <Text>Error! {JSON.stringify(createDebitError)}</Text>
-          )}
-        </StackItem>
-      </Stack>
-    </Dialog>
+    <>
+      {renderDialogs()}
+      <Dialog hidden={false} onDismiss={onDismiss} minWidth={700}>
+        <Stack
+          tokens={{
+            childrenGap: 50,
+          }}
+        >
+          <StackItem>
+            <Text variant="large">
+              Use the options below to create test data for this account.
+            </Text>
+          </StackItem>
+          <StackItem>
+            <Separator>Charges, payouts, account debits</Separator>
+            <CreateTestDataAction
+              buttonText="Create test charge to add balance"
+              hookData={createTestChargeHook}
+            />
+            <PrimaryButton
+              onClick={() => setShowAdvancedChargeCreateDialog(account)}
+            >
+              Create test charge (advanced)
+            </PrimaryButton>
+            <CreateTestDataAction
+              buttonText="Create test payout"
+              hookData={createTestPayoutHook}
+            />
+            <Stack horizontal verticalAlign="center">
+              <StackItem>
+                <Toggle
+                  checked={accountDebitCharge}
+                  onChange={() => setAccountDebitCharge(!accountDebitCharge)}
+                />
+              </StackItem>
+              <StackItem>
+                <CreateTestDataAction
+                  buttonText={`Create account debit (via ${
+                    accountDebitCharge ? "charge" : "transfer"
+                  })`}
+                  hookData={createAccountDebitHook}
+                />
+              </StackItem>
+            </Stack>
+          </StackItem>
+          <StackItem>
+            <Separator>Account metadata</Separator>
+            <CreateTestDataAction
+              buttonText="Create test risk intervention"
+              hookData={createTestInterventionHook}
+            />
+            <div style={{ height: "5px" }} />
+            <Link
+              onClick={() =>
+                onboardAccountHosted(account, "account_onboarding")
+              }
+            >
+              Onboard (hosted)
+            </Link>
+            {" | "}
+            <Link
+              onClick={() => onboardAccountHosted(account, "account_update")}
+            >
+              Update (hosted)
+            </Link>
+            <CreateTestDataAction
+              buttonText="Prefill account"
+              hookData={prefillAccountHook}
+            />
+            <CreateTestDataAction
+              buttonText="Add capabilities (card payments and transfers)"
+              hookData={addCapabilitiesHook}
+            />
+          </StackItem>
+        </Stack>
+      </Dialog>
+    </>
   );
 };

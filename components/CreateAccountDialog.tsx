@@ -33,19 +33,25 @@ const dropdownOptions: IDropdownOption[] = [
 ];
 
 export const CreateAccountDialog: React.FC<Props> = (props) => {
-  const {
-    error: createError,
-    isLoading: createLoading,
-    data: createData,
-    reset: resetCreate,
-    mutateAsync: createAccountAsync,
-  } = useCreateAccount();
   const [accountName, setAccountName] = React.useState("");
   const [accountType, setAccountType] = React.useState<IDropdownOption>(
     dropdownOptions[0],
   );
   const [prefill, setPrefill] = React.useState(false);
   const [email, setEmail] = React.useState("");
+
+  const {
+    error: createError,
+    isLoading: createLoading,
+    data: createData,
+    reset: resetCreate,
+    mutateAsync: createAccountAsync,
+  } = useCreateAccount({
+    accountName,
+    accountType: accountType.key.toString(),
+    email: email,
+    prefill,
+  });
 
   const onSelectedAccountTypeChanged = (
     _event: React.FormEvent<HTMLDivElement>,
@@ -63,12 +69,7 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
   };
 
   const onCreateAccountClicked = async () => {
-    const account = await createAccountAsync({
-      accountName,
-      accountType: accountType.key.toString(),
-      email: email,
-      prefill,
-    });
+    const account = await createAccountAsync();
     props.onAccountCreated(account);
   };
 

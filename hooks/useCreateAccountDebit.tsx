@@ -1,42 +1,19 @@
 import { useMutation } from "react-query";
 import Stripe from "stripe";
+import { useApiMutationHook } from "./useApiMutationHook";
 
 export type AccountDebitCreateMethod = "charge" | "transfer";
 
-const createDebit = async (
+export const useCreateAccountDebit = (
   accountId: string,
   method: AccountDebitCreateMethod,
-): Promise<Stripe.ApiList<Stripe.Account>> => {
-  const accountDebitResponse = await fetch("/api/create-account-debit", {
-    body: JSON.stringify({
+) => {
+  return useApiMutationHook<void>({
+    id: "CreateAccountDebit-" + accountId + method,
+    path: "/api/create-account-debit",
+    body: {
       accountId,
       method,
-    }),
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
     },
   });
-
-  if (!accountDebitResponse.ok) {
-    throw new Error(`Unexpected response code ${accountDebitResponse.status}`);
-  }
-
-  const accounts = await accountDebitResponse.json();
-  return accounts;
-};
-
-export const useCreateAccountDebit = (accountId: string) => {
-  return useMutation<
-    Stripe.ApiList<Stripe.Account>,
-    Error,
-    { method: AccountDebitCreateMethod }
-  >(
-    "CreateAccountDebit-" + accountId,
-    async ({ method }): Promise<Stripe.ApiList<Stripe.Account>> => {
-      const accounts = await createDebit(accountId, method);
-
-      return accounts;
-    },
-  );
 };
