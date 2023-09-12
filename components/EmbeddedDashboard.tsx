@@ -22,12 +22,7 @@ import { CustomersTab } from "./CustomersTab";
 import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PricingTable } from "./PricingTable";
-import {
-  ConnectComponentsProvider,
-  ConnectPaymentDetails,
-  ConnectPayments,
-  ConnectPayouts,
-} from "@stripe/react-connect-js";
+import { ConnectComponentsProvider } from "@stripe/react-connect-js";
 import {
   DebugConfigElement,
   ExtendedStripeConnectInstance,
@@ -219,18 +214,6 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     ];
   };
 
-  const renderPaymentDetailUI = () => {
-    if (!chargeId) return null;
-
-    return (
-      <ConnectPaymentDetails
-        chargeId={chargeId}
-        visible={!!chargeId}
-        onClose={() => setChargeId(undefined)}
-      />
-    );
-  };
-
   const onEditDescription = async (id: string) => {
     const response = await fetch("/api/edit-payment-intent", {
       method: "POST",
@@ -399,14 +382,13 @@ StripeConnect.init({
   const renderCurrentPage = (currentPage: ComponentPage) => {
     switch (currentPage) {
       case "Payments":
-        return <ConnectPayments />;
+        return null;
       case "Transactions":
         return <ConnectTransactions />;
       case "Payouts":
         return (
           <>
             <ConnectInstantPayouts />
-            <ConnectPayouts />
           </>
         );
       case "Apps":
@@ -423,7 +405,6 @@ StripeConnect.init({
       case "Payment Details":
         return (
           <>
-            {renderPaymentDetailUI()}
             <Stack>
               <StackItem>
                 <Text>Payments (custom table)</Text>
@@ -454,7 +435,6 @@ StripeConnect.init({
             {" "}
             <Text>Testing extracting information from Connect elements</Text>
             <ExtractChargeFromStripeElements />
-            <ConnectPayments />
             <Text>Testing Pricing table</Text>
             <PricingTable />
             <p>This is not a real connect element:</p>
@@ -553,7 +533,7 @@ StripeConnect.init({
         );
       default:
         assertNever(currentPage);
-        return <ConnectPayments />;
+        return null;
     }
   };
   const alreadyFavorited = starredAccounts?.find(

@@ -16,7 +16,10 @@ export default async function handler(
         account_onboarding: {
           enabled: true,
         },
-      },
+        account_management: {
+          enabled: true,
+        },
+      } as any,
     });
 
     (accountSessionResponse as any).publicKey =
