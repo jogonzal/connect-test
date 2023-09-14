@@ -35,6 +35,7 @@ import {
   ConnectAccountManagement,
   ConnectAppOnboarding,
   ConnectAppSettings,
+  ConnectCapitalOffer,
   ConnectCapitalOverview,
   ConnectDebugUIPreview,
   ConnectDebugUtils,
@@ -64,7 +65,8 @@ const componentPageList = [
   "Transactions",
   "Payouts",
   "Apps",
-  "Capital",
+  "Capital Offer",
+  "Capital Overview",
   "LPM",
   "Payment Details",
   "Account Onboarding",
@@ -205,7 +207,9 @@ StripeConnect.init({
             <ConnectAppSettings app="com.example.accounting-demo-app" />
           </>
         );
-      case "Capital":
+      case "Capital Offer":
+        return <ConnectCapitalOffer />;
+      case "Capital Overview":
         return <ConnectCapitalOverview />;
       case "LPM":
         return <ConnectPaymentMethodSettings />;

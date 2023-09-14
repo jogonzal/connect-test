@@ -104,6 +104,14 @@ export const ConnectAppOnboarding = ({ app }: { app: string }): JSX.Element => {
   return wrapper;
 };
 
+export const ConnectCapitalOffer = (): JSX.Element => {
+  const { wrapper } = useCreateComponent(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    "stripe-connect-capital-offer" as any,
+  );
+  return wrapper;
+};
+
 export const ConnectCapitalOverview = (): JSX.Element => {
   const { wrapper } = useCreateComponent(
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
