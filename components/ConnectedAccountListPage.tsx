@@ -128,7 +128,17 @@ export const ConnectedAccountListPage: React.FC = () => {
             <StackItem>
               <Stack>
                 <StackItem>
-                  <Text variant="large">Connect test app</Text>
+                  <Text variant="xLarge">
+                    Connect test app (
+                    <Link href="https://github.com/jogonzal/jorgeconnectplatform">
+                      source
+                    </Link>
+                    ,{" "}
+                    <Link href="https://trailhead.corp.stripe.com/docs/connect/connect-test-site#connect-test-site">
+                      docs
+                    </Link>
+                    )
+                  </Text>
                 </StackItem>
                 <Stack horizontal horizontalAlign="space-between">
                   <Stack verticalAlign="center">
