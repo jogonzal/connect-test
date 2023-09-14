@@ -6,6 +6,7 @@ import {
   IStripeConnectInitParams,
   AppearanceOptions,
   StripeConnectWrapper,
+  AppearanceVariables,
 } from "@stripe/connect-js/pure";
 import {
   getConnectJSSourceInStorage,
@@ -122,27 +123,26 @@ export const useConnectJSInit = (accountId: string) => {
     const stripeConnect: StripeConnectWrapper = await loadConnectPrivate();
     const secret = await fetchClientSecret(accountId);
 
-    const appearanceForLightMode: AppearanceOptions = {};
-    const appearanceForDarkMode = {
-      colorSecondaryButtonBackground: "#7F7A7A",
-      colorSecondaryButtonBorder: "#7F7A7A",
-      colorOffsetBackground: "#4F4F4F",
+    const appearanceForLightMode: AppearanceVariables = {};
+    const appearanceForDarkMode: AppearanceVariables = {
+      buttonSecondaryColorBackground: "#7F7A7A",
+      buttonSecondaryColorBorder: "#7F7A7A",
+      offsetBackgroundColor: "#4F4F4F",
       colorText: "#FFFFFF",
       colorSecondaryText: "#C4C4C4",
       colorBorder: "#696969",
-      colorBorderHighlight: "#616161",
+      formHighlightColorBorder: "#616161",
       colorBackground: "#222222",
-    } as any;
+    };
 
     const theme = getThemeInStorage();
 
     const initProps: IStripeConnectInitParams = {
       publishableKey: publishableKey,
       clientSecret: secret,
-      appearance:
-        theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
-      uiConfig: {
-        overlay: "dialog",
+      appearance: {
+        variables:
+          theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
       },
       locale: getLocaleInStorage(),
     };
