@@ -2,6 +2,7 @@ import * as React from "react";
 import { Link, Spinner, Text } from "@fluentui/react";
 import { useRedeemCode } from "../hooks/useRedeemCode";
 import { useRouter } from "next/router";
+import { serializeError } from "serialize-error";
 
 export const OauthRedirectPage: React.FC = () => {
   const url = new URL(window.location.href);
@@ -21,7 +22,11 @@ export const OauthRedirectPage: React.FC = () => {
   }
 
   if (apiError) {
-    return <Text>There was an error redeeming {JSON.stringify(apiError)}</Text>;
+    return (
+      <Text>
+        There was an error redeeming {JSON.stringify(serializeError(apiError))}
+      </Text>
+    );
   }
 
   if (isLoading) {

@@ -47,6 +47,7 @@ import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
 import { db } from "../clientsStorage/Database";
 import { CustomPaymentsTable } from "./CustomPaymentsTable";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
+import { serializeError } from "serialize-error";
 
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
 const starFilledIcon: IIconProps = { iconName: "FavoriteStarFill" };
@@ -84,12 +85,12 @@ const componentPageDisplayName: Partial<Record<ComponentPage, string>> = {
 export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   const {
     isLoading,
-    error,
+    error: connectJsInitError,
     data: stripeConnect,
   } = useConnectJSInit(props.account.id);
   const {
     isLoading: isPlatformAccountLoading,
-    isError: isPlatformAccountError,
+    error: platformAccountError,
     data: platformAccount,
   } = useGetCurrentAccount();
   const {
@@ -108,8 +109,15 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     "stripe-connect-payments",
   );
 
-  if (error || isPlatformAccountError) {
-    return <Text>An error occurred</Text>;
+  if (connectJsInitError || platformAccountError) {
+    return (
+      <Text>
+        An error occurred{" "}
+        {JSON.stringify(
+          serializeError(connectJsInitError ?? platformAccountError),
+        )}
+      </Text>
+    );
   }
 
   if (
