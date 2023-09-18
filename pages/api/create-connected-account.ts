@@ -134,6 +134,7 @@ export default async function handler(
         individual: {
           first_name: "Jenny",
           last_name: "Rosen",
+          id_number: "000000000",
           email: "jenny.rosen@example.com",
           address: {
             line1: "354 Oyster Point Blvd",
