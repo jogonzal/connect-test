@@ -51,12 +51,6 @@ export const ConnectedAccountList: React.FC<{
         onRender: (row: Stripe.Account) => row?.business_profile?.name,
       },
       {
-        key: "type",
-        name: "Account Type",
-        minWidth: 100,
-        onRender: (row: Stripe.Account) => getReadableAccountType(row),
-      },
-      {
         key: "id",
         name: "ID",
         minWidth: 160,
@@ -112,6 +106,15 @@ export const ConnectedAccountList: React.FC<{
         },
       },
     ];
+
+    if (!hideAccountTypeColumn) {
+      columns.splice(2, 0, {
+        key: "type",
+        name: "Account Type",
+        minWidth: 100,
+        onRender: (row: Stripe.Account) => getReadableAccountType(row),
+      });
+    }
 
     return columns;
   };
