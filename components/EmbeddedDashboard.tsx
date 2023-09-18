@@ -337,17 +337,18 @@ StripeConnect.init({
                         setCurrentAccountFullDetails(props.account)
                       }
                     >
-                      {props.account.id} (type:{" "}
-                      {getReadableAccountType(props.account)})
+                      {props.account.id}{" "}
                     </Link>
+                    (type: {getReadableAccountType(props.account)}, country:{" "}
+                    {props.account.country})
                   </em>{" "}
-                  , for{" "}
+                  for platform{" "}
                   <Link
                     onClick={() =>
                       setCurrentAccountFullDetails(platformAccount)
                     }
                   >
-                    <em>platform {platformAccount.id}</em>
+                    <em>{platformAccount.id}</em>
                   </Link>
                   <Text> {renderStarAction()}</Text>
                 </Text>
