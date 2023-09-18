@@ -1,17 +1,17 @@
 import {
+  DefaultButton,
   Dialog,
-  PrimaryButton,
   Spinner,
   Stack,
   StackItem,
   Text,
   TextField,
+  Tooltip,
+  TooltipHost,
 } from "@fluentui/react";
-import { useRouter } from "next/router";
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useGetAccount } from "../hooks/useGetAccount";
-import { embeddedDashboardUrl } from "../utils/urls";
 
 type Props = {
   account: Stripe.Account;
@@ -21,7 +21,6 @@ type Props = {
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
   const account = props.account;
   const obtainedAccount = useGetAccount(props.account.id);
-  const router = useRouter();
 
   if (!account) {
     return null;
@@ -37,19 +36,31 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
     }
 
     return (
-      <Stack>
+      <Stack tokens={{ childrenGap: "10px" }}>
         <StackItem>
-          <Text variant="large">Viewing metadata for account {account.id}</Text>
+          <Text variant="large">
+            Viewing metadata for account <em>{account.id}</em>
+          </Text>
         </StackItem>
-        <PrimaryButton
-          onClick={() => {
-            router.push(
-              embeddedDashboardUrl(account.id) + window.location.search,
-            );
-          }}
-        >
-          Open embedded dashboard
-        </PrimaryButton>
+        <Stack horizontal tokens={{ childrenGap: "10px" }}>
+          <StackItem>
+            <TooltipHost content="You can login to the standard dashboard with any account">
+              <DefaultButton href={`https://go/loginas/${props.account.id}`}>
+                &quot;Login as&quot; standard dashboard
+              </DefaultButton>
+            </TooltipHost>
+          </StackItem>
+          <StackItem>
+            <TooltipHost content="You can only generate login links for express accounts, however custom accounts can (sometimes) log in to express directly via https://connect.stripe.com">
+              <DefaultButton
+                disabled={props.account.type !== "express"}
+                href={`/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`}
+              >
+                &quot;Login link&quot; to express dashboard
+              </DefaultButton>
+            </TooltipHost>
+          </StackItem>
+        </Stack>
         <StackItem>
           <TextField
             multiline

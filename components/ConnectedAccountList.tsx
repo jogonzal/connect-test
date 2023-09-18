@@ -1,10 +1,8 @@
 import {
   IColumn,
-  PrimaryButton,
   DetailsList,
   DetailsListLayoutMode,
   SelectionMode,
-  Link,
   IconButton,
   IIconProps,
   ActionButton,
@@ -15,7 +13,6 @@ import Stripe from "stripe";
 import { db } from "../clientsStorage/Database";
 import { getReadableAccountType } from "../utils/getReadableAccountType";
 import { embeddedDashboardUrl } from "../utils/urls";
-import { AccountDetailsDialog } from "./AccountDetailsDialog";
 
 const deleteIcon: IIconProps = { iconName: "Delete" };
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
@@ -36,9 +33,6 @@ export const ConnectedAccountList: React.FC<{
 }) => {
   const router = useRouter();
 
-  const [currentAccountFullDetails, setCurrentAccountFullDetails] =
-    React.useState<Stripe.Account | undefined>(undefined);
-
   const starOrDelete = async (row: Stripe.Account) => {
     if (displayStar) {
       await db.starredAccounts.add(row);
@@ -52,25 +46,21 @@ export const ConnectedAccountList: React.FC<{
     const columns: IColumn[] = [
       {
         key: "name",
-        name: "Account Name",
+        name: "Nickname",
         minWidth: 100,
         onRender: (row: Stripe.Account) => row?.business_profile?.name,
+      },
+      {
+        key: "type",
+        name: "Account Type",
+        minWidth: 100,
+        onRender: (row: Stripe.Account) => getReadableAccountType(row),
       },
       {
         key: "id",
         name: "ID",
         minWidth: 160,
         onRender: (row: Stripe.Account) => row?.id,
-      },
-      {
-        key: "viewAccount",
-        name: "Metadata",
-        minWidth: 60,
-        onRender: (row: Stripe.Account) => {
-          return (
-            <Link onClick={() => setCurrentAccountFullDetails(row)}>View</Link>
-          );
-        },
       },
       {
         key: "viewDashboard",
@@ -81,15 +71,21 @@ export const ConnectedAccountList: React.FC<{
           const accountId = row.id;
           const url = embeddedDashboardUrl(accountId);
           toRender.push(
-            <ActionButton
-              style={{ height: "16px", width: "16px" }}
+            <div
               onClick={() => {
                 router.push(url + window.location.search);
               }}
-              iconProps={dashboardIcon}
             >
-              Open
-            </ActionButton>,
+              <ActionButton
+                style={{ height: "16px", width: "16px" }}
+                onClick={() => {
+                  router.push(url + window.location.search);
+                }}
+                iconProps={dashboardIcon}
+              >
+                Open
+              </ActionButton>
+            </div>,
           );
 
           return toRender;
@@ -117,34 +113,16 @@ export const ConnectedAccountList: React.FC<{
       },
     ];
 
-    if (!hideAccountTypeColumn) {
-      columns.splice(2, 0, {
-        key: "type",
-        name: "Account Type",
-        minWidth: 100,
-        onRender: (row: Stripe.Account) => getReadableAccountType(row),
-      });
-    }
-
     return columns;
   };
 
   return (
-    <>
-      {/* Render dialogs */}
-      {currentAccountFullDetails && (
-        <AccountDetailsDialog
-          account={currentAccountFullDetails}
-          onDismiss={() => setCurrentAccountFullDetails(undefined)}
-        />
-      )}
-      <DetailsList
-        items={accounts}
-        columns={getColumns()}
-        layoutMode={DetailsListLayoutMode.justified}
-        selectionMode={SelectionMode.none}
-        getKey={(item) => item.id}
-      />
-    </>
+    <DetailsList
+      items={accounts}
+      columns={getColumns()}
+      layoutMode={DetailsListLayoutMode.justified}
+      selectionMode={SelectionMode.none}
+      getKey={(item) => item.id}
+    />
   );
 };

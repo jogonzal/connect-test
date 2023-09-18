@@ -10,6 +10,7 @@ import {
   IStackTokens,
   Checkbox,
   Separator,
+  TooltipHost,
 } from "@fluentui/react";
 import * as React from "react";
 import Stripe from "stripe";
@@ -123,47 +124,90 @@ export const CreateAccountDialog: React.FC<Props> = (props) => {
     };
     return (
       <Stack tokens={tokens}>
-        <TextField
-          label="Account name"
-          onChange={onAccountNameChanged}
-          value={accountName}
-          placeholder="Account name"
-        />
-        <TextField
-          label="Email"
-          onChange={onEmailChanged}
-          value={email}
-          placeholder="Email"
-        />
-        <Dropdown
-          selectedKey={accountType ? accountType.key : undefined}
-          onChange={onSelectedAccountTypeChanged}
-          placeholder="Select an option"
-          options={dropdownOptions}
-          label="Account type"
-        />
-        <Checkbox
-          checked={prefill}
-          onChange={(_ev, val) => setPrefill(val ?? false)}
-          label="Prefill account"
-        />
+        <TooltipHost
+          content={"The nickname the account will have in this app."}
+        >
+          <TextField
+            label="Account nickname"
+            onChange={onAccountNameChanged}
+            value={accountName}
+            placeholder="Account nickname"
+          />
+        </TooltipHost>
+        <TooltipHost
+          content={
+            "The email registered on the account - it can be any test email like username+test@stripe.com"
+          }
+        >
+          <TextField
+            label="Email"
+            onChange={onEmailChanged}
+            value={email}
+            placeholder="Email"
+          />
+        </TooltipHost>
+        <TooltipHost
+          content={
+            "The account configuration. Each account has different implications in terms of loss liability, dashboard access, pricing config, and onboarding ownership."
+          }
+        >
+          <Dropdown
+            selectedKey={accountType ? accountType.key : undefined}
+            onChange={onSelectedAccountTypeChanged}
+            placeholder="Select an option"
+            options={dropdownOptions}
+            label="Account type"
+          />
+        </TooltipHost>
+        <TooltipHost
+          content={
+            "Whether you want to prefill the account - prefilling implies entering information on the account before onboarding. This will result in the onboarding experience being more streamlined and simulates what we encourage platforms to do."
+          }
+        >
+          <Checkbox
+            checked={prefill}
+            onChange={(_ev, val) => setPrefill(val ?? false)}
+            label="Prefill account"
+          />
+        </TooltipHost>
+
         {prefill && (
           <Text>
             If you are prompted to verify information, FirstName: Jenny,
             LastName: Rosen, SSN: 1234, DOB: 01/01/1901
           </Text>
         )}
-        <PrimaryButton onClick={onCreateAccountClicked}>
-          Create account
-        </PrimaryButton>
+        <TooltipHost
+          content={
+            "Creating an account via the API is the best/most recommended method for platforms - it is the only method that allows for prefilling and generally will be easier to implement securely than oauth."
+          }
+        >
+          <PrimaryButton onClick={onCreateAccountClicked}>
+            Create account via API
+          </PrimaryButton>
+        </TooltipHost>
 
         <Separator />
 
         {standardOauthUrl && (
-          <PrimaryButton href={standardOauthUrl}>Standard OAuth</PrimaryButton>
+          <TooltipHost
+            content={
+              "Standard Oauth is a different process by which platforms can create standard accounts. It involves an oauth redirect, and will allow users to reuse existing accounts, and may result in the creation of a non CBSP account."
+            }
+          >
+            <PrimaryButton href={standardOauthUrl}>
+              Standard OAuth
+            </PrimaryButton>{" "}
+          </TooltipHost>
         )}
         {expressOAuthUrl && (
-          <PrimaryButton href={expressOAuthUrl}>Express OAuth</PrimaryButton>
+          <TooltipHost
+            content={
+              "Express Oauth is a different process by which platforms can create express accounts. It involves an oauth redirect, however will always result in the creation of a new express account (never a non CBSP account)."
+            }
+          >
+            <PrimaryButton href={expressOAuthUrl}>Express OAuth</PrimaryButton>{" "}
+          </TooltipHost>
         )}
       </Stack>
     );

@@ -13,8 +13,6 @@ import {
 import * as React from "react";
 import { Stripe } from "stripe";
 import { useConnectJSInit } from "../hooks/useConnectJsInit";
-import { CustomersTab } from "./CustomersTab";
-import { ExtractChargeFromStripeElements } from "./ExtractChargeFromStripeElements";
 import { OnboardingExperienceExample } from "./OnboardingExperience";
 import { PricingTable } from "./PricingTable";
 import {
@@ -48,6 +46,7 @@ import { assertNever } from "./assertNever";
 import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
 import { db } from "../clientsStorage/Database";
 import { CustomPaymentsTable } from "./CustomPaymentsTable";
+import { AccountDetailsDialog } from "./AccountDetailsDialog";
 
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
 const starFilledIcon: IIconProps = { iconName: "FavoriteStarFill" };
@@ -71,11 +70,16 @@ const componentPageList = [
   "Payment Details",
   "Account Onboarding",
   "Account management",
-  "Test",
-  "Debug",
   "Theming",
+  "Pricing table",
+  "Debug",
 ] as const;
 export type ComponentPage = typeof componentPageList[number];
+
+const componentPageDisplayName: Partial<Record<ComponentPage, string>> = {
+  Theming: "Debug: Theming",
+  "Pricing table": "Debug: Pricing table",
+};
 
 export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   const {
@@ -96,6 +100,8 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   } = useGetStarredAccounts();
 
   const [showCreateTestDataDialog, setShowCreateTestDataDialog] =
+    React.useState<Stripe.Account | undefined>(undefined);
+  const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
 
   const [connectElementOption, setConnectElementOption] = React.useState(
@@ -133,39 +139,6 @@ StripeConnect.init({
     navigator.clipboard.writeText(injectableScript);
   };
 
-  const renderAccountLoginLinks = () => {
-    const renderExpressLoginLink = () => {
-      if (props.account.type === "express" || props.account.type === "custom") {
-        const url = `/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`;
-        return (
-          <>
-            {" | "}
-            <Link href={url}>Express login link</Link>
-          </>
-        );
-      }
-    };
-
-    const renderStandardLoginLink = () => {
-      const loginAsUrl = `https://go/loginas/${props.account.id}`;
-      return (
-        <>
-          {" | "}
-          <Link href={loginAsUrl} target="_blank">
-            Standard dashboard LoginAs
-          </Link>
-        </>
-      );
-    };
-
-    return (
-      <>
-        {renderExpressLoginLink()}
-        {renderStandardLoginLink()}
-      </>
-    );
-  };
-
   const logoutEmbedded = () => {
     if (!stripeConnect) {
       throw new Error("Embedded components are not defined");
@@ -177,6 +150,13 @@ StripeConnect.init({
   const renderDialogs = () => {
     return (
       <>
+        {/* Render dialogs */}
+        {currentAccountFullDetails && (
+          <AccountDetailsDialog
+            account={currentAccountFullDetails}
+            onDismiss={() => setCurrentAccountFullDetails(undefined)}
+          />
+        )}
         {showCreateTestDataDialog && (
           <CreateTestDataDialog
             account={showCreateTestDataDialog}
@@ -208,7 +188,19 @@ StripeConnect.init({
           </>
         );
       case "Capital Offer":
-        return <ConnectCapitalOffer />;
+        return (
+          <Stack tokens={{ childrenGap: "5px" }}>
+            <StackItem>
+              <Text>
+                If there is no offer for this account, then the component will
+                render blank (expected behavior)
+              </Text>
+            </StackItem>
+            <StackItem>
+              <ConnectCapitalOffer />
+            </StackItem>
+          </Stack>
+        );
       case "Capital Overview":
         return <ConnectCapitalOverview />;
       case "LPM":
@@ -225,25 +217,21 @@ StripeConnect.init({
             <ConnectAccountManagement />
           </>
         );
-      case "Test":
+      case "Pricing table":
         return (
           <>
-            {" "}
-            <Text>Testing extracting information from Connect elements</Text>
-            <ExtractChargeFromStripeElements />
-            <ConnectPayments />
             <Text>Testing Pricing table</Text>
             <PricingTable />
-            <p>This is not a real connect element:</p>
-            <CustomersTab accountId={props.account.id} />
           </>
         );
       case "Debug":
         return (
-          <>
-            <PrimaryButton onClick={logoutEmbedded}>
-              Logout of connect embedded components
-            </PrimaryButton>
+          <Stack tokens={{ childrenGap: "5px" }}>
+            <StackItem>
+              <PrimaryButton onClick={logoutEmbedded}>
+                Logout of connect embedded components
+              </PrimaryButton>
+            </StackItem>
             <ConnectDebugUtils />
             <StackItem>
               <Stack horizontal>
@@ -284,7 +272,7 @@ StripeConnect.init({
                 </StackItem>
               </Stack>
             </StackItem>
-          </>
+          </Stack>
         );
       case "Theming":
         return (
@@ -335,46 +323,60 @@ StripeConnect.init({
     <ConnectComponentsProvider
       connectInstance={stripeConnect.stripeConnectInstance}
     >
-      <Stack>
+      <Stack tokens={{ childrenGap: "5px" }}>
         {renderDialogs()}
         <Stack horizontalAlign="space-between" horizontal>
           <StackItem align="start">
-            <Stack>
-              <Text
-                styles={{
-                  root: {
-                    paddingBottom: "5px",
-                    paddingTop: "5px",
-                  },
-                }}
+            <Stack tokens={{ childrenGap: "5px" }}>
+              <StackItem>
+                <Text variant="xLarge">
+                  Viewing connected account{" "}
+                  <em>
+                    <Link
+                      onClick={() =>
+                        setCurrentAccountFullDetails(props.account)
+                      }
+                    >
+                      {props.account.id} (type:{" "}
+                      {getReadableAccountType(props.account)})
+                    </Link>
+                  </em>{" "}
+                  , for{" "}
+                  <Link
+                    onClick={() =>
+                      setCurrentAccountFullDetails(platformAccount)
+                    }
+                  >
+                    <em>platform {platformAccount.id}</em>
+                  </Link>
+                  <Text> {renderStarAction()}</Text>
+                </Text>
+              </StackItem>
+              <Stack
+                horizontal
+                tokens={{ childrenGap: "5px" }}
+                verticalAlign="center"
               >
-                Viewing connected account <em>{props.account.id}</em> ( type:{" "}
-                {getReadableAccountType(props.account)},{" "}
-                {renderAccountLoginLinks()}) for platform{" "}
-                <em>{platformAccount.id}</em>
-                <Text> {renderStarAction()}</Text>
-              </Text>
-              <Text
-                style={{
-                  paddingBottom: "5px",
-                }}
-              >
-                {renderAccountOnboardedStatus(props.account)}
-                Charges enabled: {props.account.charges_enabled
-                  ? "Yes"
-                  : "No"}{" "}
-                | Payouts enabled:{" "}
-                {props.account.payouts_enabled ? "Yes" : "No"}{" "}
-              </Text>
-              <PrimaryButton
-                onClick={() => setShowCreateTestDataDialog(props.account)}
-                style={{
-                  marginBottom: "5px",
-                }}
-              >
-                Create test data (charges, payouts, account debits,
-                interventions...)
-              </PrimaryButton>
+                <StackItem>
+                  <Text>
+                    {renderAccountOnboardedStatus(props.account)}
+                    Charges enabled:{" "}
+                    {props.account.charges_enabled ? "Yes" : "No"} | Payouts
+                    enabled: {props.account.payouts_enabled ? "Yes" : "No"}{" "}
+                  </Text>
+                </StackItem>
+                <StackItem>
+                  <DefaultButton
+                    onClick={() => setShowCreateTestDataDialog(props.account)}
+                    style={{
+                      marginBottom: "5px",
+                    }}
+                  >
+                    Create test data (charges, payouts, account debits,
+                    interventions...)
+                  </DefaultButton>
+                </StackItem>
+              </Stack>
             </Stack>
           </StackItem>
           <StackItem align="center">
@@ -383,20 +385,19 @@ StripeConnect.init({
             </DefaultButton>
           </StackItem>
         </Stack>
-        <Dropdown
-          selectedKey={props.selectedComponent}
-          onChange={(ev, val) =>
-            props.onSelectedComponentChanged((val?.key as string) ?? "USD")
-          }
-          options={componentPageList.map((p) => ({
-            key: p,
-            text: p,
-          }))}
-          style={{
-            marginBottom: "5px",
-          }}
-        />
-        {renderCurrentPage(props.selectedComponent)}
+        <StackItem>
+          <Dropdown
+            selectedKey={props.selectedComponent}
+            onChange={(ev, val) =>
+              props.onSelectedComponentChanged((val?.key as string) ?? "USD")
+            }
+            options={componentPageList.map((p) => ({
+              key: p,
+              text: componentPageDisplayName[p] ?? p,
+            }))}
+          />
+        </StackItem>
+        <StackItem>{renderCurrentPage(props.selectedComponent)}</StackItem>
       </Stack>
     </ConnectComponentsProvider>
   );
