@@ -30,59 +30,62 @@ export default async function handler(
      */
 
     // Specify the API version to include the beta header
-    const accountSessionResponse = await StripeClient.accountSessions.create({
-      account: accountId,
-      components: {
-        account_management: {
-          enabled: true,
+    const accountSessionResponse = await StripeClient.accountSessions.create(
+      {
+        account: accountId,
+        // read_only: true, // private param
+        components: {
+          account_management: {
+            enabled: true,
+          },
+          account_onboarding: {
+            enabled: true,
+          },
+          app_onboarding: {
+            enabled: true,
+          },
+          app_install: {
+            enabled: true,
+          },
+          app_settings: {
+            enabled: true,
+          },
+          balances: {
+            enabled: true,
+          },
+          capital_overview: {
+            enabled: true,
+          },
+          capital_offer: {
+            enabled: true,
+          },
+          notification_banner: {
+            enabled: true,
+          },
+          instant_payouts: {
+            enabled: true,
+          },
+          payment_details: {
+            enabled: true,
+          },
+          payment_method_settings: {
+            enabled: true,
+          },
+          payments: {
+            enabled: true,
+          },
+          payouts_list: {
+            enabled: true,
+          },
+          payouts: {
+            enabled: true,
+          },
+          transactions_list: {
+            enabled: true,
+          },
         },
-        account_onboarding: {
-          enabled: true,
-        },
-        app_onboarding: {
-          enabled: true,
-        },
-        app_install: {
-          enabled: true,
-        },
-        app_settings: {
-          enabled: true,
-        },
-        balances: {
-          enabled: true,
-        },
-        capital_overview: {
-          enabled: true,
-        },
-        capital_offer: {
-          enabled: true,
-        },
-        notification_banner: {
-          enabled: true,
-        },
-        instant_payouts: {
-          enabled: true,
-        },
-        payment_details: {
-          enabled: true,
-        },
-        payment_method_settings: {
-          enabled: true,
-        },
-        payments: {
-          enabled: true,
-        },
-        payouts_list: {
-          enabled: true,
-        },
-        payouts: {
-          enabled: true,
-        },
-        transactions_list: {
-          enabled: true,
-        },
-      } as any, // Bypass type since we have private options here,
-    });
+      } as any, // Bypass type since we have private options here
+    );
 
     (accountSessionResponse as any).publicKey =
       process.env.NEXT_PUBLIC_stripe_public_key;
