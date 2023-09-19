@@ -651,14 +651,14 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
   integrity sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==
 
-"@stripe/connect-js@2.0.0-beta.1":
-  version "2.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@stripe/connect-js/-/connect-js-2.0.0-beta.1.tgz#f73274efc3c14589a4fd209c8fb3e6c17b6f49eb"
-  integrity sha512-kO+9xVi7CRxW2J/I++4E+ljEeIqzP0O4j+S/GFX5YT7sNA69KUJQkwVjQjgUTZufwOzWFYNnZNYZXMHL2qP/cg==
+"@stripe/connect-js@^2.0.1-beta.1":
+  version "2.0.1-beta.1"
+  resolved "https://registry.yarnpkg.com/@stripe/connect-js/-/connect-js-2.0.1-beta.1.tgz#4c88ba5e985f624f042d47e472db73a584870645"
+  integrity sha512-lLo4mvoX8rZBLVvNnwjmkoSD10bDqxFulk5RD/WElfcBOCotVZJ18xmN0pRggSmdJFuggIPnudVv9ZG8C5tjkw==
   dependencies:
     "@rollup/plugin-json" "^6.0.0"
 
-"@stripe/react-connect-js@2.0.0-beta.1":
+"@stripe/react-connect-js@^2.0.0-beta.1":
   version "2.0.0-beta.1"
   resolved "https://registry.yarnpkg.com/@stripe/react-connect-js/-/react-connect-js-2.0.0-beta.1.tgz#d1e45c0340b88685c3428263522540c2e9d9b352"
   integrity sha512-a0GH68E39aKhoQ+CEyVXVH+QB8Swdynjmj3F+mdfgup/oXbrJiYaFkLUM9PmhQNJaTQbg8czYFHa9oqFS5P7Ew==
