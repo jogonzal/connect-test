@@ -16,8 +16,7 @@ import { CreateAccountDialog } from "./CreateAccountDialog";
 import { serializeError } from "serialize-error";
 import { ConnectedAccountList } from "./ConnectedAccountList";
 import { useGetStarredAccounts } from "../hooks/useGetStarredAccounts";
-import { specialAccountsData } from "./specialAccountList";
-// import { FormattedMessage } from "react-intl";
+import { SpecialAccountsGrid } from "./SpecialAccountsGrid";
 
 export const ConnectedAccountListPage: React.FC = () => {
   const [startingAfterStack, setStartingAfterStack] = React.useState<string[]>(
@@ -31,10 +30,10 @@ export const ConnectedAccountListPage: React.FC = () => {
   } = useGetAccounts(startingAfterStack[startingAfterStack.length - 1]);
 
   const {
-    data: currentAccount,
-    isLoading: isCurrentAccountLoading,
-    error: isGetCurrentAccountError,
-    refetch: refetchCurrentAccount,
+    data: currentPlatform,
+    isLoading: isCurrentPlatformLoading,
+    error: isGetCurrentPlatformError,
+    refetch: refetchCurrentPlatform,
   } = useGetCurrentAccount();
 
   const {
@@ -47,11 +46,9 @@ export const ConnectedAccountListPage: React.FC = () => {
   const [showCreateAccountDialog, setShowCreateAccountDialog] =
     React.useState<boolean>(false);
 
-  if (isCurrentAccountLoading || currentAccount === undefined) {
+  if (isCurrentPlatformLoading || currentPlatform === undefined) {
     return <Spinner label="Loading..." />;
   }
-
-  const stackTokens: IStackTokens = { maxWidth: 1000 };
 
   const onPreviousClicked = () => {
     const newList = [...startingAfterStack];
@@ -68,12 +65,12 @@ export const ConnectedAccountListPage: React.FC = () => {
     setStartingAfterStack(newList);
   };
 
-  if (isGetCurrentAccountError) {
+  if (isGetCurrentPlatformError) {
     return (
       <Text>
         Failed to load accounts!{" "}
         {JSON.stringify(
-          serializeError(isGetAccountsError ?? isGetCurrentAccountError),
+          serializeError(isGetAccountsError ?? isGetCurrentPlatformError),
         )}
       </Text>
     );
@@ -85,27 +82,6 @@ export const ConnectedAccountListPage: React.FC = () => {
   if (isGetStarredAccountsError) {
     return <Text>Failed to load starred accounts!</Text>;
   }
-
-  const renderSpecialAccountsSection = () => {
-    // Special accounts are only available for the specific test platform
-    if (currentAccount?.id !== "acct_1MZRIlLirQdaQn8E") {
-      return null;
-    }
-
-    return (
-      <>
-        <Separator />
-        <Text variant="mediumPlus">Canonical Example Accounts</Text>
-        <ConnectedAccountList
-          displayStar={true}
-          accounts={Object.values(specialAccountsData)}
-          onStarRefetch={refetchStarredAccounts}
-          starredAccounts={starredAccounts}
-          hideAccountTypeColumn
-        />
-      </>
-    );
-  };
 
   return (
     <>
@@ -122,13 +98,13 @@ export const ConnectedAccountListPage: React.FC = () => {
         />
       )}
 
-      <Stack horizontalAlign="center">
-        <StackItem tokens={stackTokens}>
+      <Stack>
+        <StackItem>
           <Stack>
-            <StackItem>
+            <StackItem style={{ paddingBottom: "10px" }}>
               <Stack>
                 <StackItem>
-                  <Text variant="xLarge">
+                  <Text variant="xxLarge">
                     Connect test app (
                     <Link href="https://github.com/jogonzal/jorgeconnectplatform">
                       source
@@ -144,12 +120,12 @@ export const ConnectedAccountListPage: React.FC = () => {
                   <Stack verticalAlign="center">
                     <Text>
                       Using platform{" "}
-                      <Link href={`https://go/o/${currentAccount.id}`}>
-                        {currentAccount.id}
+                      <Link href={`https://go/o/${currentPlatform.id}`}>
+                        {currentPlatform.id}
                       </Link>
                       {" ("}
                       <Link
-                        href={`https://go/loginas/${currentAccount.id}`}
+                        href={`https://go/loginas/${currentPlatform.id}`}
                         target="_blank"
                       >
                         Login as
@@ -157,20 +133,15 @@ export const ConnectedAccountListPage: React.FC = () => {
                       {")"}
                     </Text>
                   </Stack>
-                  <Stack>
-                    <PrimaryButton
-                      onClick={() => setShowCreateAccountDialog(true)}
-                    >
-                      Create new connected account
-                    </PrimaryButton>
-                  </Stack>
                 </Stack>
               </Stack>
             </StackItem>
-            <StackItem>{renderSpecialAccountsSection()}</StackItem>
+            <StackItem>
+              <SpecialAccountsGrid currentPlatform={currentPlatform} />
+              <Separator />
+            </StackItem>
             {starredAccounts.length > 0 && (
               <StackItem>
-                <Separator />
                 <Text variant="mediumPlus">Starred accounts</Text>
                 <ConnectedAccountList
                   displayStar={false}
@@ -178,12 +149,23 @@ export const ConnectedAccountListPage: React.FC = () => {
                   onStarRefetch={refetchStarredAccounts}
                   starredAccounts={starredAccounts}
                 />
+                <Separator />
               </StackItem>
             )}
-            <Separator />
-            {isGetAccountsError && <Text>Failed to load accounts!</Text>}
             <StackItem>
-              <Text variant="mediumPlus">All accounts</Text>
+              {isGetAccountsError && <Text>Failed to load accounts!</Text>}
+              <Stack horizontal horizontalAlign="space-between">
+                <StackItem>
+                  <Text variant="xLarge">All accounts</Text>
+                </StackItem>
+                <StackItem>
+                  <PrimaryButton
+                    onClick={() => setShowCreateAccountDialog(true)}
+                  >
+                    Create new connected account
+                  </PrimaryButton>
+                </StackItem>
+              </Stack>
               <ConnectedAccountList
                 displayStar={true}
                 accounts={accounts?.data ?? []}
@@ -207,6 +189,10 @@ export const ConnectedAccountListPage: React.FC = () => {
               </Stack>
             </StackItem>
           </Stack>
+        </StackItem>
+        <StackItem>
+          {/* Space to account for dropdowns */}
+          <div style={{ height: "30px" }} />
         </StackItem>
       </Stack>
     </>

@@ -381,8 +381,7 @@ StripeConnect.init({
                       marginBottom: "5px",
                     }}
                   >
-                    Create test data (charges, payouts, account debits,
-                    interventions...)
+                    Create test data
                   </DefaultButton>
                 </StackItem>
               </Stack>
@@ -390,7 +389,7 @@ StripeConnect.init({
           </StackItem>
           <StackItem align="center">
             <DefaultButton onClick={props.onBackToMainAppClicked}>
-              Back to main app
+              Back
             </DefaultButton>
           </StackItem>
         </Stack>

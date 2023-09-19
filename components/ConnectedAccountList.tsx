@@ -53,13 +53,13 @@ export const ConnectedAccountList: React.FC<{
       {
         key: "id",
         name: "ID",
-        minWidth: 160,
+        minWidth: 130,
         onRender: (row: Stripe.Account) => row?.id,
       },
       {
         key: "viewDashboard",
         name: "Dashboard",
-        minWidth: 80,
+        minWidth: 60,
         onRender: (row: Stripe.Account) => {
           const toRender = [];
           const accountId = row.id;
@@ -88,7 +88,7 @@ export const ConnectedAccountList: React.FC<{
       {
         key: "star",
         name: "Star",
-        minWidth: 40,
+        minWidth: 30,
         onRender: (row: Stripe.Account) => {
           const alreadyFavorited =
             displayStar && starredAccounts.find((x) => x.id === row.id);
@@ -110,8 +110,8 @@ export const ConnectedAccountList: React.FC<{
     if (!hideAccountTypeColumn) {
       columns.splice(2, 0, {
         key: "type",
-        name: "Account Type",
-        minWidth: 100,
+        name: "Type",
+        minWidth: 65,
         onRender: (row: Stripe.Account) => getReadableAccountType(row),
       });
     }
