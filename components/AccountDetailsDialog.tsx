@@ -45,7 +45,10 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
         <Stack horizontal tokens={{ childrenGap: "10px" }}>
           <StackItem>
             <TooltipHost content="You can login to the standard dashboard with any account">
-              <DefaultButton href={`https://go/loginas/${props.account.id}`}>
+              <DefaultButton
+                href={`https://go/loginas/${props.account.id}`}
+                target="_blank"
+              >
                 &quot;Login as&quot; standard dashboard
               </DefaultButton>
             </TooltipHost>
@@ -55,6 +58,7 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
               <DefaultButton
                 disabled={props.account.type !== "express"}
                 href={`/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`}
+                target="_blank"
               >
                 &quot;Login link&quot; to express dashboard
               </DefaultButton>
