@@ -10,4 +10,7 @@ export const StripeClient = new Stripe(StripePrivateKey, {
   // protocol: 'http',
   // port: undefined,
   // httpAgent: new HttpProxyAgent('http://localhost:2375')
+
+  // Uncomment this for QA
+  // host: "qa-api.stripe.com",
 });
