@@ -40,6 +40,7 @@ export const CreateTestDataDialog: React.FC<Props> = ({
     false,
     "USD",
     false,
+    false,
   );
 
   const createTestInterventionHook = useCreateTestIntervention(account.id);

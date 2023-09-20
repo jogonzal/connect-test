@@ -41,6 +41,7 @@ export const CreateAdvancedChargeDialog: React.FC<Props> = (props) => {
     React.useState<boolean>(false);
 
   const [disputed, setDisputed] = React.useState<boolean>(false);
+  const [uncaptured, setUncaptured] = React.useState<boolean>(false);
 
   const createTestChargeHook = useCreateTestCharge(
     props.account.id,
@@ -52,6 +53,7 @@ export const CreateAdvancedChargeDialog: React.FC<Props> = (props) => {
     useOBO,
     currency,
     disputed,
+    uncaptured,
   );
 
   const currentAccountFullDetails = props.account;
@@ -174,6 +176,11 @@ export const CreateAdvancedChargeDialog: React.FC<Props> = (props) => {
               label="Disputed (only works for 'Create via API')"
               checked={disputed}
               onChange={(ev, s) => setDisputed(!!s)}
+            />
+            <Checkbox
+              label="Uncaptured (only works for 'Create via API')"
+              checked={uncaptured}
+              onChange={(ev, s) => setUncaptured(!!s)}
             />
             <Checkbox
               label="Destination charge"

@@ -11,6 +11,7 @@ export const useCreateTestCharge = (
   obo: boolean,
   currency: string,
   disputed: boolean,
+  uncaptured: boolean,
 ) => {
   return useApiMutationHook<Stripe.Charge>({
     id: "CreateTestCharge-" + accountId,
@@ -25,6 +26,7 @@ export const useCreateTestCharge = (
       obo,
       currency,
       disputed,
+      uncaptured,
     },
   });
 };

@@ -16,6 +16,7 @@ export default async function handler(
     const obo = req.body.obo;
     const currency = req.body.currency;
     const disputed = req.body.disputed;
+    const uncaptured = req.body.uncaptured;
 
     console.log("Currency is", currency);
 
@@ -39,6 +40,11 @@ export default async function handler(
           amount: transferAmount ? amount - fee : undefined,
         },
         on_behalf_of: obo ? accountId : undefined,
+        ...(uncaptured
+          ? {
+              capture_method: "manual", // https://stripeSdk.com/docs/payments/place-a-hold-on-a-payment-method
+            }
+          : {}),
       });
     } else {
       payment = await StripeClient.paymentIntents.create(
@@ -49,6 +55,11 @@ export default async function handler(
           payment_method: paymentMethod,
           confirmation_method: "manual",
           confirm: true,
+          ...(uncaptured
+            ? {
+                capture_method: "manual", // https://stripeSdk.com/docs/payments/place-a-hold-on-a-payment-method
+              }
+            : {}),
         },
         {
           stripeAccount: accountId,
