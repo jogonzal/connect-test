@@ -651,10 +651,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
   integrity sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==
 
-"@stripe/connect-js@^2.0.1-beta.1":
-  version "2.0.1-beta.1"
-  resolved "https://registry.yarnpkg.com/@stripe/connect-js/-/connect-js-2.0.1-beta.1.tgz#4c88ba5e985f624f042d47e472db73a584870645"
-  integrity sha512-lLo4mvoX8rZBLVvNnwjmkoSD10bDqxFulk5RD/WElfcBOCotVZJ18xmN0pRggSmdJFuggIPnudVv9ZG8C5tjkw==
+"@stripe/connect-js@^2.0.1-beta.2":
+  version "2.0.1-beta.2"
+  resolved "https://registry.yarnpkg.com/@stripe/connect-js/-/connect-js-2.0.1-beta.2.tgz#30146abd5f5ed0cd65ff6eff2ac5d4150f43abdc"
+  integrity sha512-76qh7q5ZCgAltYccOVwCZ3qusdvzy3OTGGPq4/UEex/zwIzpfF5CbfbdCryRFHjrAhHeu+v4hgZSRjF55RFBxw==
   dependencies:
     "@rollup/plugin-json" "^6.0.0"
 
