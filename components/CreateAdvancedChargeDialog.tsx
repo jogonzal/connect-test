@@ -171,7 +171,7 @@ export const CreateAdvancedChargeDialog: React.FC<Props> = (props) => {
               onChange={(ev, s) => setApplicationFee(parseInt(s ?? "0"))}
             />
             <Checkbox
-              label="Disputed (only works for 'create directly')"
+              label="Disputed (only works for 'Create via API')"
               checked={disputed}
               onChange={(ev, s) => setDisputed(!!s)}
             />
