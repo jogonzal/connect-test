@@ -166,10 +166,6 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 text: "prodv1.0",
               },
               {
-                key: "popoverinline-storage",
-                text: "popoverinline",
-              },
-              {
                 key: "bstripecdn",
                 text: "b.stripecdn (prod)",
               },
@@ -177,18 +173,10 @@ export const LocaleAndThemingOptions: React.FC = () => {
                 key: "specificcommit",
                 text: "Specific commit",
               },
-              // {
-              //   key: "popoverinline-cdn",
-              //   text: "popoverinline-cdn",
-              // },
               {
                 key: "popoveraccesory-storage",
                 text: "popoveraccesory",
               },
-              // {
-              //   key: "popoveraccesory-cdn",
-              //   text: "popoveraccesory-cdn",
-              // },
             ]}
             selectedKey={currentConnectJSSource}
             onChange={(_ev, item) => {
@@ -196,7 +184,7 @@ export const LocaleAndThemingOptions: React.FC = () => {
 
               if (newSource === "specificcommit") {
                 const specificCommit = window.prompt(
-                  "Enter specific commit hash:",
+                  "Enter specific commit hash. NOTE: The commit has to be a commit in `master` and a commit that has previously been deployed to `submerchant-surfaces-statics-srv`.",
                 );
                 if (!specificCommit) {
                   throw new Error("Need commit");
