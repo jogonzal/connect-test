@@ -27,9 +27,9 @@ const injectScript = (): HTMLScriptElement => {
       script.src = "http://localhost:3001/v0.1/connect.js";
       break;
     case "prodv0.1":
-      script.src = "https://connect-js.stripe.com/v0.1/connect.js";
+      // script.src = "https://connect-js.stripe.com/v0.1/connect.js";
       // Use this to test QA
-      // script.src = "https://qa-connect-js.stripe.com/v0.1/connect.js";
+      script.src = "https://qa-connect-js.stripe.com/v0.1/connect.js";
       break;
     case "prodv1.0":
       script.src = "https://connect-js.stripe.com/v1.0/connect.js";
