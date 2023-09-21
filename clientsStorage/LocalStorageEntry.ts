@@ -56,9 +56,6 @@ export type ConnectJSSource =
   | "prodv1.0"
   | "local"
   | "bstripecdn"
-  | "popoverinline-cdn"
-  | "popoverinline-storage"
-  | "popoveraccesory-cdn"
   | "popoveraccesory-storage"
   | "specificcommit";
 

@@ -34,18 +34,6 @@ const injectScript = (): HTMLScriptElement => {
     case "prodv1.0":
       script.src = "https://connect-js.stripe.com/v1.0/connect.js";
       break;
-    case "popoverinline-cdn":
-      script.src =
-        "https://connectjstestcdn.azureedge.net/vpopoverinline/dist/v0.1/connect.js";
-      break;
-    case "popoverinline-storage":
-      script.src =
-        "https://connectjstest.blob.core.windows.net/vpopoverinline/dist/v0.1/connect.js";
-      break;
-    case "popoveraccesory-cdn":
-      script.src =
-        "https://connectjstestcdn.azureedge.net/vpopoveraccesory/dist/v0.1/connect.js";
-      break;
     case "popoveraccesory-storage":
       script.src =
         "https://connectjstest.blob.core.windows.net/vpopoveraccesory/dist/v0.1/connect.js";
