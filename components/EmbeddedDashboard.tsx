@@ -4,6 +4,7 @@ import {
   IIconProps,
   IconButton,
   Link,
+  MessageBar,
   PrimaryButton,
   Spinner,
   Stack,
@@ -129,6 +130,8 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     return <Spinner label="Loading..." />;
   }
 
+  const readableAccountType = getReadableAccountType(props.account);
+
   const copyEmbeddableScript = async () => {
     const newSecret = await fetchClientSecret(props.account.id);
     const injectableScript = `
@@ -173,6 +176,56 @@ StripeConnect.init({
         )}
       </>
     );
+  };
+
+  const renderDashboardLinks = () => {
+    const hasAccessToStandard =
+      props.account.controller?.dashboard?.type === "full";
+    const hasAccessToExpress =
+      props.account.controller?.dashboard?.type === "express";
+
+    // Technically checking dashboard type should work, but it doesn't as `controller` is not returned for non CBSP accounts
+    if (
+      hasAccessToStandard ||
+      readableAccountType === "UA1" ||
+      readableAccountType === "UA2" ||
+      readableAccountType === "standard" ||
+      readableAccountType === "standard CBSP" ||
+      readableAccountType === "standard nonCBSP"
+    ) {
+      return (
+        <MessageBar>
+          This account has access to the Stripe standard dashboard.
+          <Link
+            href={`https://go/loginas/${props.account.id}`}
+            target="_blank"
+            underline
+          >
+            Click here to open the standard dashboard for this account
+          </Link>
+        </MessageBar>
+      );
+    }
+
+    if (
+      hasAccessToExpress
+      //  readableAccountType === "UA4" || readableAccountType === "express"
+    ) {
+      return (
+        <MessageBar>
+          This account has access to the express dashboard.
+          <Link
+            href={`/api/create-dashboard-login-link?connectedAccountId=${props.account.id}`}
+            target="_blank"
+            underline
+          >
+            Click here to open the express dashboard for this account
+          </Link>
+        </MessageBar>
+      );
+    }
+
+    return null;
   };
 
   const renderCurrentPage = (currentPage: ComponentPage) => {
@@ -347,7 +400,7 @@ StripeConnect.init({
                     >
                       {props.account.id}{" "}
                     </Link>
-                    (type: {getReadableAccountType(props.account)}, country:{" "}
+                    (type: {readableAccountType}, country:{" "}
                     {props.account.country})
                   </em>{" "}
                   for platform{" "}
@@ -393,6 +446,7 @@ StripeConnect.init({
             </DefaultButton>
           </StackItem>
         </Stack>
+        {renderDashboardLinks()}
         <StackItem>
           <Dropdown
             selectedKey={props.selectedComponent}
