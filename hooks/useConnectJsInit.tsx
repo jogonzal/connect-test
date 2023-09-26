@@ -16,6 +16,11 @@ import {
 } from "../clientsStorage/LocalStorageEntry";
 import { assertNever } from "@fluentui/react";
 import { loadConnect } from "@stripe/connect-js/pure";
+import {
+  FeaturesConfig,
+  accountSessionFeaturesUpToDate,
+  setAccountSessionFeaturesUpToDate,
+} from "../utils/featuresConfigUtils";
 
 const injectScript = (): HTMLScriptElement => {
   const script = document.createElement("script");
@@ -95,15 +100,21 @@ const connectJsCache: Record<
   }
 > = {};
 
-export const useConnectJSInit = (accountId: string) => {
+export const useConnectJSInit = (
+  accountId: string,
+  featuresConfig?: FeaturesConfig,
+) => {
   return useQuery<
     {
       stripeConnectInstance: StripeConnectInstance;
       stripeConnectWrapper: StripeConnectWrapper;
     },
     Error
-  >(["ConnectJSInit", accountId], async () => {
-    if (connectJsCache[accountId]) {
+  >(["ConnectJSInit", accountId, featuresConfig], async () => {
+    if (
+      connectJsCache[accountId] &&
+      accountSessionFeaturesUpToDate(accountId)
+    ) {
       return connectJsCache[accountId];
     }
 
@@ -158,6 +169,8 @@ export const useConnectJSInit = (accountId: string) => {
       stripeConnectInstance: instance,
       stripeConnectWrapper: stripeConnect,
     };
+
+    setAccountSessionFeaturesUpToDate(accountId);
 
     return {
       stripeConnectInstance: instance,

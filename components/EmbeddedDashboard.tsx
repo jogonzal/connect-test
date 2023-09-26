@@ -29,6 +29,7 @@ import { StripePublicKey } from "../config/ClientConfig";
 import { getReadableAccountType } from "../utils/getReadableAccountType";
 import { useGetCurrentAccount } from "../hooks/useGetCurrentAccount";
 import { CreateTestDataDialog } from "./CreateTestDataDialog";
+import { FeaturesConfigDialog } from "./FeaturesConfigDialog";
 import {
   ConnectAccountManagement,
   ConnectAppOnboarding,
@@ -48,6 +49,8 @@ import { db } from "../clientsStorage/Database";
 import { CustomPaymentsTable } from "./CustomPaymentsTable";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
 import { serializeError } from "serialize-error";
+import { featuresCache } from "../utils/featuresConfigUtils";
+import type { FeaturesConfig } from "../utils/featuresConfigUtils";
 
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
 const starFilledIcon: IIconProps = { iconName: "FavoriteStarFill" };
@@ -83,11 +86,15 @@ const componentPageDisplayName: Partial<Record<ComponentPage, string>> = {
 };
 
 export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
+  const [featuresConfig, setFeaturesConfig] = React.useState<
+    FeaturesConfig | undefined
+  >(featuresCache[props.account.id]?.featuresConfig);
+
   const {
     isLoading,
     error: connectJsInitError,
     data: stripeConnect,
-  } = useConnectJSInit(props.account.id);
+  } = useConnectJSInit(props.account.id, featuresConfig);
   const {
     isLoading: isPlatformAccountLoading,
     error: platformAccountError,
@@ -104,6 +111,9 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     React.useState<Stripe.Account | undefined>(undefined);
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
+
+  const [showFeaturesConfigDialog, setShowFeaturesConfigDialog] =
+    React.useState<boolean>(false);
 
   const [connectElementOption, setConnectElementOption] = React.useState(
     "stripe-connect-payments",
@@ -169,6 +179,17 @@ StripeConnect.init({
           <CreateTestDataDialog
             account={showCreateTestDataDialog}
             onDismiss={() => setShowCreateTestDataDialog(undefined)}
+          />
+        )}
+        {showFeaturesConfigDialog && (
+          <FeaturesConfigDialog
+            accountId={props.account.id}
+            onDismiss={() => {
+              setShowFeaturesConfigDialog(false);
+            }}
+            onSave={(config) => {
+              setFeaturesConfig(config);
+            }}
           />
         )}
       </>
@@ -385,6 +406,11 @@ StripeConnect.init({
                   </DefaultButton>
                 </StackItem>
               </Stack>
+              <StackItem>
+                <Link onClick={() => setShowFeaturesConfigDialog(true)}>
+                  Change component features config
+                </Link>
+              </StackItem>
             </Stack>
           </StackItem>
           <StackItem align="center">
