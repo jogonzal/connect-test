@@ -658,10 +658,10 @@
   dependencies:
     "@rollup/plugin-json" "^6.0.0"
 
-"@stripe/react-connect-js@2.0.0-beta.2":
-  version "2.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@stripe/react-connect-js/-/react-connect-js-2.0.0-beta.2.tgz#03c36cdd363a995251f35b9970596018eb43baae"
-  integrity sha512-1EfoG9f/g+arEBkjwSaw3mJmt/F/UMBX+AsFgp2wf4JmJcTk7y+YOIMqrDh2kVRA9D4JuINwEewrsBta15ywFg==
+"@stripe/react-connect-js@2.0.0-beta.3":
+  version "2.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@stripe/react-connect-js/-/react-connect-js-2.0.0-beta.3.tgz#d930aacc2cae3e6e3a547b46200bf5f21501d47c"
+  integrity sha512-OzO6paYYR7aXKM7nT4XLp0RGNkSe2TCov7cIpoWGwsmqOKDlgifGZLxB215qs669ViZgwpOR+g3DE2fO0PnFmA==
 
 "@stripe/react-stripe-js@^2.1.2":
   version "2.1.2"
@@ -735,10 +735,15 @@
     "@types/estree" "*"
     "@types/json-schema" "*"
 
-"@types/estree@*", "@types/estree@^1.0.0":
+"@types/estree@*":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.1.tgz#aa22750962f3bf0e79d753d3cc067f010c95f194"
   integrity sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==
+
+"@types/estree@^1.0.0":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.2.tgz#ff02bc3dc8317cd668dfec247b750ba1f1d62453"
+  integrity sha512-VeiPZ9MMwXjO32/Xu7+OwflfmeoRwkE/qzndw42gGtgJwZopBnzy2gD//NN1+go1mADzkDcqf/KnFRSjTJ8xJA==
 
 "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
