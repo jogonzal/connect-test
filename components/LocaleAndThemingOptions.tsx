@@ -1,16 +1,6 @@
-import { DefaultButton, Dropdown, PrimaryButton, Stack } from "@fluentui/react";
+import { DefaultButton, Stack } from "@fluentui/react";
 import * as React from "react";
 import { createTheme, loadTheme } from "@fluentui/react";
-import {
-  ConnectJSSource,
-  getConnectJSSourceInStorage,
-  getLocaleInStorage,
-  getThemeInStorage,
-  setConnectJSSourceInStorage,
-  setConnectJsSpecificCommitInStorage,
-  setLocaleInStorage,
-  setThemeInStorage,
-} from "../clientsStorage/LocalStorageEntry";
 import { SettingsPanel } from "./SettingsPanel";
 
 export type Theme = "Light" | "Dark";
