@@ -28,14 +28,14 @@ function deepCopy(obj: Object) {
 }
 
 export const FeaturesConfigDialog: React.FC<Props> = (props) => {
+  const [featuresConfigState, setFeaturesConfigState] = React.useState(
+    getFeaturesConfigInStorage() || deepCopy(defaultFeaturesConfig),
+  );
+
   const renderContent = () => {
     const tokens: IStackTokens = {
       childrenGap: "15px",
     };
-
-    const [featuresConfigState, setFeaturesConfigState] = React.useState(
-      getFeaturesConfigInStorage() || deepCopy(defaultFeaturesConfig),
-    );
 
     return (
       <Stack tokens={tokens}>
