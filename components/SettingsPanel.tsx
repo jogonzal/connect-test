@@ -8,6 +8,7 @@ import {
   Panel,
   PanelType,
   Dropdown,
+  Separator,
 } from "@fluentui/react";
 import { Theme } from "./LocaleAndThemingOptions";
 import * as React from "react";
@@ -144,6 +145,7 @@ export const SettingsPanel: React.FC<Props> = (props) => {
                   window.location.reload();
                 }}
               />
+              <Separator />
             </StackItem>
             <StackItem>
               <Dropdown
@@ -166,6 +168,7 @@ export const SettingsPanel: React.FC<Props> = (props) => {
                   window.location.reload();
                 }}
               />
+              <Separator />
             </StackItem>
             <StackItem>
               <Dropdown
@@ -217,6 +220,7 @@ export const SettingsPanel: React.FC<Props> = (props) => {
                   window.location.reload();
                 }}
               />
+              <Separator />
             </StackItem>
           </Stack>
         </StackItem>
