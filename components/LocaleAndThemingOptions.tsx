@@ -6,14 +6,12 @@ import {
   getConnectJSSourceInStorage,
   getLocaleInStorage,
   getThemeInStorage,
-  resetFeaturesConfigInStorage,
   setConnectJSSourceInStorage,
   setConnectJsSpecificCommitInStorage,
-  setFeaturesConfigInStorage,
   setLocaleInStorage,
   setThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
-import { FeaturesConfigDialog } from "./FeaturesConfigDialog";
+import { SettingsPanel } from "./SettingsPanel";
 
 export type Theme = "Light" | "Dark";
 
@@ -99,35 +97,16 @@ export const lightTheme = createTheme({
 lightTheme.name = "Light";
 
 export const LocaleAndThemingOptions: React.FC = () => {
-  const [currentTheme, setCurrentTheme] = React.useState<Theme>(
-    getThemeInStorage(),
-  );
-  const [currentLocale, setCurrentLocale] = React.useState<string>(
-    getLocaleInStorage(),
-  );
-  const [currentConnectJSSource, setCurrentConnectJSSource] =
-    React.useState<string>(getConnectJSSourceInStorage());
-
   const [showFeaturesConfigDialog, setShowFeaturesConfigDialog] =
     React.useState<boolean>(false);
-
-  React.useEffect(() => {}, [currentTheme]);
 
   const renderDialog = () => {
     return (
       <>
         {showFeaturesConfigDialog && (
-          <FeaturesConfigDialog
+          <SettingsPanel
             onDismiss={() => {
               setShowFeaturesConfigDialog(false);
-            }}
-            onSave={(config) => {
-              setFeaturesConfigInStorage(config);
-              window.location.reload();
-            }}
-            onReset={() => {
-              resetFeaturesConfigInStorage();
-              window.location.reload();
             }}
           />
         )}
@@ -140,96 +119,10 @@ export const LocaleAndThemingOptions: React.FC = () => {
       <div style={{ position: "fixed", bottom: "0", right: "0" }}>
         {renderDialog()}
         <Stack horizontal>
-          <Dropdown
-            options={[
-              {
-                key: "Light",
-                text: "Light",
-              },
-              {
-                key: "Dark",
-                text: "Dark",
-              },
-            ]}
-            selectedKey={currentTheme}
-            onChange={(_ev, item) => {
-              const newTheme = item?.key as Theme;
-              setCurrentTheme(newTheme);
-              setThemeInStorage(newTheme);
-              ThemeUtils.loadTheme(newTheme);
-              window.location.reload();
-            }}
+          <DefaultButton
+            onClick={() => setShowFeaturesConfigDialog(true)}
+            iconProps={{ iconName: "Settings" }}
           />
-          <Dropdown
-            options={[
-              {
-                key: "en",
-                text: "en",
-              },
-              {
-                key: "es",
-                text: "es",
-              },
-            ]}
-            selectedKey={currentLocale}
-            onChange={(_ev, item) => {
-              const newLocale = item?.key as string;
-              setCurrentLocale(newLocale);
-              setLocaleInStorage(newLocale);
-              window.location.reload();
-            }}
-          />
-          <Dropdown
-            style={{ width: "150px" }}
-            options={[
-              {
-                key: "local",
-                text: "local",
-              },
-              {
-                key: "prodv0.1",
-                text: "prodv0.1",
-              },
-              {
-                key: "prodv1.0",
-                text: "prodv1.0",
-              },
-              {
-                key: "bstripecdn",
-                text: "b.stripecdn (prod)",
-              },
-              {
-                key: "specificcommit",
-                text: "Specific commit",
-              },
-              {
-                key: "popoveraccesory-storage",
-                text: "popoveraccesory",
-              },
-            ]}
-            selectedKey={currentConnectJSSource}
-            onChange={(_ev, item) => {
-              const newSource = item?.key as ConnectJSSource;
-
-              if (newSource === "specificcommit") {
-                const specificCommit = window.prompt(
-                  "Enter specific commit hash. NOTE: The commit has to be a commit in `master` and a commit that has previously been deployed to `submerchant-surfaces-statics-srv`.",
-                );
-                if (!specificCommit) {
-                  throw new Error("Need commit");
-                }
-                setConnectJsSpecificCommitInStorage(specificCommit);
-              }
-
-              setCurrentConnectJSSource(newSource);
-              setConnectJSSourceInStorage(newSource);
-
-              window.location.reload();
-            }}
-          />
-          <DefaultButton onClick={() => setShowFeaturesConfigDialog(true)}>
-            Change component features config
-          </DefaultButton>
         </Stack>
       </div>
     </div>
