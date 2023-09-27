@@ -11,6 +11,7 @@ import {
 import {
   getConnectJSSourceInStorage,
   getConnectJsSpecificCommitInStorage,
+  getFeaturesConfigInStorage,
   getLocaleInStorage,
   getThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
@@ -111,7 +112,10 @@ export const useConnectJSInit = (accountId: string) => {
 
     const publishableKey = StripePublicKey;
     const stripeConnect: StripeConnectWrapper = await loadConnectPrivate();
-    const secret = await fetchClientSecret(accountId);
+    const secret = await fetchClientSecret(
+      accountId,
+      getFeaturesConfigInStorage(),
+    );
 
     const appearanceForLightMode: AppearanceVariables = {};
     const appearanceForDarkMode: AppearanceVariables = {

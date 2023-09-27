@@ -49,6 +49,7 @@ import { db } from "../clientsStorage/Database";
 import { CustomPaymentsTable } from "./CustomPaymentsTable";
 import { AccountDetailsDialog } from "./AccountDetailsDialog";
 import { serializeError } from "serialize-error";
+import { getFeaturesConfigInStorage } from "../clientsStorage/LocalStorageEntry";
 
 const starIcon: IIconProps = { iconName: "FavoriteStar" };
 const starFilledIcon: IIconProps = { iconName: "FavoriteStarFill" };
@@ -133,7 +134,10 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
   const readableAccountType = getReadableAccountType(props.account);
 
   const copyEmbeddableScript = async () => {
-    const newSecret = await fetchClientSecret(props.account.id);
+    const newSecret = await fetchClientSecret(
+      props.account.id,
+      getFeaturesConfigInStorage(),
+    );
     const injectableScript = `
 document.body.appendChild(document.createElement('${connectElementOption}'));
 const script = document.createElement('script')

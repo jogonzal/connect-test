@@ -1,4 +1,4 @@
-import { Dropdown, Stack } from "@fluentui/react";
+import { DefaultButton, Dropdown, PrimaryButton, Stack } from "@fluentui/react";
 import * as React from "react";
 import { createTheme, loadTheme } from "@fluentui/react";
 import {
@@ -6,11 +6,14 @@ import {
   getConnectJSSourceInStorage,
   getLocaleInStorage,
   getThemeInStorage,
+  resetFeaturesConfigInStorage,
   setConnectJSSourceInStorage,
   setConnectJsSpecificCommitInStorage,
+  setFeaturesConfigInStorage,
   setLocaleInStorage,
   setThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
+import { FeaturesConfigDialog } from "./FeaturesConfigDialog";
 
 export type Theme = "Light" | "Dark";
 
@@ -105,11 +108,37 @@ export const LocaleAndThemingOptions: React.FC = () => {
   const [currentConnectJSSource, setCurrentConnectJSSource] =
     React.useState<string>(getConnectJSSourceInStorage());
 
+  const [showFeaturesConfigDialog, setShowFeaturesConfigDialog] =
+    React.useState<boolean>(false);
+
   React.useEffect(() => {}, [currentTheme]);
+
+  const renderDialog = () => {
+    return (
+      <>
+        {showFeaturesConfigDialog && (
+          <FeaturesConfigDialog
+            onDismiss={() => {
+              setShowFeaturesConfigDialog(false);
+            }}
+            onSave={(config) => {
+              setFeaturesConfigInStorage(config);
+              window.location.reload();
+            }}
+            onReset={() => {
+              resetFeaturesConfigInStorage();
+              window.location.reload();
+            }}
+          />
+        )}
+      </>
+    );
+  };
 
   return (
     <div>
       <div style={{ position: "fixed", bottom: "0", right: "0" }}>
+        {renderDialog()}
         <Stack horizontal>
           <Dropdown
             options={[
@@ -198,6 +227,9 @@ export const LocaleAndThemingOptions: React.FC = () => {
               window.location.reload();
             }}
           />
+          <DefaultButton onClick={() => setShowFeaturesConfigDialog(true)}>
+            Change component features config
+          </DefaultButton>
         </Stack>
       </div>
     </div>
