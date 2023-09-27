@@ -1,9 +1,12 @@
 import {
-  clearFeaturesConfig,
+  FeaturesConfig,
   getAccountSessionComponentParamWithFeatures,
 } from "../utils/featuresConfigUtils";
 
-export const fetchClientSecret = async (accountId: string): Promise<string> => {
+export const fetchClientSecret = async (
+  accountId: string,
+  featureConfig: FeaturesConfig | undefined,
+): Promise<string> => {
   // Original list:
   /**
    "account_management" => @account_permissions,
@@ -57,22 +60,12 @@ export const fetchClientSecret = async (accountId: string): Promise<string> => {
     },
     payment_details: {
       enabled: true,
-      features: {
-        refund_management: true,
-        dispute_management: true,
-        capture_payments: true,
-      },
     },
     payment_method_settings: {
       enabled: true,
     },
     payments: {
       enabled: true,
-      features: {
-        refund_management: true,
-        dispute_management: true,
-        capture_payments: true,
-      },
     },
     payouts_list: {
       enabled: true,
@@ -93,8 +86,8 @@ export const fetchClientSecret = async (accountId: string): Promise<string> => {
       body: JSON.stringify({
         accountId: accountId,
         components: getAccountSessionComponentParamWithFeatures(
-          accountId,
           defaultComponents,
+          featureConfig,
         ),
       }),
     });
@@ -107,7 +100,6 @@ export const fetchClientSecret = async (accountId: string): Promise<string> => {
       } catch (e) {
         // ignore
       }
-      clearFeaturesConfig(accountId);
       throw new Error(
         `Unexpected response code ${apiResponse.status}. ${
           errorText ? `Internal error: ${errorText}` : ""

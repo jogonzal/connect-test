@@ -1,4 +1,5 @@
 import { Theme } from "../components/LocaleAndThemingOptions";
+import { FeaturesConfig } from "../utils/featuresConfigUtils";
 
 export class LocalStorageWrapper {
   private inMemoryItems: Record<string, string> = {};
@@ -76,4 +77,18 @@ export const getConnectJsSpecificCommitInStorage = (): string | undefined => {
 
 export const setConnectJsSpecificCommitInStorage = (commit: string) => {
   localStorageWrapper.setItem("connectjsspecificcommit", commit);
+};
+
+export const getFeaturesConfigInStorage = (): FeaturesConfig | undefined => {
+  const config = localStorageWrapper.getItem("featuresconfig");
+  if (config == null) return undefined;
+  return JSON.parse(config);
+};
+
+export const setFeaturesConfigInStorage = (config: FeaturesConfig) => {
+  localStorageWrapper.setItem("featuresconfig", JSON.stringify(config));
+};
+
+export const resetFeaturesConfigInStorage = () => {
+  localStorage.removeItem("featuresconfig");
 };

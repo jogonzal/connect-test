@@ -11,16 +11,12 @@ import {
 import {
   getConnectJSSourceInStorage,
   getConnectJsSpecificCommitInStorage,
+  getFeaturesConfigInStorage,
   getLocaleInStorage,
   getThemeInStorage,
 } from "../clientsStorage/LocalStorageEntry";
 import { assertNever } from "@fluentui/react";
 import { loadConnect } from "@stripe/connect-js/pure";
-import {
-  FeaturesConfig,
-  accountSessionFeaturesUpToDate,
-  setAccountSessionFeaturesUpToDate,
-} from "../utils/featuresConfigUtils";
 
 const injectScript = (): HTMLScriptElement => {
   const script = document.createElement("script");
@@ -100,21 +96,15 @@ const connectJsCache: Record<
   }
 > = {};
 
-export const useConnectJSInit = (
-  accountId: string,
-  featuresConfig?: FeaturesConfig,
-) => {
+export const useConnectJSInit = (accountId: string) => {
   return useQuery<
     {
       stripeConnectInstance: StripeConnectInstance;
       stripeConnectWrapper: StripeConnectWrapper;
     },
     Error
-  >(["ConnectJSInit", accountId, featuresConfig], async () => {
-    if (
-      connectJsCache[accountId] &&
-      accountSessionFeaturesUpToDate(accountId)
-    ) {
+  >(["ConnectJSInit", accountId], async () => {
+    if (connectJsCache[accountId]) {
       return connectJsCache[accountId];
     }
 
@@ -122,7 +112,10 @@ export const useConnectJSInit = (
 
     const publishableKey = StripePublicKey;
     const stripeConnect: StripeConnectWrapper = await loadConnectPrivate();
-    const secret = await fetchClientSecret(accountId);
+    const secret = await fetchClientSecret(
+      accountId,
+      getFeaturesConfigInStorage(),
+    );
 
     const appearanceForLightMode: AppearanceVariables = {};
     const appearanceForDarkMode: AppearanceVariables = {
@@ -169,8 +162,6 @@ export const useConnectJSInit = (
       stripeConnectInstance: instance,
       stripeConnectWrapper: stripeConnect,
     };
-
-    setAccountSessionFeaturesUpToDate(accountId);
 
     return {
       stripeConnectInstance: instance,

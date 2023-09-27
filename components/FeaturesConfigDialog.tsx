@@ -1,26 +1,26 @@
 import {
   PrimaryButton,
   Stack,
+  StackItem,
+  Text,
   Dialog,
   IStackTokens,
   Checkbox,
+  DefaultButton,
 } from "@fluentui/react";
 import * as React from "react";
-import {
-  defaultFeaturesConfig,
-  featuresCache,
-  setFeaturesConfig,
-} from "../utils/featuresConfigUtils";
+import { defaultFeaturesConfig } from "../utils/featuresConfigUtils";
 import type {
   FeaturesConfig,
   Component,
   Feature,
 } from "../utils/featuresConfigUtils";
+import { getFeaturesConfigInStorage } from "../clientsStorage/LocalStorageEntry";
 
 type Props = {
-  accountId: string;
   onDismiss: () => void;
   onSave: (featuresConfig: FeaturesConfig) => void;
+  onReset: () => void;
 };
 
 function deepCopy(obj: Object) {
@@ -34,9 +34,7 @@ export const FeaturesConfigDialog: React.FC<Props> = (props) => {
     };
 
     const [featuresConfigState, setFeaturesConfigState] = React.useState(
-      deepCopy(
-        featuresCache[props.accountId]?.featuresConfig || defaultFeaturesConfig,
-      ),
+      getFeaturesConfigInStorage() || deepCopy(defaultFeaturesConfig),
     );
 
     return (
@@ -45,11 +43,13 @@ export const FeaturesConfigDialog: React.FC<Props> = (props) => {
           const component = c as Component;
           return (
             <Stack tokens={tokens} key={component}>
-              <Stack>{component}</Stack>
+              <StackItem>
+                <Text variant="large">{component}</Text>
+              </StackItem>
               {Object.keys(featuresConfigState[component]).map((f) => {
                 const feature = f as Feature;
                 return (
-                  <Stack key={feature}>
+                  <StackItem key={feature}>
                     <Checkbox
                       checked={featuresConfigState[component][feature]}
                       onChange={(_ev, val) => {
@@ -58,7 +58,7 @@ export const FeaturesConfigDialog: React.FC<Props> = (props) => {
                       }}
                       label={feature}
                     />
-                  </Stack>
+                  </StackItem>
                 );
               })}
             </Stack>
@@ -67,12 +67,17 @@ export const FeaturesConfigDialog: React.FC<Props> = (props) => {
         <PrimaryButton
           onClick={() => {
             props.onSave(featuresConfigState);
-            setFeaturesConfig(props.accountId, featuresConfigState);
-            props.onDismiss();
           }}
         >
           Save
         </PrimaryButton>
+        <DefaultButton
+          onClick={() => {
+            props.onReset();
+          }}
+        >
+          Reset
+        </DefaultButton>
       </Stack>
     );
   };
