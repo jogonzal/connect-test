@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   Dialog,
-  Link,
   PrimaryButton,
   Separator,
   Stack,
@@ -57,28 +56,6 @@ export const CreateTestDataDialog: React.FC<Props> = ({
 
   const [showAdvancedChargeCreateDialog, setShowAdvancedChargeCreateDialog] =
     React.useState<Stripe.Account | undefined>(undefined);
-
-  const onboardAccountHosted = async (
-    row: Stripe.Account,
-    type: Stripe.AccountLinkCreateParams.Type,
-  ) => {
-    const accountsResponse = await fetch("/api/create-account-link", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        accountId: row.id,
-        type: type,
-      }),
-    });
-    if (!accountsResponse.ok) {
-      throw new Error(`Unexpected response code ${accountsResponse.status}`);
-    }
-    const accountLink: Stripe.Response<Stripe.AccountLink> =
-      await accountsResponse.json();
-    window.open(accountLink.url);
-  };
 
   const renderDialogs = () => {
     return (
@@ -145,20 +122,6 @@ export const CreateTestDataDialog: React.FC<Props> = ({
               buttonText="Create test risk intervention"
               hookData={createTestInterventionHook}
             />
-            <div style={{ height: "5px" }} />
-            <Link
-              onClick={() =>
-                onboardAccountHosted(account, "account_onboarding")
-              }
-            >
-              Onboard (hosted)
-            </Link>
-            {" | "}
-            <Link
-              onClick={() => onboardAccountHosted(account, "account_update")}
-            >
-              Update (hosted)
-            </Link>
             <CreateTestDataAction
               buttonText="Prefill account"
               hookData={prefillAccountHook}

@@ -106,6 +106,10 @@ export const EmbeddedDashboardInternal: React.FC<Props> = (props) => {
     React.useState<Stripe.Account | undefined>(undefined);
   const [currentAccountFullDetails, setCurrentAccountFullDetails] =
     React.useState<Stripe.Account | undefined>(undefined);
+  const [
+    currentAccountIsConnectedAccount,
+    setCurrentAccountIsConnectedAccount,
+  ] = React.useState<boolean>(false);
 
   const [connectElementOption, setConnectElementOption] = React.useState(
     "stripe-connect-payments",
@@ -168,6 +172,7 @@ StripeConnect.init({
         {/* Render dialogs */}
         {currentAccountFullDetails && (
           <AccountDetailsDialog
+            isConnectedAccount={currentAccountIsConnectedAccount}
             account={currentAccountFullDetails}
             onDismiss={() => setCurrentAccountFullDetails(undefined)}
           />
@@ -398,9 +403,10 @@ StripeConnect.init({
                   Viewing connected account{" "}
                   <em>
                     <Link
-                      onClick={() =>
-                        setCurrentAccountFullDetails(props.account)
-                      }
+                      onClick={() => {
+                        setCurrentAccountFullDetails(props.account);
+                        setCurrentAccountIsConnectedAccount(true);
+                      }}
                     >
                       {props.account.id}{" "}
                     </Link>
@@ -409,9 +415,10 @@ StripeConnect.init({
                   </em>{" "}
                   for platform{" "}
                   <Link
-                    onClick={() =>
-                      setCurrentAccountFullDetails(platformAccount)
-                    }
+                    onClick={() => {
+                      setCurrentAccountFullDetails(platformAccount);
+                      setCurrentAccountIsConnectedAccount(false);
+                    }}
                   >
                     <em>{platformAccount.id}</em>
                   </Link>

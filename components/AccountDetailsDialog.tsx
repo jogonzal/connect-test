@@ -1,12 +1,12 @@
 import {
   DefaultButton,
   Dialog,
+  Link,
   Spinner,
   Stack,
   StackItem,
   Text,
   TextField,
-  Tooltip,
   TooltipHost,
 } from "@fluentui/react";
 import * as React from "react";
@@ -15,12 +15,35 @@ import { useGetAccount } from "../hooks/useGetAccount";
 
 type Props = {
   account: Stripe.Account;
+  isConnectedAccount: boolean;
   onDismiss: () => void;
 };
 
 export const AccountDetailsDialog: React.FC<Props> = (props) => {
   const account = props.account;
   const obtainedAccount = useGetAccount(props.account.id);
+
+  const onboardAccountHosted = async (
+    row: Stripe.Account,
+    type: Stripe.AccountLinkCreateParams.Type,
+  ) => {
+    const accountsResponse = await fetch("/api/create-account-link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accountId: row.id,
+        type: type,
+      }),
+    });
+    if (!accountsResponse.ok) {
+      throw new Error(`Unexpected response code ${accountsResponse.status}`);
+    }
+    const accountLink: Stripe.Response<Stripe.AccountLink> =
+      await accountsResponse.json();
+    window.open(accountLink.url);
+  };
 
   if (!account) {
     return null;
@@ -65,6 +88,31 @@ export const AccountDetailsDialog: React.FC<Props> = (props) => {
             </TooltipHost>
           </StackItem>
         </Stack>
+        {props.isConnectedAccount && (
+          <StackItem>
+            <div style={{ height: "5px" }} />
+            <TooltipHost content="Account links are what a platform would use to onboard an account via hosted">
+              <Text>
+                Hosted account links:{" "}
+                <Link
+                  onClick={() =>
+                    onboardAccountHosted(account, "account_onboarding")
+                  }
+                >
+                  Onboard
+                </Link>
+                {" | "}
+                <Link
+                  onClick={() =>
+                    onboardAccountHosted(account, "account_update")
+                  }
+                >
+                  Update
+                </Link>
+              </Text>
+            </TooltipHost>
+          </StackItem>
+        )}
         <StackItem>
           <TextField
             multiline
