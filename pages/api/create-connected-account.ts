@@ -152,6 +152,7 @@ export default async function handler(
         },
         company: {
           tax_id: "000000000", // There is a bug where prefilling id_number for individual is not working
+          name: "Jenny Rosen", // There is a bug with prefilling that also requires this field for GS
         },
         settings: {
           card_payments: {
