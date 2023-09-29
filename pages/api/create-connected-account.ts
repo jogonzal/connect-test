@@ -150,6 +150,9 @@ export default async function handler(
           phone: "4257537115",
           ssn_last_4: "0000",
         },
+        company: {
+          tax_id: "000000000", // There is a bug where prefilling id_number for individual is not working
+        },
         settings: {
           card_payments: {
             statement_descriptor_prefix: "FurEver",
