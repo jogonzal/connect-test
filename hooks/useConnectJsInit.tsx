@@ -4,7 +4,6 @@ import { fetchClientSecret } from "./fetchClientSecret";
 import {
   StripeConnectInstance,
   IStripeConnectInitParams,
-  AppearanceOptions,
   StripeConnectWrapper,
   AppearanceVariables,
 } from "@stripe/connect-js/pure";
@@ -34,10 +33,6 @@ const injectScript = (): HTMLScriptElement => {
       break;
     case "prodv1.0":
       script.src = "https://connect-js.stripe.com/v1.0/connect.js";
-      break;
-    case "popoveraccesory-storage":
-      script.src =
-        "https://connectjstest.blob.core.windows.net/vpopoveraccesory/dist/v0.1/connect.js";
       break;
     case "bstripecdn":
       script.src =
