@@ -57,7 +57,6 @@ export type ConnectJSSource =
   | "prodv1.0"
   | "local"
   | "bstripecdn"
-  | "popoveraccesory-storage"
   | "specificcommit";
 
 export const getConnectJSSourceInStorage = (): ConnectJSSource => {

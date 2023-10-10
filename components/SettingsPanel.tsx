@@ -195,10 +195,6 @@ export const SettingsPanel: React.FC<Props> = (props) => {
                     key: "specificcommit",
                     text: "Specific commit",
                   },
-                  {
-                    key: "popoveraccesory-storage",
-                    text: "popoveraccesory",
-                  },
                 ]}
                 selectedKey={currentConnectJSSource}
                 onChange={(_ev, item) => {
