@@ -15,8 +15,6 @@ export default async function handler(
       components: req.body.components,
     });
 
-    (accountSessionResponse as any).publicKey =
-      process.env.NEXT_PUBLIC_stripe_public_key;
     res.status(200).json(accountSessionResponse);
   } catch (error) {
     const errorAsAny = error as any;
