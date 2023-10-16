@@ -7,6 +7,8 @@ import {
   StackItem,
   IStackTokens,
   Spinner,
+  MessageBar,
+  MessageBarType,
 } from "@fluentui/react";
 import * as React from "react";
 import { Stripe } from "stripe";
@@ -99,6 +101,12 @@ export const ConnectedAccountListPage: React.FC = () => {
       )}
 
       <Stack>
+        <StackItem>
+          <MessageBar messageBarType={MessageBarType.warning}>
+            This app is deprecated and has moved to https://go/connect-test.
+            Please use that going forward
+          </MessageBar>
+        </StackItem>
         <StackItem>
           <Stack>
             <StackItem style={{ paddingBottom: "10px" }}>

@@ -1,3 +1,7 @@
+This app is deprecated and has moved to https://go/connect-test. Please use that going forward.
+
+---
+
 This project is deployed at: https://connecttest.onrender.com/
 
 ## Getting Started

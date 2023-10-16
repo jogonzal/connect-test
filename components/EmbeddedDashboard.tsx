@@ -5,6 +5,7 @@ import {
   IconButton,
   Link,
   MessageBar,
+  MessageBarType,
   PrimaryButton,
   Spinner,
   Stack,
@@ -395,6 +396,12 @@ StripeConnect.init({
     >
       <Stack tokens={{ childrenGap: "5px" }}>
         {renderDialogs()}
+        <StackItem>
+          <MessageBar messageBarType={MessageBarType.warning}>
+            This app is deprecated and has moved to https://go/connect-test.
+            Please use that going forward
+          </MessageBar>
+        </StackItem>
         <Stack horizontalAlign="space-between" horizontal>
           <StackItem align="start">
             <Stack tokens={{ childrenGap: "5px" }}>
