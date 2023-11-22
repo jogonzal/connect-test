@@ -13,9 +13,14 @@ import {
   getFeaturesConfigInStorage,
   getLocaleInStorage,
   getThemeInStorage,
+  getConnectJsFontConfig,
 } from "../clientsStorage/LocalStorageEntry";
 import { assertNever } from "@fluentui/react";
 import { loadConnect } from "@stripe/connect-js/pure";
+import {
+  DEFAULT_CUSTOM_FONT_SOURCE,
+  DEFAULT_FONT_CONFIG,
+} from "../utils/fontConfig";
 
 const injectScript = (): HTMLScriptElement => {
   const script = document.createElement("script");
@@ -126,15 +131,52 @@ export const useConnectJSInit = (accountId: string) => {
 
     const theme = getThemeInStorage();
 
+    // Font logic
+    const { fontFamily, fontSource, cssFontSource } =
+      getConnectJsFontConfig() || DEFAULT_FONT_CONFIG;
+
+    console.log("DEFAULT", fontSource, DEFAULT_CUSTOM_FONT_SOURCE);
+    console.log({
+      fonts:
+        fontSource === "customfontsource"
+          ? DEFAULT_CUSTOM_FONT_SOURCE
+          : [
+              {
+                cssSrc: cssFontSource,
+              },
+            ],
+      appearance: {
+        variables: {
+          fontFamily:
+            fontSource === "customfontsource" ? "Segoe UI" : fontFamily,
+          ...(theme === "Light"
+            ? appearanceForLightMode
+            : appearanceForDarkMode),
+        } as any,
+      },
+    });
     const initProps: IStripeConnectInitParams = {
       publishableKey: publishableKey,
       clientSecret: secret,
+      fonts:
+        fontSource === "customfontsource"
+          ? DEFAULT_CUSTOM_FONT_SOURCE
+          : [
+              {
+                cssSrc: cssFontSource,
+              },
+            ],
       appearance: {
-        variables:
-          theme === "Light" ? appearanceForLightMode : appearanceForDarkMode,
+        variables: {
+          fontFamily:
+            fontSource === "customfontsource" ? "Segoe UI" : fontFamily,
+          ...(theme === "Light"
+            ? appearanceForLightMode
+            : appearanceForDarkMode),
+        } as any,
       },
       locale: getLocaleInStorage(),
-    };
+    } as any;
 
     const instance = stripeConnect.initialize({
       ...initProps,

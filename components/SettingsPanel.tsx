@@ -9,6 +9,7 @@ import {
   PanelType,
   Dropdown,
   Separator,
+  TextField,
 } from "@fluentui/react";
 import { Theme } from "./LocaleAndThemingOptions";
 import * as React from "react";
@@ -26,8 +27,15 @@ import {
   setFeaturesConfigInStorage,
   setLocaleInStorage,
   setThemeInStorage,
+  getConnectJsFontConfig,
+  setConnectJsFontConfig,
 } from "../clientsStorage/LocalStorageEntry";
 import { ThemeUtils } from "./LocaleAndThemingOptions";
+import {
+  FontConfig,
+  FontSource,
+  DEFAULT_FONT_CONFIG,
+} from "../utils/fontConfig";
 
 type Props = {
   onDismiss: () => void;
@@ -50,6 +58,10 @@ export const SettingsPanel: React.FC<Props> = (props) => {
   );
   const [currentConnectJSSource, setCurrentConnectJSSource] =
     React.useState<string>(getConnectJSSourceInStorage());
+
+  const [currentFontConfig, setCurrentFontConfig] = React.useState<FontConfig>(
+    getConnectJsFontConfig() || deepCopy(DEFAULT_FONT_CONFIG),
+  );
 
   const renderAccountSessionFeatures = () => {
     return (
@@ -216,6 +228,79 @@ export const SettingsPanel: React.FC<Props> = (props) => {
                   window.location.reload();
                 }}
               />
+              <Separator />
+            </StackItem>
+            <StackItem
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              <Text variant="mediumPlus">Font config</Text>
+              <Stack>
+                <TextField
+                  label="Font family"
+                  style={{ width: "100%" }}
+                  placeholder="Enter a valid font family"
+                  disabled={currentFontConfig.fontSource === "customfontsource"}
+                  value={currentFontConfig.fontFamily || ""}
+                  onChange={(_ev, val) => {
+                    setCurrentFontConfig((prev) => ({
+                      ...prev,
+                      fontFamily: val,
+                    }));
+                  }}
+                />
+                <Dropdown
+                  label="Font source"
+                  style={{ width: "150px" }}
+                  options={[
+                    {
+                      key: "customfontsource",
+                      text: "CustomFontSource",
+                    },
+                    {
+                      key: "cssfontsource",
+                      text: "CSSFontSource",
+                    },
+                  ]}
+                  selectedKey={currentFontConfig.fontSource}
+                  onChange={(_ev, item) => {
+                    const newSource = item?.key as FontSource;
+                    setCurrentFontConfig((prev) => ({
+                      ...prev,
+                      // For custom fonts, since we are loading by local files, we use a hardcoded file value
+                      ...(newSource === "customfontsource"
+                        ? {
+                            fontFamily: "Segoe UI",
+                          }
+                        : {}),
+                      fontSource: newSource,
+                    }));
+                  }}
+                />
+                <TextField
+                  label="CSSFontSource"
+                  style={{ width: "100%" }}
+                  placeholder="Enter a URL pointing to a CSS file, e.g. https://fonts.googleapis.com/css?family=Open+Sans"
+                  disabled={currentFontConfig.fontSource === "customfontsource"}
+                  value={currentFontConfig.cssFontSource || ""}
+                  onChange={(_ev, val) => {
+                    setCurrentFontConfig((prev) => ({
+                      ...prev,
+                      cssFontSource: val,
+                    }));
+                  }}
+                />
+              </Stack>
+              <PrimaryButton
+                style={{
+                  width: "fit-content",
+                }}
+                onClick={() => {
+                  setConnectJsFontConfig(currentFontConfig);
+                  window.location.reload();
+                }}
+              >
+                Apply
+              </PrimaryButton>
               <Separator />
             </StackItem>
           </Stack>

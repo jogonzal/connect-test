@@ -1,5 +1,6 @@
 import { Theme } from "../components/LocaleAndThemingOptions";
 import { FeaturesConfig } from "../utils/featuresConfigUtils";
+import { FontConfig } from "../utils/fontConfig";
 
 export class LocalStorageWrapper {
   private inMemoryItems: Record<string, string> = {};
@@ -90,4 +91,13 @@ export const setFeaturesConfigInStorage = (config: FeaturesConfig) => {
 
 export const resetFeaturesConfigInStorage = () => {
   localStorage.removeItem("featuresconfig");
+};
+
+export const getConnectJsFontConfig = (): FontConfig | undefined => {
+  const config = localStorageWrapper.getItem("fontconfig");
+  if (config == null) return undefined;
+  return JSON.parse(config);
+};
+export const setConnectJsFontConfig = (config: FontConfig) => {
+  localStorageWrapper.setItem("fontconfig", JSON.stringify(config));
 };
